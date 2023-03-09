@@ -7,3 +7,4 @@ const v1Loader = () => {
   return router;
 };
 module.exports = v1Loader;
+console.log("t");
