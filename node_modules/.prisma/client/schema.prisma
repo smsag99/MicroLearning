@@ -29,3 +29,19 @@ type Address {
   city     String
   address  String
 }
+
+model Admin {
+  id                       String       @id @default(auto()) @map("_id") @db.ObjectId
+  userName                 String       @unique
+  firstName                String       @default("")
+  lastName                 String       @default("")
+  password                 String       @default("")
+  refreshToken             String       @default("")
+  permissions              permission[]
+  isAllowedtoResetPassword Boolean      @default(false)
+}
+
+type permission {
+  action  String
+  subject String
+}
