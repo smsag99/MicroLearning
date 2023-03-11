@@ -25,7 +25,13 @@ const verify = async (req) => {
   }
 };
 
-function getUserbyId(objectId) {}
+async function getUserbyId(objectId) {
+  return await prisma.User.findUnique({
+    where: {
+      id: objectId,
+    },
+  });
+}
 
 async function getUserbyPhone(phone) {
   return await prisma.User.findUnique({
