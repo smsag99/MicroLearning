@@ -2,11 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  console.log("teeeeeee");
-  res.send("ok");
-});
-router.post("/", (req, res) => {
-  console.log("teeeeeee");
+  console.log("auth admin");
   res.send("ok");
 });
 

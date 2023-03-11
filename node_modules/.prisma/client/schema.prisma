@@ -12,16 +12,16 @@ datasource db {
 }
 
 model User {
-  id                       String  @id @default(auto()) @map("_id") @db.ObjectId
-  firstName                String
-  lastName                 String
-  phoneNumber              String  @unique
-  countryCode              String
-  password                 String
-  refreshToken             String
-  blocked                  Boolean
-  address                  Address
-  isAllowedtoResetPassword Boolean
+  id                       String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName                String   @default("")
+  lastName                 String   @default("")
+  phoneNumber              String   @unique
+  countryCode              String   @default("")
+  password                 String   @default("")
+  refreshToken             String   @default("")
+  blocked                  Boolean  @default(false)
+  isAllowedtoResetPassword Boolean  @default(false)
+  address                  Address?
 }
 
 type Address {

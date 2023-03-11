@@ -1,7 +1,6 @@
-const { Level } = require("level");
+const SData = require("simple-data-storage");
 const Kavenegar = require("kavenegar");
 const axios = require("axios");
-const db = new Level("example", { valueEncoding: "json" });
 const min = 1000,
   max = 9999;
 
@@ -18,7 +17,7 @@ async function sendSMS(code, number) {
         "&template=MicroLearning"
     )
     .then((response) => {
-      console.log(response);
+      //console.log(response.data);
     })
     .catch((error) => {
       console.log(error);
@@ -26,7 +25,7 @@ async function sendSMS(code, number) {
 }
 
 async function saveCodeInDB(code, number) {
-  await db.put(number, code);
+  await SData(number, { code: code, time: Date.now() });
 }
 async function generateNewCodeForThisNumber(number) {
   const code = getRandomInt();
@@ -34,10 +33,16 @@ async function generateNewCodeForThisNumber(number) {
   await sendSMS(code, number);
 }
 async function CheckIfCorrect(code, number) {
-  if ((await db.get(number)) == code) {
-    saveCodeInDB("", number);
-    return true;
-  } else {
+  try {
+    const savedCode = await SData(number);
+    if (Date.now() - savedCode.time <= 120000)
+      if (savedCode.code == code) {
+        SData.clear(number);
+        return true;
+      } else {
+        return false;
+      }
+  } catch (err) {
     return false;
   }
 }
