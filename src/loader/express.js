@@ -1,5 +1,5 @@
 const express = require("express");
-const routes = require("../routes");
+const routes = require("../api/routes");
 const httpStatus = require("http-status-codes");
 require("dotenv").config({ path: "../.env" });
 
