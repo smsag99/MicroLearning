@@ -2,6 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const { CheckIfCorrect, generateNewCodeForThisNumber } = require("./sms.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { PROCESSING } = require("http-status-codes");
 require("dotenv").config();
 
 const prisma = new PrismaClient();
@@ -12,8 +13,33 @@ const signup = async (req) => {
   if (admin) {
     return "This admin Already Exists!";
   } else {
-    await createAdmin(userName, password);
+    return await createAdmin(userName, password);
   }
+};
+
+const login = async (req) => {
+  const { userName, password } = req.body;
+  const admin = await getAdminbyUserName(userName);
+  if (!admin) {
+    return "This admin Doesn't Exists!";
+  } else {
+    if (await bcrypt.compare(password, admin.password))
+      return await setRefereshToken(userName, password);
+    return "password is incorrect";
+  }
+};
+
+const refreshToken = async (req) => {
+  const { userName } = req.body;
+  const admin = await getAdminbyUserName(userName);
+  await setRefereshToken(admin);
+};
+
+const logout = async (req) => {
+  const { userName } = req.body;
+  const admin = await getAdminbyUserName(userName);
+  admin.refreshToken = "";
+  await updateAdmin(admin);
 };
 
 async function getAdminbyId(objectId) {
@@ -35,18 +61,18 @@ async function getAdminbyUserName(userName) {
 
 async function setRefereshToken(userName) {
   const admin = await getAdminbyUserName(userName);
-  console.log(admin);
   const refreshToken = await jwt.sign(
-    { objectId: admin.objectId, userName: userName },
-    "12345678",
+    { id: admin.id },
+    process.env.REFRESHTOKEN_SECRET,
     { expiresIn: 3600000 * 1000 }
   );
   const accessToken = await jwt.sign(
-    { objectId: admin.objectId, userName: userName },
-    "12345678",
+    { id: admin.id },
+    process.env.ACCESSTOKEN_SECRET,
     { expiresIn: 3600000 }
   );
-  if (await updateAdmin({ userName, refreshToken })) {
+  admin.refreshToken = refreshToken;
+  if (await updateAdmin(admin)) {
     return accessToken;
   }
 }
@@ -64,10 +90,8 @@ async function createAdmin(userName, password) {
 
 async function updateAdmin(admin) {
   try {
-    const { userName } = admin;
-    //console.log(phone);
     await prisma.Admin.update({
-      where: { userName: userName },
+      where: { userName: admin.userName },
       data: {
         firstName: admin.firstName,
         lastName: admin.lastName,
@@ -85,4 +109,4 @@ async function updateAdmin(admin) {
 
 function deleteAdmin(userName) {}
 
-module.exports = { signup };
+module.exports = { signup, login, refreshToken, logout };
