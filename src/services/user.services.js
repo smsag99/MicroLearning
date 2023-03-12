@@ -25,6 +25,31 @@ const verify = async (req) => {
   }
 };
 
+const login = async (req) => {
+  const { phone, password } = req.body;
+  const user = await getUserbyPhone(phone);
+  if (!user) {
+    return "This User Doesn't Exists!";
+  } else {
+    if (await bcrypt.compare(password, user.password))
+      return await setRefereshToken(phone, password);
+    return "password is incorrect";
+  }
+};
+
+const refreshToken = async (req) => {
+  const { phoneNumber } = req.body;
+  const user = await user(phoneNumber);
+  await setRefereshToken(user);
+};
+
+const logout = async (req) => {
+  const { phone } = req.body;
+  const user = await getAdminbyUserName(phone);
+  user.refreshToken = "";
+  await updateAdmin(user);
+};
+
 async function getUserbyId(objectId) {
   return await prisma.User.findUnique({
     where: {
@@ -43,18 +68,18 @@ async function getUserbyPhone(phone) {
 
 async function setRefereshToken(phone) {
   const user = await getUserbyPhone(phone);
-  //console.log(user);
   const refreshToken = await jwt.sign(
-    { objectId: user.objectId, phone: phone },
-    "12345678",
+    { id: user.id },
+    process.env.REFRESHTOKEN_SECRET,
     { expiresIn: 3600000 * 1000 }
   );
   const accessToken = await jwt.sign(
-    { objectId: user.objectId, phone: phone },
-    "12345678",
+    { id: user.id },
+    process.env.ACCESSTOKEN_SECRET,
     { expiresIn: 3600000 }
   );
-  if (await updateUser({ phone, refreshToken })) {
+  user.refreshToken = refreshToken;
+  if (await updateUser(user)) {
     return accessToken;
   }
 }
@@ -72,13 +97,14 @@ async function createUser(phone, password) {
 
 async function updateUser(user) {
   try {
-    const { phone } = user;
-    //console.log(phone);
+    console.log("test3");
+    const { phoneNumber } = user;
     await prisma.User.update({
-      where: { phoneNumber: phone },
+      where: { phoneNumber: phoneNumber },
       data: {
         firstName: user.firstName,
         lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
         countryCode: user.countryCode,
         password: user.password,
         refreshToken: user.refreshToken,
@@ -86,12 +112,14 @@ async function updateUser(user) {
         isAllowedtoResetPassword: user.isAllowedtoResetPassword,
       },
     });
+    console.log("done");
     return true;
   } catch (err) {
+    console.log(err);
     return false;
   }
 }
 
 function deleteUser(phone) {}
 
-module.exports = { signup, verify };
+module.exports = { signup, verify, login, refreshToken };
