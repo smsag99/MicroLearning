@@ -19,7 +19,6 @@ const verify = async (req) => {
   const { phone, code, password } = req.body;
   if (await CheckIfCorrect(code, phone)) {
     return createUser(phone, password);
-    //return "code is correct and user is created";
   } else {
     return "code isn't correct";
   }
@@ -45,9 +44,26 @@ const refreshToken = async (req) => {
 
 const logout = async (req) => {
   const { phone } = req.body;
-  const user = await getAdminbyUserName(phone);
+  const user = await getUserbyPhone(phone);
   user.refreshToken = "";
-  await updateAdmin(user);
+  await updateUser(user);
+};
+
+const forgetPassword = async (req) => {
+  const { phone } = req.body;
+  await generateNewCodeForThisNumber(phone);
+};
+
+const verifyForgetPassword = async (req) => {
+  const { phone, code, password } = req.body;
+  const user = await getUserbyPhone(phone);
+  if (await CheckIfCorrect(code, phone)) {
+    const hashedPaassword = await bcrypt.hash(password, 10);
+    user.password = hashedPaassword;
+    return await updateUser(user);
+  } else {
+    return "code isn't correct";
+  }
 };
 
 async function getUserbyId(objectId) {
@@ -99,6 +115,7 @@ async function updateUser(user) {
   try {
     console.log("test3");
     const { phoneNumber } = user;
+    console.log(phoneNumber);
     await prisma.User.update({
       where: { phoneNumber: phoneNumber },
       data: {
@@ -122,4 +139,11 @@ async function updateUser(user) {
 
 function deleteUser(phone) {}
 
-module.exports = { signup, verify, login, refreshToken };
+module.exports = {
+  signup,
+  verify,
+  login,
+  refreshToken,
+  forgetPassword,
+  verifyForgetPassword,
+};

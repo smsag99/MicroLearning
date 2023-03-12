@@ -4,6 +4,8 @@ const {
   verify,
   login,
   refreshToken,
+  forgetPassword,
+  verifyForgetPassword,
 } = require("../../../../services/user.services.js");
 const router = express.Router();
 
@@ -37,6 +39,24 @@ router.post("/login", async (req, res, next) => {
 router.post("/refreshToken", async (req, res, next) => {
   try {
     const resault = await refreshToken(req);
+    return res.send(resault);
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.post("/forgetpassword", async (req, res, next) => {
+  try {
+    const resault = await forgetPassword(req);
+    return res.send(resault);
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.post("/verifyforgetpassword", async (req, res, next) => {
+  try {
+    const resault = await verifyForgetPassword(req);
     return res.send(resault);
   } catch (error) {
     return next(error);
