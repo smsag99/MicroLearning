@@ -109,4 +109,4 @@ async function updateAdmin(admin) {
 
 function deleteAdmin(userName) {}
 
-module.exports = { signup, login, refreshToken, logout };
+module.exports = { signup, login, refreshToken, logout, getAdminbyId };

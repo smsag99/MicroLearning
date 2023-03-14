@@ -37,8 +37,8 @@ const login = async (req) => {
 };
 
 const refreshToken = async (req) => {
-  const { phoneNumber } = req.body;
-  const user = await user(phoneNumber);
+  const { phone } = req.body;
+  const user = await user(phone);
   await setRefereshToken(user);
 };
 
@@ -77,7 +77,7 @@ async function getUserbyId(objectId) {
 async function getUserbyPhone(phone) {
   return await prisma.User.findUnique({
     where: {
-      phoneNumber: phone,
+      phone: phone,
     },
   });
 }
@@ -104,7 +104,7 @@ async function createUser(phone, password) {
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await prisma.User.create({
     data: {
-      phoneNumber: phone,
+      phone: phone,
       password: hashedPassword,
     },
   });
@@ -113,15 +113,15 @@ async function createUser(phone, password) {
 
 async function updateUser(user) {
   try {
-    console.log("test3");
-    const { phoneNumber } = user;
-    console.log(phoneNumber);
+    //console.log("test3");
+    const { phone } = user;
+    //console.log(phone);
     await prisma.User.update({
-      where: { phoneNumber: phoneNumber },
+      where: { phone: phone },
       data: {
         firstName: user.firstName,
         lastName: user.lastName,
-        phoneNumber: user.phoneNumber,
+        phone: user.phone,
         countryCode: user.countryCode,
         password: user.password,
         refreshToken: user.refreshToken,
@@ -129,7 +129,7 @@ async function updateUser(user) {
         isAllowedtoResetPassword: user.isAllowedtoResetPassword,
       },
     });
-    console.log("done");
+    //console.log("done");
     return true;
   } catch (err) {
     console.log(err);
@@ -146,4 +146,11 @@ module.exports = {
   refreshToken,
   forgetPassword,
   verifyForgetPassword,
+  logout,
+  updateUser,
+  getUserbyId,
+  getUserbyPhone,
+  setRefereshToken,
+  createUser,
+  deleteUser,
 };
