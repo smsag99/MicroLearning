@@ -115,19 +115,11 @@ async function updateUser(user) {
   try {
     //console.log("test3");
     const { phone } = user;
+    delete user.id;
     //console.log(phone);
     await prisma.User.update({
       where: { phone: phone },
-      data: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        phone: user.phone,
-        countryCode: user.countryCode,
-        password: user.password,
-        refreshToken: user.refreshToken,
-        blocked: user.blocked,
-        isAllowedtoResetPassword: user.isAllowedtoResetPassword,
-      },
+      data: user,
     });
     //console.log("done");
     return true;
@@ -137,7 +129,19 @@ async function updateUser(user) {
   }
 }
 
-function deleteUser(phone) {}
+async function deleteUser(phone) {
+  try {
+    await prisma.User.update({
+      where: { phone: phone },
+      data: {
+        phone: "D" + user.phone,
+        softDelete: true,
+      },
+    });
+  } catch (error) {
+    return "error";
+  }
+}
 
 module.exports = {
   signup,

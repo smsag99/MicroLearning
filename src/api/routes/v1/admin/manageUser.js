@@ -17,19 +17,22 @@ const { isCan } = require("../../../middlewares/isCan.middleware");
 const { fetchAdmin } = require("../../../middlewares/fetchAdmin.middleware");
 
 router.get(
-  "/phone:",
+  "/:phone",
   isAuth,
   fetchAdmin,
   isCan("read", "User"),
   async (req, res, next) => {
     try {
-      const resault = await getUserbyPhone(req.params.phone);
+      const phone = req.params.phone;
+      console.log(phone);
+      const resault = await getUserbyPhone(phone);
       res.send(resault);
     } catch (error) {
       res.send("user not found");
     }
   }
 );
+
 router.post(
   "/",
   isAuth,
@@ -60,13 +63,14 @@ router.put(
   }
 );
 router.delete(
-  "/",
+  "/:phone",
   isAuth,
   fetchAdmin,
   isCan("delete", "User"),
   async (req, res, next) => {
     try {
-      const resault = await deleteUser(req.body);
+      const phone = req.params.phone;
+      const resault = await deleteUser(phone);
       res.status(200).send(resault);
     } catch (error) {
       res.send("bad request");

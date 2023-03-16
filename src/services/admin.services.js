@@ -8,12 +8,12 @@ require("dotenv").config();
 const prisma = new PrismaClient();
 
 const signup = async (req) => {
-  const { userName, password } = req.body;
+  const { userName, password, permissions } = req.body;
   const admin = await getAdminbyUserName(userName);
   if (admin) {
     return "This admin Already Exists!";
   } else {
-    return await createAdmin(userName, password);
+    return await createAdmin(userName, password, permissions);
   }
 };
 
@@ -77,12 +77,14 @@ async function setRefereshToken(userName) {
   }
 }
 
-async function createAdmin(userName, password) {
+async function createAdmin(userName, password, permissions) {
   const hashedPassword = await bcrypt.hash(password, 10);
+  const permissionsString = JSON.stringify(permissions);
   const admin = await prisma.Admin.create({
     data: {
       userName: userName,
       password: hashedPassword,
+      permissions: permissionsString,
     },
   });
   return await setRefereshToken(userName);
@@ -90,16 +92,10 @@ async function createAdmin(userName, password) {
 
 async function updateAdmin(admin) {
   try {
+    delete admin.id;
     await prisma.Admin.update({
       where: { userName: admin.userName },
-      data: {
-        firstName: admin.firstName,
-        lastName: admin.lastName,
-        password: admin.password,
-        refreshToken: admin.refreshToken,
-        permissions: admin.permissions,
-        isAllowedtoResetPassword: admin.isAllowedtoResetPassword,
-      },
+      data: admin,
     });
     return true;
   } catch (err) {

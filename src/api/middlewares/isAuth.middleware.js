@@ -9,6 +9,7 @@ const isAuth = async (req, res, next) => {
   try {
     const decoded = await jwt.verify(token, process.env.ACCESSTOKEN_SECRET);
     req.user = decoded;
+    console.log("auth");
     next();
   } catch (error) {
     return res.send("invalid token!");
