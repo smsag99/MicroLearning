@@ -3,6 +3,7 @@ const {
   signup,
   verify,
   login,
+  logout,
   refreshToken,
   forgetPassword,
   verifyForgetPassword,
@@ -30,6 +31,15 @@ router.post("/verify", async (req, res, next) => {
 router.post("/login", async (req, res, next) => {
   try {
     const resault = await login(req);
+    return res.send(resault);
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.post("/logout", async (req, res, next) => {
+  try {
+    const resault = await logout(req);
     return res.send(resault);
   } catch (error) {
     return next(error);

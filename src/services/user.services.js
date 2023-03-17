@@ -47,11 +47,13 @@ const logout = async (req) => {
   const user = await getUserbyPhone(phone);
   user.refreshToken = "";
   await updateUser(user);
+  return "user loged out";
 };
 
 const forgetPassword = async (req) => {
   const { phone } = req.body;
   await generateNewCodeForThisNumber(phone);
+  return "new code has generated";
 };
 
 const verifyForgetPassword = async (req) => {
@@ -113,15 +115,12 @@ async function createUser(phone, password) {
 
 async function updateUser(user) {
   try {
-    //console.log("test3");
     const { phone } = user;
     delete user.id;
-    //console.log(phone);
     await prisma.User.update({
       where: { phone: phone },
       data: user,
     });
-    //console.log("done");
     return true;
   } catch (err) {
     console.log(err);
@@ -131,13 +130,15 @@ async function updateUser(user) {
 
 async function deleteUser(phone) {
   try {
+    const deletedPhone = "D" + phone;
     await prisma.User.update({
       where: { phone: phone },
       data: {
-        phone: "D" + user.phone,
+        phone: deletedPhone,
         softDelete: true,
       },
     });
+    return "user deleted";
   } catch (error) {
     return "error";
   }

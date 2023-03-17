@@ -17,14 +17,13 @@ const { isCan } = require("../../../middlewares/isCan.middleware");
 const { fetchAdmin } = require("../../../middlewares/fetchAdmin.middleware");
 
 router.get(
-  "/:phone",
+  "/",
   isAuth,
   fetchAdmin,
   isCan("read", "User"),
   async (req, res, next) => {
     try {
-      const phone = req.params.phone;
-      console.log(phone);
+      const { phone } = req.body;
       const resault = await getUserbyPhone(phone);
       res.send(resault);
     } catch (error) {
@@ -63,13 +62,13 @@ router.put(
   }
 );
 router.delete(
-  "/:phone",
+  "/",
   isAuth,
   fetchAdmin,
   isCan("delete", "User"),
   async (req, res, next) => {
     try {
-      const phone = req.params.phone;
+      const { phone } = req.body;
       const resault = await deleteUser(phone);
       res.status(200).send(resault);
     } catch (error) {
