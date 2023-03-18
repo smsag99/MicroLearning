@@ -39,6 +39,7 @@ model Admin {
   password                 String  @default("")
   refreshToken             String  @default("")
   permissions              String  @default("[]")
+  softDelete               Boolean @default(false)
   isAllowedtoResetPassword Boolean @default(false)
 }
 

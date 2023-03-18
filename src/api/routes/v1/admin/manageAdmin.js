@@ -4,30 +4,31 @@ const {
   login,
   refreshToken,
   logout,
-  updateUser,
-  getUserbyId,
-  getUserbyPhone,
+  updateAdmin,
+  getAdminbyId,
+  getAdminbyUserName,
   setRefereshToken,
-  createUser,
-  deleteUser,
-} = require("../../../../services/user.services.js");
+  createAdmin,
+  deleteAdmin,
+} = require("../../../../services/admin.services.js");
 const router = express.Router();
 const { isAuth } = require("../../../middlewares/isAuth.middleware.js");
 const { isCan } = require("../../../middlewares/isCan.middleware");
 const { fetchAdmin } = require("../../../middlewares/fetchAdmin.middleware");
+const { JsonWebTokenError } = require("jsonwebtoken");
 
 router.get(
   "/",
   isAuth,
   fetchAdmin,
-  isCan("read", "User"),
+  isCan("read", "Admin"),
   async (req, res, next) => {
     try {
-      const { phone } = req.body;
-      const resault = await getUserbyPhone(phone);
+      const { userName } = req.body;
+      const resault = await getAdminbyUserName(userName);
       res.send(resault);
     } catch (error) {
-      res.send("user not found");
+      res.send("admin not found");
     }
   }
 );
@@ -36,15 +37,16 @@ router.post(
   "/",
   isAuth,
   fetchAdmin,
-  isCan("create", "User"),
+  isCan("create", "Admin"),
   async (req, res, next) => {
     try {
-      const { phone, password } = req.body;
-      const user = await getUserbyPhone(phone);
-      if (user) {
+      const { userName } = req.body;
+      const admin = await getAdminbyUserName(userName);
+      if (admin) {
         res.send("This User Already Exists!");
       } else {
-        const resault = await createUser(phone, password);
+        const { userName, password, permissions } = req.body;
+        const resault = await createAdmin(userName, password, permissions);
         res.status(200).send(resault);
       }
     } catch (error) {
@@ -56,10 +58,11 @@ router.put(
   "/",
   isAuth,
   fetchAdmin,
-  isCan("update", "User"),
+  isCan("update", "Admin"),
   async (req, res, next) => {
     try {
-      const resault = await updateUser(req.body);
+      req.body.permissions = JSON.stringify(req.body.permissions);
+      const resault = await updateAdmin(req.body);
       res.status(200).send(resault);
     } catch (error) {
       res.send("bad request");
@@ -70,11 +73,11 @@ router.delete(
   "/",
   isAuth,
   fetchAdmin,
-  isCan("delete", "User"),
+  isCan("delete", "Admin"),
   async (req, res, next) => {
     try {
-      const { phone } = req.body;
-      const resault = await deleteUser(phone);
+      const { userName } = req.body;
+      const resault = await deleteAdmin(userName);
       res.status(200).send(resault);
     } catch (error) {
       res.send("bad request");

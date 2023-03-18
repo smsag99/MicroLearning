@@ -62,7 +62,7 @@ const verifyForgetPassword = async (req) => {
   if (await CheckIfCorrect(code, phone)) {
     const hashedPaassword = await bcrypt.hash(password, 10);
     user.password = hashedPaassword;
-    return await updateUser(user);
+    if (await updateUser(user)) return await setRefereshToken(user.phone);
   } else {
     return "code isn't correct";
   }
@@ -130,7 +130,7 @@ async function updateUser(user) {
 
 async function deleteUser(phone) {
   try {
-    const deletedPhone = "D" + phone;
+    const deletedPhone = "D-" + phone;
     await prisma.User.update({
       where: { phone: phone },
       data: {

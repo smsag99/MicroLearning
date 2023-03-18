@@ -8,12 +8,12 @@ require("dotenv").config();
 const prisma = new PrismaClient();
 
 const signup = async (req) => {
-  const { userName, password, permissions } = req.body;
+  const { userName, password } = req.body;
   const admin = await getAdminbyUserName(userName);
   if (admin) {
     return "This admin Already Exists!";
   } else {
-    return await createAdmin(userName, password, permissions);
+    return await createAdmin(userName, password, "[]");
   }
 };
 
@@ -52,11 +52,15 @@ async function getAdminbyId(objectId) {
 
 async function getAdminbyUserName(userName) {
   console.log(userName);
-  return await prisma.Admin.findUnique({
-    where: {
-      userName: userName,
-    },
-  });
+  try {
+    return await prisma.Admin.findUnique({
+      where: {
+        userName: userName,
+      },
+    });
+  } catch (error) {
+    return error;
+  }
 }
 
 async function setRefereshToken(userName) {
@@ -99,10 +103,37 @@ async function updateAdmin(admin) {
     });
     return true;
   } catch (err) {
+    console.log(err);
     return false;
   }
 }
 
-function deleteAdmin(userName) {}
+async function deleteAdmin(userName) {
+  try {
+    const deletedUserName = "D-" + userName;
+    await prisma.Admin.update({
+      where: { userName: userName },
+      data: {
+        userName: deletedUserName,
+        softDelete: true,
+      },
+    });
+    return "admin deleted";
+  } catch (error) {
+    return "error";
+  }
+}
 
-module.exports = { signup, login, refreshToken, logout, getAdminbyId };
+module.exports = {
+  signup,
+  login,
+  refreshToken,
+  logout,
+  getAdminbyId,
+  updateAdmin,
+  getAdminbyId,
+  getAdminbyUserName,
+  setRefereshToken,
+  createAdmin,
+  deleteAdmin,
+};
