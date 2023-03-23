@@ -6,44 +6,10 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
-  // url      = "mongodb://localhost:27019,localhost:27018,localhost:27017/test2"
 }
 
 model User {
-  id                       String   @id @default(auto()) @map("_id") @db.ObjectId
-  firstName                String   @default("")
-  lastName                 String   @default("")
-  phone                    String   @unique
-  countryCode              String   @default("")
-  password                 String   @default("")
-  refreshToken             String   @default("")
-  blocked                  Boolean  @default(false)
-  softDelete               Boolean  @default(false)
-  isAllowedtoResetPassword Boolean  @default(false)
-  address                  Address?
-}
-
-type Address {
-  province String
-  city     String
-  address  String
-}
-
-model Admin {
-  id                       String  @id @default(auto()) @map("_id") @db.ObjectId
-  userName                 String  @unique
-  firstName                String  @default("")
-  lastName                 String  @default("")
-  password                 String  @default("")
-  refreshToken             String  @default("")
-  permissions              String  @default("[]")
-  softDelete               Boolean @default(false)
-  isAllowedtoResetPassword Boolean @default(false)
-}
-
-type permission {
-  action  String
-  subject String
+  id @id @default()
 }
