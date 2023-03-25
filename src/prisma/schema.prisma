@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,5 +8,108 @@ datasource db {
 }
 
 model User {
-  id @id @default()
+  id                       Int      @id @default(autoincrement())
+  firstName                String   @default("")
+  lastName                 String   @default("")
+  phone                    String   @unique
+  countryCode              String   @default("")
+  password                 String   @default("")
+  refreshToken             String   @default("")
+  blocked                  Boolean  @default(false)
+  softDelete               Boolean  @default(false)
+  address                  String   @default("")
+  classes                  Class[]
+}
+model Admin {
+  id                       Int      @id @default(autoincrement())
+  firstName                String   @default("")
+  lastName                 String   @default("")
+  userName                 String   @unique
+  role                     String   @default("")
+  password                 String   @default("")
+  refreshToken             String   @default("")
+  softDelete               Boolean  @default(false)
+  permissions              Json
+  classes                  Class[]     
+  courses                  Course[]
+}
+model Class {
+  id                       Int      @id @default(autoincrement())
+  course                   Course   @relation(fields : [courseID], references : [id])
+  courseID                 Int 
+  mentor                   Admin    @relation(fields: [mentorID], references: [id])
+  mentorID                 Int
+  student                  User      @relation(fields: [studetID], references: [id])
+  studetID                 Int
+  title                    String   @default("")
+  startTime                String   @default("")
+  isLocked                 Boolean  @default(false)
+  capasity                 Int      @default(0)
+  mentors                  String[] @default([])
+  students                 String[] @default([])
+}
+model Course {
+  id                       Int      @id  @default(autoincrement())
+  teacher                  Admin    @relation(fields: [teacherID], references: [id])
+  teacherID                Int
+  //session                  session  @relation(fields: [sessionID], references: [id], name : "course")
+  sessionID                Int @unique
+  title                    String   @default("")
+  deadlineDuration         String   @default("")
+  description              String   @default("")
+  rate                     Int      @default(0)
+  taskCount                Int      @default(0)
+  isLocked                 Boolean  @default(false)
+  enrolledPeople           String[] @default([])
+  sessions                 String[]       @default([])
+  classes                  Class[]
+  //sessionss                 session[] @relation(name : "c")
+}
+model session {
+  id                       Int      @id @default(autoincrement())
+  //course                   Course   @relation(fields: [courseID], references: [id], name : "")
+  courseID                 Int @unique
+  //chapter                  chapter  @relation(fields: [chapterID], references: [id])
+  chapterID                Int
+  title                    String   @default("")
+  priority                 Int   @default(0)
+  sessions                 String[]       @default([])
+  //courses                  Course[]
+}
+model EnrolledCoursebyEachUser {
+  id                      Int      @id @default(autoincrement())
+  userID                  String   @default("")
+  courseID                String   @default("")
+  classID                 String   @default("")
+  mark                    Int      @default(0)
+  progress                Float    @default(0.0)
+  startTime               String   @default("")
+  endTime                 String   @default("")
+  quizes                  Json     
+  done                    Json
+ }
+model chapter{
+  id                      Int      @id @default(autoincrement())
+  sessionID               String   @default("")
+  courseID                String   @default("")
+  taskID                  String   @default("")
+  title                   String   @default("")
+  priority                Int      @default(0)
+  examID                  String   @default("")
+  tasks                   String[]   @default([])
+ }
+model task {
+  id                      Int      @id @default(autoincrement())
+  chpterID                String   @default("")
+  courseID                String   @default("")
+  title                   String      @default("")
+  priority                Int    @default(0)
+  description             String   @default("")
+
+}
+model Quize {
+ id Int @id @default(autoincrement())
+ row1  String @default("")
+ row2  String @default("")
+ row3  String @default("")
 }
