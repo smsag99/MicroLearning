@@ -113,3 +113,8 @@ model Quize {
  row2  String @default("")
  row3  String @default("")
 }
+
+model test {
+ id Int @id @default(autoincrement())
+ name  String @default("")
+}
