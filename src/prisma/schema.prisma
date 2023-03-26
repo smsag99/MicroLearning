@@ -19,6 +19,7 @@ model User {
   softDelete               Boolean  @default(false)
   address                  String   @default("")
   classes                  Class[]
+  enrolled                 EnrolledCoursebyEachUser[]
 }
 model Admin {
   id                       Int      @id @default(autoincrement())
@@ -39,7 +40,7 @@ model Class {
   courseID                 Int 
   mentor                   Admin    @relation(fields: [mentorID], references: [id])
   mentorID                 Int
-  student                  User      @relation(fields: [studetID], references: [id])
+  student                  User     @relation(fields: [studetID], references: [id])
   studetID                 Int
   title                    String   @default("")
   startTime                String   @default("")
@@ -47,40 +48,48 @@ model Class {
   capasity                 Int      @default(0)
   mentors                  String[] @default([])
   students                 String[] @default([])
+  enrolled                 EnrolledCoursebyEachUser[]
 }
 model Course {
   id                       Int      @id  @default(autoincrement())
-  teacher                  Admin    @relation(fields: [teacherID], references: [id])
-  teacherID                Int
-  //session                  session  @relation(fields: [sessionID], references: [id], name : "course")
-  sessionID                Int @unique
-  title                    String   @default("")
-  deadlineDuration         String   @default("")
-  description              String   @default("")
-  rate                     Int      @default(0)
-  taskCount                Int      @default(0)
-  isLocked                 Boolean  @default(false)
-  enrolledPeople           String[] @default([])
-  sessions                 String[]       @default([])
-  classes                  Class[]
-  //sessionss                 session[] @relation(name : "c")
+  Teacher                  Admin    @relation(fields: [TeacherID], references: [id])
+  TeacherID                Int
+  session                  session  @relation(name: "sessionID", fields: [sessionID], references: [id])
+  sessionID                Int      @unique
+  title                    String
+  deadlineDuration         DateTime
+  description              String
+  rate                     Int
+  taskcount                Int
+  isLocked                 Boolean
+  enrolledpeople           String[]
+  sessions                 String[]
+  courseID                 session? @relation("course ID")
+  enrolled                 EnrolledCoursebyEachUser[]
+  class                    Class[]
+  chapter                  chapter[]
+  task                     task[]
+
 }
 model session {
-  id                       Int      @id @default(autoincrement())
-  //course                   Course   @relation(fields: [courseID], references: [id], name : "")
-  courseID                 Int @unique
-  //chapter                  chapter  @relation(fields: [chapterID], references: [id])
-  chapterID                Int
-  title                    String   @default("")
-  priority                 Int   @default(0)
-  sessions                 String[]       @default([])
-  //courses                  Course[]
+  id                      Int @id  @default(autoincrement())
+  course                  Course?  @relation(name: "course ID", fields: [courseID], references: [id])
+  courseID                Int      @unique
+  chapterID               String
+  title                   String
+  priority                Int
+  chapters                String[]
+  sessionID               Course[] @relation(name: "sessionID")
+  chapter                 chapter[]
 }
 model EnrolledCoursebyEachUser {
   id                      Int      @id @default(autoincrement())
-  userID                  String   @default("")
-  courseID                String   @default("")
-  classID                 String   @default("")
+  user                    User     @relation(fields: [userID], references: [id])
+  userID                  Int
+  course                  Course   @relation(fields: [courseID], references: [id])
+  courseID                Int   
+  class                   Class    @relation(fields: [classID], references: [id])
+  classID                 Int   
   mark                    Int      @default(0)
   progress                Float    @default(0.0)
   startTime               String   @default("")
@@ -90,21 +99,28 @@ model EnrolledCoursebyEachUser {
  }
 model chapter{
   id                      Int      @id @default(autoincrement())
-  sessionID               String   @default("")
-  courseID                String   @default("")
-  taskID                  String   @default("")
+  session                 session  @relation(fields: [sessionID], references: [id])
+  sessionID               Int   
+  course                  Course   @relation(fields: [courseID], references: [id])
+  courseID                Int   
+  task                    task     @relation(fields: [taskID], references: [id])
+  taskID                  Int   
   title                   String   @default("")
   priority                Int      @default(0)
   examID                  String   @default("")
-  tasks                   String[]   @default([])
- }
+  tasks                   String[] @default([])
+  chapterID               task?    @relation("chapterID")
+   }
 model task {
   id                      Int      @id @default(autoincrement())
-  chpterID                String   @default("")
-  courseID                String   @default("")
-  title                   String      @default("")
-  priority                Int    @default(0)
+  chapter                 chapter? @relation(name: "chapterID",fields: [chpterID], references: [id])
+  chpterID                Int      @unique
+  course                  Course   @relation(fields: [courseID], references: [id])
+  courseID                Int   
+  title                   String   @default("")
+  priority                Int      @default(0)
   description             String   @default("")
+  taskID                  chapter[]
 
 }
 model Quize {
