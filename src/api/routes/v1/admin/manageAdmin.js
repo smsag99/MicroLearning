@@ -16,9 +16,11 @@ const { isAuth } = require("../../../middlewares/isAuth.middleware.js");
 const { isCan } = require("../../../middlewares/isCan.middleware");
 const { fetchAdmin } = require("../../../middlewares/fetchAdmin.middleware");
 const { JsonWebTokenError } = require("jsonwebtoken");
-
+const validate = require("./../../../middlewares/validate.middleware.js");
+const manageAdminValidationSchema = require("./../../../../validation/validation.admin.manageAdmin.services.js");
 router.get(
   "/",
+  validate(manageAdminValidationSchema.read),
   isAuth,
   fetchAdmin,
   isCan("read", "Admin"),
@@ -35,6 +37,7 @@ router.get(
 
 router.post(
   "/",
+  validate(manageAdminValidationSchema.create),
   isAuth,
   fetchAdmin,
   isCan("create", "Admin"),
@@ -56,6 +59,8 @@ router.post(
 );
 router.put(
   "/",
+  validate(manageAdminValidationSchema.update),
+
   isAuth,
   fetchAdmin,
   isCan("update", "Admin"),

@@ -15,9 +15,11 @@ const router = express.Router();
 const { isAuth } = require("../../../middlewares/isAuth.middleware.js");
 const { isCan } = require("../../../middlewares/isCan.middleware");
 const { fetchAdmin } = require("../../../middlewares/fetchAdmin.middleware");
-
+const validate = require("./../../../middlewares/validate.middleware.js");
+const manageUserValidationSchema = require("./../../../../validation/validation.admin.manageUser.services");
 router.get(
   "/",
+  validate(manageUserValidationSchema.read),
   isAuth,
   fetchAdmin,
   isCan("read", "User"),
@@ -34,6 +36,7 @@ router.get(
 
 router.post(
   "/",
+  validate(manageUserValidationSchema.create),
   isAuth,
   fetchAdmin,
   isCan("create", "User"),
@@ -54,6 +57,7 @@ router.post(
 );
 router.put(
   "/",
+  validate(manageUserValidationSchema.update),
   isAuth,
   fetchAdmin,
   isCan("update", "User"),
