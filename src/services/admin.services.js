@@ -8,12 +8,13 @@ require("dotenv").config();
 const prisma = new PrismaClient();
 
 const signup = async (req) => {
-  const { userName, password } = req.body;
+  const { userName, password, permissions } = req.body;
   const admin = await getAdminbyUserName(userName);
+  console.log(admin);
   if (admin) {
     return "This admin Already Exists!";
   } else {
-    return await createAdmin(userName, password, "[]");
+    return await createAdmin(userName, password, permissions);
   }
 };
 
@@ -51,7 +52,7 @@ async function getAdminbyId(objectId) {
 }
 
 async function getAdminbyUserName(userName) {
-  console.log(userName);
+  console.log("getadmin by username", userName);
   try {
     return await prisma.Admin.findUnique({
       where: {

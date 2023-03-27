@@ -1,49 +1,142 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
-  // url      = "mongodb://localhost:27019,localhost:27018,localhost:27017/test2"
 }
 
 model User {
-  id                       String   @id @default(auto()) @map("_id") @db.ObjectId
-  firstName                String   @default("")
-  lastName                 String   @default("")
-  phone                    String   @unique
-  countryCode              String   @default("")
-  password                 String   @default("")
-  refreshToken             String   @default("")
-  blocked                  Boolean  @default(false)
-  softDelete               Boolean  @default(false)
-  isAllowedtoResetPassword Boolean  @default(false)
-  address                  Address?
-}
-
-type Address {
-  province String
-  city     String
-  address  String
+  id           Int                        @id @default(autoincrement())
+  firstName    String                     @default("")
+  lastName     String                     @default("")
+  phone        String                     @unique
+  countryCode  String                     @default("")
+  password     String                     @default("")
+  refreshToken String                     @default("")
+  blocked      Boolean                    @default(false)
+  softDelete   Boolean                    @default(false)
+  address      String                     @default("")
+  classes      Class[]
+  enrolled     EnrolledCoursebyEachUser[]
 }
 
 model Admin {
-  id                       String  @id @default(auto()) @map("_id") @db.ObjectId
-  userName                 String  @unique
-  firstName                String  @default("")
-  lastName                 String  @default("")
-  password                 String  @default("")
-  refreshToken             String  @default("")
-  permissions              String  @default("[]")
-  softDelete               Boolean @default(false)
-  isAllowedtoResetPassword Boolean @default(false)
+  id           Int      @id @default(autoincrement())
+  firstName    String   @default("")
+  lastName     String   @default("")
+  userName     String   @unique
+  role         String   @default("")
+  password     String   @default("")
+  refreshToken String   @default("")
+  softDelete   Boolean  @default(false)
+  permissions  Json     @db.JsonB
+  classes      Class[]
+  courses      Course[]
 }
 
-type permission {
-  action  String
-  subject String
+model Class {
+  id        Int                        @id @default(autoincrement())
+  course    Course                     @relation(fields: [courseID], references: [id])
+  courseID  Int
+  mentor    Admin                      @relation(fields: [mentorID], references: [id])
+  mentorID  Int
+  student   User                       @relation(fields: [studetID], references: [id])
+  studetID  Int
+  title     String                     @default("")
+  startTime String                     @default("")
+  isLocked  Boolean                    @default(false)
+  capasity  Int                        @default(0)
+  mentors   String[]                   @default([])
+  students  String[]                   @default([])
+  enrolled  EnrolledCoursebyEachUser[]
+}
+
+model Course {
+  id               Int                        @id @default(autoincrement())
+  Teacher          Admin                      @relation(fields: [TeacherID], references: [id])
+  TeacherID        Int
+  session          session                    @relation(name: "sessionID", fields: [sessionID], references: [id])
+  sessionID        Int                        @unique
+  title            String
+  deadlineDuration DateTime
+  description      String
+  rate             Int
+  taskcount        Int
+  isLocked         Boolean
+  enrolledpeople   String[]
+  sessions         String[]
+  courseID         session?                   @relation("course ID")
+  enrolled         EnrolledCoursebyEachUser[]
+  class            Class[]
+  chapter          chapter[]
+  task             task[]
+}
+
+model session {
+  id        Int       @id @default(autoincrement())
+  course    Course?   @relation(name: "course ID", fields: [courseID], references: [id])
+  courseID  Int       @unique
+  chapterID String
+  title     String
+  priority  Int
+  chapters  String[]
+  sessionID Course[]  @relation(name: "sessionID")
+  chapter   chapter[]
+}
+
+model EnrolledCoursebyEachUser {
+  id        Int    @id @default(autoincrement())
+  user      User   @relation(fields: [userID], references: [id])
+  userID    Int
+  course    Course @relation(fields: [courseID], references: [id])
+  courseID  Int
+  class     Class  @relation(fields: [classID], references: [id])
+  classID   Int
+  mark      Int    @default(0)
+  progress  Float  @default(0.0)
+  startTime String @default("")
+  endTime   String @default("")
+  quizes    Json   @db.JsonB
+  done      Json   @db.JsonB
+}
+
+model chapter {
+  id        Int      @id @default(autoincrement())
+  session   session  @relation(fields: [sessionID], references: [id])
+  sessionID Int
+  course    Course   @relation(fields: [courseID], references: [id])
+  courseID  Int
+  task      task     @relation(fields: [taskID], references: [id])
+  taskID    Int
+  title     String   @default("")
+  priority  Int      @default(0)
+  examID    String   @default("")
+  tasks     String[] @default([])
+  chapterID task?    @relation("chapterID")
+}
+
+model task {
+  id          Int       @id @default(autoincrement())
+  chapter     chapter?  @relation(name: "chapterID", fields: [chpterID], references: [id])
+  chpterID    Int       @unique
+  course      Course    @relation(fields: [courseID], references: [id])
+  courseID    Int
+  title       String    @default("")
+  priority    Int       @default(0)
+  description String    @default("")
+  taskID      chapter[]
+}
+
+model Quize {
+  id   Int    @id @default(autoincrement())
+  row1 String @default("")
+  row2 String @default("")
+  row3 String @default("")
+}
+
+model test {
+  id   Int    @id @default(autoincrement())
+  name String @default("")
 }
