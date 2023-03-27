@@ -24,8 +24,10 @@ router.get(
   isCan("read", "Admin"),
   async (req, res, next) => {
     try {
+      console.log("route get admin");
       const { userName } = req.body;
       const resault = await getAdminbyUserName(userName);
+
       res.send(resault);
     } catch (error) {
       res.send("admin not found");
