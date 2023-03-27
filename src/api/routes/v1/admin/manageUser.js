@@ -17,6 +17,8 @@ const { isCan } = require("../../../middlewares/isCan.middleware");
 const { fetchAdmin } = require("../../../middlewares/fetchAdmin.middleware");
 const validate = require("./../../../middlewares/validate.middleware.js");
 const manageUserValidationSchema = require("./../../../../validation/validation.admin.manageUser.services");
+const bcrypt = require("bcrypt");
+
 router.get(
   "/:phone",
   validate(manageUserValidationSchema.read),
@@ -63,6 +65,7 @@ router.put(
   isCan("update", "User"),
   async (req, res, next) => {
     try {
+      req.body.password = (await bcrypt.hash(req.body.password, 10)).toString();
       req.body.phone = req.params.phone;
       const resault = await updateUser(req.body);
       res.status(200).send(resault);

@@ -21,6 +21,7 @@ const signup = async (userName, password, permissions) => {
 
 const login = async (userName, password) => {
   const admin = await getAdminbyUserName(userName);
+  console.log(admin);
   if (!admin) {
     return "This admin Doesn't Exists!";
   } else {
@@ -107,11 +108,11 @@ async function createAdmin(userName, password, permissions) {
 async function updateAdmin(admin) {
   try {
     delete admin.id;
-    admin.password = (await bcrypt.hash(admin.password, 10)).toString();
-    await prisma.Admin.update({
+    const resault = await prisma.Admin.update({
       where: { userName: admin.userName },
       data: admin,
     });
+    console.log(resault);
     return true;
   } catch (err) {
     return false;

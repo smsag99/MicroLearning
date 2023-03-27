@@ -18,6 +18,7 @@ const { fetchAdmin } = require("../../../middlewares/fetchAdmin.middleware");
 const { JsonWebTokenError } = require("jsonwebtoken");
 const validate = require("./../../../middlewares/validate.middleware.js");
 const manageAdminValidationSchema = require("./../../../../validation/validation.admin.manageAdmin.services.js");
+const bcrypt = require("bcrypt");
 router.get(
   "/:userName",
   validate(manageAdminValidationSchema.read),
@@ -60,16 +61,17 @@ router.post(
   }
 );
 router.put(
-  "/",
+  "/:userName",
   validate(manageAdminValidationSchema.update),
-
   isAuth,
   fetchAdmin,
   isCan("update", "Admin"),
   async (req, res, next) => {
     try {
+      req.body.password = (await bcrypt.hash(req.body.password, 10)).toString();
       req.body.userName = req.params.userName;
       req.body.permissions = JSON.stringify(req.body.permissions);
+      console.log(req.body.permissions);
       const resault = await updateAdmin(req.body);
       res.status(200).send(resault);
     } catch (error) {

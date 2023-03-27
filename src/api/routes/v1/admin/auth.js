@@ -35,8 +35,11 @@ router.post(
   async (req, res, next) => {
     try {
       const { userName, password } = req.body;
-      const resault = await login(userName);
-      return res.send(resault);
+      const resault = await login(userName, password);
+
+      return res.send({
+        token: resault,
+      });
     } catch (error) {
       return next(error);
     }
@@ -55,6 +58,7 @@ router.post(
         const resault = await refreshToken(adminId);
         return res.send(resault);
       }
+      return res.send("refresh token not valid");
     } catch (error) {
       return next(error);
     }
