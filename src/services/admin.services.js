@@ -7,8 +7,7 @@ require("dotenv").config();
 
 const prisma = new PrismaClient();
 
-const signup = async (req) => {
-  const { userName, password, permissions } = req.body;
+const signup = async (userName, password, permissions) => {
   const admin = await getAdminbyUserName(userName);
   console.log(admin);
   if (admin) {
@@ -18,8 +17,7 @@ const signup = async (req) => {
   }
 };
 
-const login = async (req) => {
-  const { userName, password } = req.body;
+const login = async (userName, password) => {
   const admin = await getAdminbyUserName(userName);
   if (!admin) {
     return "This admin Doesn't Exists!";
@@ -30,14 +28,12 @@ const login = async (req) => {
   }
 };
 
-const refreshToken = async (req) => {
-  const { userName } = req.body;
+const refreshToken = async (userName) => {
   const admin = await getAdminbyUserName(userName);
   await setRefereshToken(admin);
 };
 
-const logout = async (req) => {
-  const { userName } = req.body;
+const logout = async (userName) => {
   try {
     const admin = await getAdminbyUserName(userName);
     admin.refreshToken = "";

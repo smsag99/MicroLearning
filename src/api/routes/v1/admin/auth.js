@@ -15,7 +15,8 @@ router.post(
   validate(adminAuthValidationSchema.signup),
   async (req, res, next) => {
     try {
-      const resault = await signup(req);
+      const { userName, password, permissions } = req.body;
+      const resault = await signup(userName, password, permissions);
       return res.send(resault);
     } catch (error) {
       return next(error);
@@ -27,7 +28,8 @@ router.post(
   validate(adminAuthValidationSchema.login),
   async (req, res, next) => {
     try {
-      const resault = await login(req);
+      const { userName, password } = req.body;
+      const resault = await login(userName);
       return res.send(resault);
     } catch (error) {
       return next(error);
@@ -39,7 +41,8 @@ router.post(
   validate(adminAuthValidationSchema.refreshToken),
   async (req, res, next) => {
     try {
-      const resault = await refreshToken(req);
+      const { userName } = req.body;
+      const resault = await refreshToken(userName);
       return res.send(resault);
     } catch (error) {
       return next(error);
@@ -52,7 +55,8 @@ router.post(
   validate(adminAuthValidationSchema.logout),
   async (req, res, next) => {
     try {
-      const resault = await logout(req);
+      const { userName } = req.body;
+      const resault = await logout(userName);
       return res.send(resault);
     } catch (error) {
       return next(error);

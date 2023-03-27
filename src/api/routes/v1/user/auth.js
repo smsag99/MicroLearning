@@ -17,7 +17,8 @@ router.post(
   validate(userAuthValidationSchema.signup),
   async (req, res, next) => {
     try {
-      const resault = await signup(req);
+      const { phone } = req.body;
+      const resault = await signup(phone);
       return res.send(resault);
     } catch (error) {
       return next(error);
@@ -30,7 +31,8 @@ router.post(
   validate(userAuthValidationSchema.verify),
   async (req, res, next) => {
     try {
-      const resault = await verify(req);
+      const { phone, code, password } = req.body;
+      const resault = await verify(phone, code, password);
       return res.send(resault);
     } catch (error) {
       return next(error);
@@ -43,20 +45,9 @@ router.post(
   validate(userAuthValidationSchema.login),
   async (req, res, next) => {
     try {
-      const resault = await login(req);
-      return res.send(resault);
-    } catch (error) {
-      return next(error);
-    }
-  }
-);
+      const { phone, password } = req.body;
 
-router.post(
-  "/logout",
-  validate(userAuthValidationSchema.logout),
-  async (req, res, next) => {
-    try {
-      const resault = await logout(req);
+      const resault = await login(phone, password);
       return res.send(resault);
     } catch (error) {
       return next(error);
@@ -69,7 +60,22 @@ router.post(
   validate(userAuthValidationSchema.refreshToken),
   async (req, res, next) => {
     try {
-      const resault = await refreshToken(req);
+      const { phone } = req.body;
+      const resault = await refreshToken(phone);
+      return res.send(resault);
+    } catch (error) {
+      return next(error);
+    }
+  }
+);
+
+router.post(
+  "/logout",
+  validate(userAuthValidationSchema.logout),
+  async (req, res, next) => {
+    try {
+      const { phone } = req.body;
+      const resault = await logout(phone);
       return res.send(resault);
     } catch (error) {
       return next(error);
@@ -82,7 +88,8 @@ router.post(
   validate(userAuthValidationSchema.forgetPassword),
   async (req, res, next) => {
     try {
-      const resault = await forgetPassword(req);
+      const { phone } = req.body;
+      const resault = await forgetPassword(phone);
       return res.send(resault);
     } catch (error) {
       return next(error);
@@ -95,7 +102,8 @@ router.post(
   validate(userAuthValidationSchema.verifyForgetPassword),
   async (req, res, next) => {
     try {
-      const resault = await verifyForgetPassword(req);
+      const { phone, code, password } = req.body;
+      const resault = await verifyForgetPassword(phone, code, password);
       return res.send(resault);
     } catch (error) {
       return next(error);

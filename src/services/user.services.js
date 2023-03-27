@@ -6,8 +6,7 @@ require("dotenv").config();
 
 const prisma = new PrismaClient();
 
-const signup = async (req) => {
-  const { phone } = req.body;
+const signup = async (phone) => {
   const user = await getUserbyPhone(phone);
   if (user) {
     return "This User Already Exists!";
@@ -15,8 +14,7 @@ const signup = async (req) => {
   await generateNewCodeForThisNumber(phone);
 };
 
-const verify = async (req) => {
-  const { phone, code, password } = req.body;
+const verify = async (phone, code, password) => {
   if (await CheckIfCorrect(code, phone)) {
     return createUser(phone, password);
   } else {
@@ -24,8 +22,7 @@ const verify = async (req) => {
   }
 };
 
-const login = async (req) => {
-  const { phone, password } = req.body;
+const login = async (phone, password) => {
   const user = await getUserbyPhone(phone);
   if (!user) {
     return "This User Doesn't Exists!";
@@ -36,15 +33,13 @@ const login = async (req) => {
   }
 };
 
-const refreshToken = async (req) => {
-  const { phone } = req.body;
+const refreshToken = async (phone) => {
   const user = await user(phone);
   await setRefereshToken(user);
 };
 
-const logout = async (req) => {
+const logout = async (phone) => {
   try {
-    const { phone } = req.body;
     const user = await getUserbyPhone(phone);
     user.refreshToken = "";
     await updateUser(user);
@@ -54,14 +49,12 @@ const logout = async (req) => {
   }
 };
 
-const forgetPassword = async (req) => {
-  const { phone } = req.body;
+const forgetPassword = async (phone) => {
   await generateNewCodeForThisNumber(phone);
   return "new code has generated";
 };
 
-const verifyForgetPassword = async (req) => {
-  const { phone, code, password } = req.body;
+const verifyForgetPassword = async (phone, code, password ) => {
   const user = await getUserbyPhone(phone);
   if (await CheckIfCorrect(code, phone)) {
     const hashedPaassword = await bcrypt.hash(password, 10);
