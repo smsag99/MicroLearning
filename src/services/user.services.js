@@ -43,11 +43,15 @@ const refreshToken = async (req) => {
 };
 
 const logout = async (req) => {
-  const { phone } = req.body;
-  const user = await getUserbyPhone(phone);
-  user.refreshToken = "";
-  await updateUser(user);
-  return "user loged out";
+  try {
+    const { phone } = req.body;
+    const user = await getUserbyPhone(phone);
+    user.refreshToken = "";
+    await updateUser(user);
+    return "user loged out";
+  } catch (error) {
+    return false;
+  }
 };
 
 const forgetPassword = async (req) => {
@@ -123,7 +127,6 @@ async function updateUser(user) {
     });
     return true;
   } catch (err) {
-    console.log(err);
     return false;
   }
 }

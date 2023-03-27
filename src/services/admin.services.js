@@ -38,9 +38,13 @@ const refreshToken = async (req) => {
 
 const logout = async (req) => {
   const { userName } = req.body;
-  const admin = await getAdminbyUserName(userName);
-  admin.refreshToken = "";
-  await updateAdmin(admin);
+  try {
+    const admin = await getAdminbyUserName(userName);
+    admin.refreshToken = "";
+    await updateAdmin(admin);
+  } catch (error) {
+    return "Admin not found";
+  }
 };
 
 async function getAdminbyId(objectId) {
@@ -98,13 +102,13 @@ async function createAdmin(userName, password, permissions) {
 async function updateAdmin(admin) {
   try {
     delete admin.id;
+    admin.password = (await bcrypt.hash(admin.password, 10)).toString();
     await prisma.Admin.update({
       where: { userName: admin.userName },
       data: admin,
     });
     return true;
   } catch (err) {
-    console.log(err);
     return false;
   }
 }

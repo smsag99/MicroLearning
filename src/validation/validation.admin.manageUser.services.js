@@ -46,7 +46,7 @@ const update = {
     password: joi
       .string()
       .pattern(new RegExp("^[a-zA-Z0-9]{8,16}$"))
-      .required(),
+      .optional,
     blocked: joi.bool().optional(),
     softDelete: joi.bool().optional(),
     countryCode: joi.string().optional(),
