@@ -32,10 +32,17 @@ const login = async (phone, password) => {
     return "password is incorrect";
   }
 };
-
-const refreshToken = async (phone) => {
-  const user = await user(phone);
-  await setRefereshToken(user);
+async function checkRefreshToken(receivedRefreshToken) {
+  const userId = await jwt.verify(
+    receivedRefreshToken,
+    process.env.REFRESHTOKEN_SECRET
+  ).id;
+  const admin = await getUserbyId(userId);
+  if (receivedRefreshToken == admin.refreshToken) return userId;
+}
+const refreshToken = async (id) => {
+  const user = await getUserbyId(id);
+  return await setRefereshToken(user.phone);
 };
 
 const logout = async (phone) => {
@@ -54,7 +61,7 @@ const forgetPassword = async (phone) => {
   return "new code has generated";
 };
 
-const verifyForgetPassword = async (phone, code, password ) => {
+const verifyForgetPassword = async (phone, code, password) => {
   const user = await getUserbyPhone(phone);
   if (await CheckIfCorrect(code, phone)) {
     const hashedPaassword = await bcrypt.hash(password, 10);
@@ -154,4 +161,5 @@ module.exports = {
   setRefereshToken,
   createUser,
   deleteUser,
+  checkRefreshToken,
 };

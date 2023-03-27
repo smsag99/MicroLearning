@@ -3,6 +3,8 @@ const { CheckIfCorrect, generateNewCodeForThisNumber } = require("./sms.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { PROCESSING } = require("http-status-codes");
+const { func } = require("joi");
+const { getUserbyId } = require("./user.services.js");
 require("dotenv").config();
 
 const prisma = new PrismaClient();
@@ -23,14 +25,14 @@ const login = async (userName, password) => {
     return "This admin Doesn't Exists!";
   } else {
     if (await bcrypt.compare(password, admin.password))
-      return await setRefereshToken(userName, password);
+      return await setRefereshToken(userName);
     return "password is incorrect";
   }
 };
 
-const refreshToken = async (userName) => {
-  const admin = await getAdminbyUserName(userName);
-  await setRefereshToken(admin);
+const refreshToken = async (id) => {
+  const admin = await getAdminbyId(id);
+  return await setRefereshToken(admin.userName);
 };
 
 const logout = async (userName) => {
@@ -63,7 +65,14 @@ async function getAdminbyUserName(userName) {
     return error;
   }
 }
-
+async function checkRefreshToken(receivedRefreshToken) {
+  const adminId = await jwt.verify(
+    receivedRefreshToken,
+    process.env.REFRESHTOKEN_SECRET
+  ).id;
+  const admin = await getAdminbyId(adminId);
+  if (receivedRefreshToken == admin.refreshToken) return admin.id;
+}
 async function setRefereshToken(userName) {
   const admin = await getAdminbyUserName(userName);
   const refreshToken = await jwt.sign(
@@ -137,4 +146,5 @@ module.exports = {
   setRefereshToken,
   createAdmin,
   deleteAdmin,
+  checkRefreshToken,
 };

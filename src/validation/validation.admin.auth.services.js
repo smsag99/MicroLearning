@@ -38,10 +38,7 @@ const login = {
 };
 const refreshToken = {
   body: joi.object().keys({
-    userName: joi
-      .string()
-      .pattern(new RegExp("^[a-zA-Z0-9]{5,16}$"))
-      .required(),
+    receivedRefreshToken: joi.string().required(),
   }),
 };
 const logout = {

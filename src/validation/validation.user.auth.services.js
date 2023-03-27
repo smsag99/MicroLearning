@@ -53,11 +53,7 @@ const logout = {
 };
 const refreshToken = {
   body: joi.object().keys({
-    phone: joi
-      .string()
-      .length(11)
-      .pattern(/^[0-9]+$/)
-      .required(),
+    receivedRefreshToken: joi.string().required(),
   }),
 };
 const forgetPassword = {

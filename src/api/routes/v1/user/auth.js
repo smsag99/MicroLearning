@@ -9,6 +9,7 @@ const {
   refreshToken,
   forgetPassword,
   verifyForgetPassword,
+  checkRefreshToken,
 } = require("../../../../services/user.services.js");
 const router = express.Router();
 
@@ -46,7 +47,6 @@ router.post(
   async (req, res, next) => {
     try {
       const { phone, password } = req.body;
-
       const resault = await login(phone, password);
       return res.send(resault);
     } catch (error) {
@@ -60,9 +60,12 @@ router.post(
   validate(userAuthValidationSchema.refreshToken),
   async (req, res, next) => {
     try {
-      const { phone } = req.body;
-      const resault = await refreshToken(phone);
-      return res.send(resault);
+      const { receivedRefreshToken } = req.body;
+      const userId = await checkRefreshToken(receivedRefreshToken);
+      if (userId) {
+        const resault = await refreshToken(userId);
+        return res.send(resault);
+      }
     } catch (error) {
       return next(error);
     }
