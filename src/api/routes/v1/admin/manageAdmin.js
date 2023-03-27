@@ -19,7 +19,7 @@ const { JsonWebTokenError } = require("jsonwebtoken");
 const validate = require("./../../../middlewares/validate.middleware.js");
 const manageAdminValidationSchema = require("./../../../../validation/validation.admin.manageAdmin.services.js");
 router.get(
-  "/",
+  "/:userName",
   validate(manageAdminValidationSchema.read),
   isAuth,
   fetchAdmin,
@@ -27,7 +27,7 @@ router.get(
   async (req, res, next) => {
     try {
       console.log("route get admin");
-      const { userName } = req.body;
+      const { userName } = req.params;
       const resault = await getAdminbyUserName(userName);
 
       res.send(resault);
@@ -68,6 +68,7 @@ router.put(
   isCan("update", "Admin"),
   async (req, res, next) => {
     try {
+      req.body.userName = req.params.userName;
       req.body.permissions = JSON.stringify(req.body.permissions);
       const resault = await updateAdmin(req.body);
       res.status(200).send(resault);

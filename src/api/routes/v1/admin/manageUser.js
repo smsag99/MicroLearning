@@ -18,14 +18,14 @@ const { fetchAdmin } = require("../../../middlewares/fetchAdmin.middleware");
 const validate = require("./../../../middlewares/validate.middleware.js");
 const manageUserValidationSchema = require("./../../../../validation/validation.admin.manageUser.services");
 router.get(
-  "/",
+  "/:phone",
   validate(manageUserValidationSchema.read),
   isAuth,
   fetchAdmin,
   isCan("read", "User"),
   async (req, res, next) => {
     try {
-      const { phone } = req.body;
+      const { phone } = req.params;
       const resault = await getUserbyPhone(phone);
       res.send(resault);
     } catch (error) {
@@ -56,13 +56,14 @@ router.post(
   }
 );
 router.put(
-  "/",
+  "/:phone",
   validate(manageUserValidationSchema.update),
   isAuth,
   fetchAdmin,
   isCan("update", "User"),
   async (req, res, next) => {
     try {
+      req.body.phone = req.params.phone;
       const resault = await updateUser(req.body);
       res.status(200).send(resault);
     } catch (error) {

@@ -1,7 +1,7 @@
 const joi = require("joi");
 
 const read = {
-  body: joi.object().keys({
+  params: joi.object().keys({
     userName: joi
       .string()
       .pattern(new RegExp("^[a-zA-Z0-9]{5,16}$"))
@@ -39,11 +39,13 @@ const create = {
 };
 
 const update = {
-  body: joi.object().keys({
+  params: joi.object().keys({
     userName: joi
       .string()
       .pattern(new RegExp("^[a-zA-Z0-9]{5,16}$"))
       .required(),
+  }),
+  body: joi.object().keys({
     password: joi
       .string()
       .pattern(new RegExp("^[a-zA-Z0-9]{8,16}$"))
