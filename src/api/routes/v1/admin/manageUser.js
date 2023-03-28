@@ -65,7 +65,10 @@ router.put(
   isCan("update", "User"),
   async (req, res, next) => {
     try {
-      req.body.password = (await bcrypt.hash(req.body.password, 10)).toString();
+      if (req.body.password)
+        req.body.password = (
+          await bcrypt.hash(req.body.password, 10)
+        ).toString();
       req.body.phone = req.params.phone;
       const resault = await updateUser(req.body);
       res.status(200).send(resault);

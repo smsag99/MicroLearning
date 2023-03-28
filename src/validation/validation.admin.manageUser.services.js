@@ -4,7 +4,7 @@ const read = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^[0-9]+$/)
+      .pattern(/^09\d{9}$/)
       .required(),
   }),
 };
@@ -15,7 +15,7 @@ const create = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^[0-9]+$/)
+      .pattern(/^09\d{9}$/)
       .required(),
     password: joi
       .string()
@@ -39,7 +39,7 @@ const update = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^[0-9]+$/)
+      .pattern(/^09\d{9}$/)
       .required(),
   }),
   body: joi.object().keys({

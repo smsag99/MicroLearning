@@ -36,7 +36,6 @@ router.post(
     try {
       const { userName, password } = req.body;
       const resault = await login(userName, password);
-
       return res.send({
         token: resault,
       });

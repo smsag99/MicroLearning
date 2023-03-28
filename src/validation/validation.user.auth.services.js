@@ -5,7 +5,7 @@ const signup = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^[0-9]+$/)
+      .pattern(/^09\d{9}$/)
       .required(),
   }),
 };
@@ -15,7 +15,7 @@ const verify = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^[0-9]+$/)
+      .pattern(/^09\d{9}$/)
       .required(),
     code: joi
       .string()
@@ -33,7 +33,7 @@ const login = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^[0-9]+$/)
+      .pattern(/^09\d{9}$/)
       .required(),
     password: joi
       .string()
@@ -47,7 +47,7 @@ const logout = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^[0-9]+$/)
+      .pattern(/^09\d{9}$/)
       .required(),
   }),
 };
@@ -61,7 +61,7 @@ const forgetPassword = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^[0-9]+$/)
+      .pattern(/^09\d{9}$/)
       .required(),
   }),
 };
@@ -71,7 +71,7 @@ const verifyForgetPassword = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^[0-9]+$/)
+      .pattern(/^09\d{9}$/)
       .required(),
     code: joi
       .string()
