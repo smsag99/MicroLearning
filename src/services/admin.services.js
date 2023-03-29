@@ -1,11 +1,12 @@
-const { PrismaClient } = require("@prisma/client");
-const { CheckIfCorrect, generateNewCodeForThisNumber } = require("./sms.js");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { PROCESSING } = require("http-status-codes");
-const { func } = require("joi");
-const { getUserbyId } = require("./user.services.js");
-require("dotenv").config();
+/* eslint-disable no-use-before-define */
+const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { PROCESSING } = require('http-status-codes');
+const { func } = require('joi');
+const { CheckIfCorrect, generateNewCodeForThisNumber } = require('./sms');
+const { getUserbyId } = require('./user.services');
+require('dotenv').config();
 
 const prisma = new PrismaClient();
 
@@ -13,10 +14,9 @@ const signup = async (userName, password, permissions) => {
   const admin = await getAdminbyUserName(userName);
   console.log(admin);
   if (admin) {
-    return "This admin Already Exists!";
-  } else {
-    return await createAdmin(userName, password, permissions);
+    return 'This admin Already Exists!';
   }
+  return await createAdmin(userName, password, permissions);
 };
 
 const login = async (userName, password) => {
@@ -24,11 +24,9 @@ const login = async (userName, password) => {
   console.log(admin);
   if (!admin) {
     return "This admin Doesn't Exists!";
-  } else {
-    if (await bcrypt.compare(password, admin.password))
-      return await setRefereshToken(userName);
-    return "password is incorrect";
   }
+  if (await bcrypt.compare(password, admin.password)) { return await setRefereshToken(userName); }
+  return 'password is incorrect';
 };
 
 const refreshToken = async (id) => {
@@ -39,10 +37,10 @@ const refreshToken = async (id) => {
 const logout = async (userName) => {
   try {
     const admin = await getAdminbyUserName(userName);
-    admin.refreshToken = "";
+    admin.refreshToken = '';
     await updateAdmin(admin);
   } catch (error) {
-    return "Admin not found";
+    return 'Admin not found';
   }
 };
 
@@ -55,11 +53,11 @@ async function getAdminbyId(objectId) {
 }
 
 async function getAdminbyUserName(userName) {
-  console.log("getadmin by username", userName);
+  console.log('getadmin by username', userName);
   try {
     return await prisma.Admin.findUnique({
       where: {
-        userName: userName,
+        userName,
       },
     });
   } catch (error) {
@@ -69,7 +67,7 @@ async function getAdminbyUserName(userName) {
 async function checkRefreshToken(receivedRefreshToken) {
   const adminId = await jwt.verify(
     receivedRefreshToken,
-    process.env.REFRESHTOKEN_SECRET
+    process.env.REFRESHTOKEN_SECRET,
   ).id;
   const admin = await getAdminbyId(adminId);
   if (receivedRefreshToken == admin.refreshToken) return admin.id;
@@ -79,12 +77,12 @@ async function setRefereshToken(userName) {
   const refreshToken = await jwt.sign(
     { id: admin.id },
     process.env.REFRESHTOKEN_SECRET,
-    { expiresIn: 3600000 * 1000 }
+    { expiresIn: 3600000 * 1000 },
   );
   const accessToken = await jwt.sign(
     { id: admin.id },
     process.env.ACCESSTOKEN_SECRET,
-    { expiresIn: 3600000 }
+    { expiresIn: 3600000 },
   );
   admin.refreshToken = refreshToken;
   if (await updateAdmin(admin)) {
@@ -97,7 +95,7 @@ async function createAdmin(userName, password, permissions) {
   const permissionsString = JSON.stringify(permissions);
   const admin = await prisma.Admin.create({
     data: {
-      userName: userName,
+      userName,
       password: hashedPassword,
       permissions: permissionsString,
     },
@@ -121,17 +119,17 @@ async function updateAdmin(admin) {
 
 async function deleteAdmin(userName) {
   try {
-    const deletedUserName = "D-" + userName;
+    const deletedUserName = `D-${userName}`;
     await prisma.Admin.update({
-      where: { userName: userName },
+      where: { userName },
       data: {
         userName: deletedUserName,
         softDelete: true,
       },
     });
-    return "admin deleted";
+    return 'admin deleted';
   } catch (error) {
-    return "error";
+    return 'error';
   }
 }
 
