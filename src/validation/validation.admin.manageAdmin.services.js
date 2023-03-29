@@ -5,7 +5,7 @@ const read = {
   params: joi.object().keys({
     userName: joi
       .string()
-      .pattern(/^[a-zA-Z0-9]{5,16}$/)
+      .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
   }),
 };
@@ -13,14 +13,14 @@ const create = {
   body: joi.object().keys({
     userName: joi
       .string()
-      .pattern(/^[a-zA-Z0-9]{5,16}$/)
+      .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
     firstName: joi.string().optional(),
     lastName: joi.string().optional(),
     softDelete: joi.bool().optional(),
     password: joi
       .string()
-      .pattern(/^[a-zA-Z0-9]{8,16}$/)
+      .regex(/^[a-zA-Z0-9]{8,16}$/)
       .required(),
     permissions: joi.array().items(
       joi.object({
@@ -34,8 +34,8 @@ const create = {
           .required(),
       }),
     ),
-    firstName: joi.string().pattern(/^[a-zA-Z]{3,16}$/).optional(),
-    lastName: joi.string().pattern(/^[a-zA-Z]{3,16}$/).optional(),
+    firstName: joi.string().regex(/^[a-zA-Z]{3,16}$/).optional(),
+    lastName: joi.string().regex(/^[a-zA-Z]{3,16}$/).optional(),
   }),
 };
 
@@ -43,13 +43,13 @@ const update = {
   params: joi.object().keys({
     userName: joi
       .string()
-      .pattern(/^[a-zA-Z0-9]{5,16}$/)
+      .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
   }),
   body: joi.object().keys({
     password: joi
       .string()
-      .pattern(/^[a-zA-Z0-9]{8,16}$/)
+      .regex(/^[a-zA-Z0-9]{8,16}$/)
       .required(),
     permissions: joi.array().items(
       joi.object({
@@ -63,8 +63,8 @@ const update = {
           .required(),
       }),
     ),
-    firstName: joi.string().pattern(/^[a-zA-Z]{3,16}$/).optional(),
-    lastName: joi.string().pattern(/^[a-zA-Z]{3,16}$/).optional(),
+    firstName: joi.string().regex(/^[a-zA-Z]{3,16}$/).optional(),
+    lastName: joi.string().regex(/^[a-zA-Z]{3,16}$/).optional(),
   }),
 };
 

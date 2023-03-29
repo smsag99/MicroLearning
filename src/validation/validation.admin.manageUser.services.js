@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 const joi = require('joi');
 
 const read = {
@@ -6,7 +5,7 @@ const read = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^09\d{9}$/)
+      .regex(/^09\d{9}$/)
       .required(),
   }),
 };
@@ -17,11 +16,11 @@ const create = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^09\d{9}$/)
+      .regex(/^09\d{9}$/)
       .required(),
     password: joi
       .string()
-      .pattern(('^[a-zA-Z0-9]{8,16}$'))
+      .regex(/^[a-zA-Z0-9]{8,16}$/)
       .required(),
     blocked: joi.bool().optional(),
     softDelete: joi.bool().optional(),
@@ -41,7 +40,7 @@ const update = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^09\d{9}$/)
+      .regex(/^09\d{9}$/)
       .required(),
   }),
   body: joi.object().keys({
@@ -49,7 +48,7 @@ const update = {
     lastName: joi.string().optional(),
     password: joi
       .string()
-      .pattern(/^[a-zA-Z0-9]{8,16}$/)
+      .regex(/^[a-zA-Z0-9]{8,16}$/)
       .optional(),
     blocked: joi.bool().optional(),
     softDelete: joi.bool().optional(),

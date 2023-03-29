@@ -4,11 +4,11 @@ const signup = {
   body: joi.object().keys({
     userName: joi
       .string()
-      .pattern(/^[a-zA-Z0-9]{5,16}$/)
+      .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
     password: joi
       .string()
-      .pattern(/^[a-zA-Z0-9]{8,16}$/)
+      .regex(/^[a-zA-Z0-9]{8,16}$/)
       .required(),
     permissions: joi.array().items(
       joi.object({
@@ -28,11 +28,11 @@ const login = {
   body: joi.object().keys({
     userName: joi
       .string()
-      .pattern(/^[a-zA-Z0-9]{5,16}$/)
+      .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
     password: joi
       .string()
-      .pattern(/^[a-zA-Z0-9]{8,16}$/)
+      .regex(/^[a-zA-Z0-9]{8,16}$/)
       .required(),
   }),
 };
@@ -45,7 +45,7 @@ const logout = {
   body: joi.object().keys({
     userName: joi
       .string()
-      .pattern(/^[a-zA-Z0-9]{5,16}$/)
+      .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
   }),
 };
