@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 const joi = require('joi');
 
 const read = {
@@ -20,7 +21,7 @@ const create = {
       .required(),
     password: joi
       .string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{8,16}$'))
+      .pattern(('^[a-zA-Z0-9]{8,16}$'))
       .required(),
     blocked: joi.bool().optional(),
     softDelete: joi.bool().optional(),
@@ -48,7 +49,7 @@ const update = {
     lastName: joi.string().optional(),
     password: joi
       .string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{8,16}$'))
+      .pattern(/^[a-zA-Z0-9]{8,16}$/)
       .optional(),
     blocked: joi.bool().optional(),
     softDelete: joi.bool().optional(),
