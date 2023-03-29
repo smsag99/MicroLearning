@@ -1,26 +1,26 @@
-const joi = require("joi");
+const joi = require('joi');
 
 const signup = {
   body: joi.object().keys({
     userName: joi
       .string()
-      .pattern(new RegExp("^[a-zA-Z0-9]{5,16}$"))
+      .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
     password: joi
       .string()
-      .pattern(new RegExp("^[a-zA-Z0-9]{8,16}$"))
+      .regex(/^[a-zA-Z0-9]{8,16}$/)
       .required(),
     permissions: joi.array().items(
       joi.object({
         action: joi
           .string()
-          .valid(...["create", "read", "update", "delete"])
+          .valid(...['create', 'read', 'update', 'delete'])
           .required(),
         subject: joi
           .string()
-          .valid(...["Admin", "User"])
+          .valid(...['Admin', 'User'])
           .required(),
-      })
+      }),
     ),
   }),
 };
@@ -28,11 +28,11 @@ const login = {
   body: joi.object().keys({
     userName: joi
       .string()
-      .pattern(new RegExp("^[a-zA-Z0-9]{5,16}$"))
+      .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
     password: joi
       .string()
-      .pattern(new RegExp("^[a-zA-Z0-9]{8,16}$"))
+      .regex(/^[a-zA-Z0-9]{8,16}$/)
       .required(),
   }),
 };
@@ -45,7 +45,7 @@ const logout = {
   body: joi.object().keys({
     userName: joi
       .string()
-      .pattern(new RegExp("^[a-zA-Z0-9]{5,16}$"))
+      .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
   }),
 };

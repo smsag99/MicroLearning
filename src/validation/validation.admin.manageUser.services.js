@@ -1,10 +1,11 @@
-const joi = require("joi");
+const joi = require('joi');
+
 const read = {
   params: joi.object().keys({
     phone: joi
       .string()
       .length(11)
-      .pattern(/^09\d{9}$/)
+      .regex(/^09\d{9}$/)
       .required(),
   }),
 };
@@ -15,11 +16,11 @@ const create = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^09\d{9}$/)
+      .regex(/^09\d{9}$/)
       .required(),
     password: joi
       .string()
-      .pattern(new RegExp("^[a-zA-Z0-9]{8,16}$"))
+      .regex(/^[a-zA-Z0-9]{8,16}$/)
       .required(),
     blocked: joi.bool().optional(),
     softDelete: joi.bool().optional(),
@@ -29,7 +30,7 @@ const create = {
         province: joi.string().optional(),
         city: joi.string().optional(),
         address: joi.string().optional(),
-      }).optional
+      }).optional,
     ),
   }),
 };
@@ -39,7 +40,7 @@ const update = {
     phone: joi
       .string()
       .length(11)
-      .pattern(/^09\d{9}$/)
+      .regex(/^09\d{9}$/)
       .required(),
   }),
   body: joi.object().keys({
@@ -47,7 +48,7 @@ const update = {
     lastName: joi.string().optional(),
     password: joi
       .string()
-      .pattern(new RegExp("^[a-zA-Z0-9]{8,16}$"))
+      .regex(/^[a-zA-Z0-9]{8,16}$/)
       .optional(),
     blocked: joi.bool().optional(),
     softDelete: joi.bool().optional(),
@@ -57,7 +58,7 @@ const update = {
         province: joi.string().optional(),
         city: joi.string().optional(),
         address: joi.string().optional(),
-      }).optional
+      }).optional,
     ),
   }),
 };
