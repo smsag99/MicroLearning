@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const pick = (object, keys) => keys.reduce((obj, key) => {
   if (object && Object.prototype.hasOwnProperty.call(object, key)) {
-    obj[key] = object.assign[key];
+    obj[key] = object[key];
   }
   return obj;
 }, {});
