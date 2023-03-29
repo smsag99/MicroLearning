@@ -1,4 +1,4 @@
-const expressLoader = require("./express.js");
+const expressLoader = require('./express');
 
 const loader = async (app) => {
   await expressLoader(app);

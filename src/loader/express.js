@@ -1,23 +1,22 @@
-const express = require("express");
-const routes = require("../api/routes");
-const httpStatus = require("http-status-codes");
-require("dotenv").config({ path: "../.env" });
+const express = require('express');
+const routes = require('../api/routes');
+require('dotenv').config({ path: '../.env' });
 
 const expressLoader = async (app) => {
   app.use(express.json());
-  app.use("/api", routes());
+  app.use('/api', routes());
 
   app.listen(process.env.PORT, () => {
     console.log(`on port ${process.env.PORT}`);
   });
 
   app.use((req, res, next) => {
-    const err = new Error("Not Found");
-    err["status"] = 404;
+    const err = new Error('Not Found');
+    err.status = 404;
     next(err);
   });
 
-  app.use((err, req, res, next) => {
+  app.use((err, req, res) => {
     res.status(err.status || 500);
     res.json({
       errors: {
