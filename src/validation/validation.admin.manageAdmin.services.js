@@ -35,7 +35,7 @@ const create = {
       }),
     ),
     firstName: joi.string().pattern(/^[a-zA-Z]{3,16}$/).optional(),
-    lastName: joi.optional.pattern(/^[a-zA-Z]{3,16}$/).optional(),
+    lastName: joi.string().pattern(/^[a-zA-Z]{3,16}$/).optional(),
   }),
 };
 
