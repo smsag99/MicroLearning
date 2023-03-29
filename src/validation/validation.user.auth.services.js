@@ -23,7 +23,7 @@ const verify = {
       .required(),
     password: joi
       .string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{8,16}$'))
+      .pattern(('^[a-zA-Z0-9]{8,16}$'))
       .required(),
   }),
 };
@@ -37,7 +37,7 @@ const login = {
       .required(),
     password: joi
       .string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{8,16}$'))
+      .pattern(('^[a-zA-Z0-9]{8,16}$'))
       .required(),
   }),
 };
@@ -79,7 +79,7 @@ const verifyForgetPassword = {
       .required(),
     password: joi
       .string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{8,16}$'))
+      .pattern(('^[a-zA-Z0-9]{8,16}$'))
       .required(),
   }),
 };
