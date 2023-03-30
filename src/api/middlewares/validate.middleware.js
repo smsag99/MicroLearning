@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { ApiError } = require('./errorHandling.middleware');
 
 const pick = (object, keys) => keys.reduce((obj, key) => {
   if (object && Object.prototype.hasOwnProperty.call(object, key)) {
@@ -17,7 +18,8 @@ const validate = (schema) => (req, res, next) => {
     const errorMessage = error.details
       .map((details) => details.message)
       .join(', ');
-    return res.status(400).send(errorMessage);
+      const err = new ApiError(400,errorMessage)
+    return next(err);
   }
   Object.assign(req, value);
   return next();
