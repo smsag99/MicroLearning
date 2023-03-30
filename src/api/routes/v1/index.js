@@ -10,7 +10,6 @@ const v1Loader = () => {
   router.use('/authAdmin', authAdminV1);
   router.use('/manageUser', manageUserV1);
   router.use('/manageAdmin', manageAdminV1);
-
   return router;
 };
 

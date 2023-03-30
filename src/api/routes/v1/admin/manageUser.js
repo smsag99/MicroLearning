@@ -1,9 +1,11 @@
+/* eslint-disable linebreak-style */
 const express = require('express');
 
 const bcrypt = require('bcrypt');
 
 const {
   updateUser,
+  getAllusers,
   getUserbyPhone,
   createUser,
   deleteUser,
@@ -29,6 +31,21 @@ router.get(
       res.send(resault);
     } catch (error) {
       res.send('user not found');
+    }
+  },
+);
+router.get(
+  '/',
+  validate(manageUserValidationSchema.read),
+  isAuth,
+  fetchAdmin,
+  isCan('read', 'User'),
+  async (req, res) => {
+    try {
+      const resault = await getAllusers();
+      res.send(resault);
+    } catch (error) {
+      res.send('the database is empty');
     }
   },
 );

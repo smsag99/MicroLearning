@@ -61,6 +61,18 @@ async function getAdminbyUserName(userName) {
     return error;
   }
 }
+async function getAlladmins() {
+  try {
+    const adminRecords = await prisma.admin.findMany({
+      where: {
+        role: 'admin',
+      },
+    });
+    return adminRecords;
+  } catch (error) {
+    return error;
+  }
+}
 async function checkRefreshToken(receivedRefreshToken) {
   const adminId = await jwt.verify(
     receivedRefreshToken,
@@ -139,6 +151,7 @@ module.exports = {
   getAdminbyId,
   updateAdmin,
   getAdminbyUserName,
+  getAlladmins,
   setRefereshToken,
   createAdmin,
   deleteAdmin,
