@@ -1,4 +1,9 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable no-use-before-define */
+
+
+
+
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -25,11 +30,18 @@ const verify = async (phone, code, password) => {
 const login = async (phone, password) => {
   const user = await getUserbyPhone(phone);
   if (!user) {
-    return "This User Doesn't Exists!";
+    return 'password or username is incorrect';
   }
   if (await bcrypt.compare(password, user.password)) return setRefereshToken(phone, password);
-  return 'password is incorrect';
+  return 'password or username is incorrect';
 };
+async function getAllusers() {
+  try {
+    const users = await prisma.user.findMany();
+    return users;
+  } catch (error) {
+    return error;
+  }}
 async function checkRefreshToken(receivedRefreshToken) {
   const userId = await jwt.verify(
     receivedRefreshToken,
@@ -156,6 +168,7 @@ module.exports = {
   logout,
   updateUser,
   getUserbyId,
+  getAllusers,
   getUserbyPhone,
   setRefereshToken,
   createUser,

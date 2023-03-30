@@ -1,11 +1,8 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable no-use-before-define */
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { PROCESSING } = require('http-status-codes');
-const { func } = require('joi');
-const { CheckIfCorrect, generateNewCodeForThisNumber } = require('./sms');
-const { getUserbyId } = require('./user.services');
 require('dotenv').config();
 
 const prisma = new PrismaClient();
@@ -16,7 +13,7 @@ const signup = async (userName, password, permissions) => {
   if (admin) {
     return 'This admin Already Exists!';
   }
-  return await createAdmin(userName, password, permissions);
+  return createAdmin(userName, password, permissions);
 };
 
 const login = async (userName, password) => {
@@ -25,13 +22,13 @@ const login = async (userName, password) => {
   if (!admin) {
     return "This admin Doesn't Exists!";
   }
-  if (await bcrypt.compare(password, admin.password)) { return await setRefereshToken(userName); }
+  if (await bcrypt.compare(password, admin.password)) { return setRefereshToken(userName); }
   return 'password is incorrect';
 };
 
 const refreshToken = async (id) => {
   const admin = await getAdminbyId(id);
-  return await setRefereshToken(admin.userName);
+  return setRefereshToken(admin.userName);
 };
 
 const logout = async (userName) => {
@@ -45,7 +42,7 @@ const logout = async (userName) => {
 };
 
 async function getAdminbyId(objectId) {
-  return await prisma.Admin.findUnique({
+  return prisma.Admin.findUnique({
     where: {
       id: objectId,
     },
@@ -64,17 +61,29 @@ async function getAdminbyUserName(userName) {
     return error;
   }
 }
+async function getAlladmins() {
+  try {
+    const adminRecords = await prisma.admin.findMany({
+      where: {
+        role: 'admin',
+      },
+    });
+    return adminRecords;
+  } catch (error) {
+    return error;
+  }
+}
 async function checkRefreshToken(receivedRefreshToken) {
   const adminId = await jwt.verify(
     receivedRefreshToken,
     process.env.REFRESHTOKEN_SECRET,
   ).id;
   const admin = await getAdminbyId(adminId);
-  if (receivedRefreshToken == admin.refreshToken) return admin.id;
+  if (receivedRefreshToken === admin.refreshToken) return admin.id;
 }
 async function setRefereshToken(userName) {
   const admin = await getAdminbyUserName(userName);
-  const refreshToken = await jwt.sign(
+  const refreshtoken = await jwt.sign(
     { id: admin.id },
     process.env.REFRESHTOKEN_SECRET,
     { expiresIn: 3600000 * 1000 },
@@ -84,7 +93,7 @@ async function setRefereshToken(userName) {
     process.env.ACCESSTOKEN_SECRET,
     { expiresIn: 3600000 },
   );
-  admin.refreshToken = refreshToken;
+  admin.refreshToken = refreshtoken;
   if (await updateAdmin(admin)) {
     return accessToken;
   }
@@ -93,18 +102,19 @@ async function setRefereshToken(userName) {
 async function createAdmin(userName, password, permissions) {
   const hashedPassword = await bcrypt.hash(password, 10);
   const permissionsString = JSON.stringify(permissions);
-  const admin = await prisma.Admin.create({
+  await prisma.Admin.create({
     data: {
       userName,
       password: hashedPassword,
       permissions: permissionsString,
     },
   });
-  return await setRefereshToken(userName);
+  return setRefereshToken(userName);
 }
 
 async function updateAdmin(admin) {
   try {
+    // eslint-disable-next-line no-param-reassign
     delete admin.id;
     const resault = await prisma.Admin.update({
       where: { userName: admin.userName },
@@ -140,8 +150,8 @@ module.exports = {
   logout,
   getAdminbyId,
   updateAdmin,
-  getAdminbyId,
   getAdminbyUserName,
+  getAlladmins,
   setRefereshToken,
   createAdmin,
   deleteAdmin,

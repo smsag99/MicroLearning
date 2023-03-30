@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 const express = require('express');
 const bcrypt = require('bcrypt');
 const {
@@ -5,6 +6,7 @@ const {
   getAdminbyUserName,
   createAdmin,
   deleteAdmin,
+  getAlladmins,
 } = require('../../../../services/admin.services');
 
 const router = express.Router();
@@ -32,7 +34,22 @@ router.get(
     }
   },
 );
-
+router.get(
+  '/',
+  validate(manageAdminValidationSchema.read),
+  isAuth,
+  fetchAdmin,
+  isCan('read', 'Admin'),
+  async (req, res) => {
+    try {
+      console.log('route get admins');
+      const resault = await getAlladmins();
+      res.send(resault);
+    } catch (error) {
+      res.send('admin database is empty');
+    }
+  },
+);
 router.post(
   '/',
   validate(manageAdminValidationSchema.create),
