@@ -1,9 +1,9 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-use-before-define */
-const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const prisma = new PrismaClient();
 
@@ -11,7 +11,7 @@ const signup = async (userName, password, permissions) => {
   const admin = await getAdminbyUserName(userName);
   console.log(admin);
   if (admin) {
-    return 'This admin Already Exists!';
+    return "This admin Already Exists!";
   }
   return createAdmin(userName, password, permissions);
 };
@@ -22,8 +22,10 @@ const login = async (userName, password) => {
   if (!admin) {
     return "This admin Doesn't Exists!";
   }
-  if (await bcrypt.compare(password, admin.password)) { return setRefereshToken(userName); }
-  return 'password is incorrect';
+  if (await bcrypt.compare(password, admin.password)) {
+    return setRefereshToken(userName);
+  }
+  return "password is incorrect";
 };
 
 const refreshToken = async (id) => {
@@ -34,10 +36,10 @@ const refreshToken = async (id) => {
 const logout = async (userName) => {
   try {
     const admin = await getAdminbyUserName(userName);
-    admin.refreshToken = '';
+    admin.refreshToken = "";
     await updateAdmin(admin);
   } catch (error) {
-    return 'Admin not found';
+    return "Admin not found";
   }
 };
 
@@ -50,7 +52,7 @@ async function getAdminbyId(objectId) {
 }
 
 async function getAdminbyUserName(userName) {
-  console.log('getadmin by username', userName);
+  console.log("getadmin by username", userName);
   try {
     return await prisma.Admin.findUnique({
       where: {
@@ -61,13 +63,9 @@ async function getAdminbyUserName(userName) {
     return error;
   }
 }
-async function getAlladmins() {
+async function getAllAdmins() {
   try {
-    const adminRecords = await prisma.admin.findMany({
-      where: {
-        role: 'admin',
-      },
-    });
+    const adminRecords = await prisma.admin.findMany();
     return adminRecords;
   } catch (error) {
     return error;
@@ -76,7 +74,7 @@ async function getAlladmins() {
 async function checkRefreshToken(receivedRefreshToken) {
   const adminId = await jwt.verify(
     receivedRefreshToken,
-    process.env.REFRESHTOKEN_SECRET,
+    process.env.REFRESHTOKEN_SECRET
   ).id;
   const admin = await getAdminbyId(adminId);
   if (receivedRefreshToken === admin.refreshToken) return admin.id;
@@ -86,12 +84,12 @@ async function setRefereshToken(userName) {
   const refreshtoken = await jwt.sign(
     { id: admin.id },
     process.env.REFRESHTOKEN_SECRET,
-    { expiresIn: 3600000 * 1000 },
+    { expiresIn: 3600000 * 1000 }
   );
   const accessToken = await jwt.sign(
     { id: admin.id },
     process.env.ACCESSTOKEN_SECRET,
-    { expiresIn: 3600000 },
+    { expiresIn: 3600000 }
   );
   admin.refreshToken = refreshtoken;
   if (await updateAdmin(admin)) {
@@ -137,9 +135,9 @@ async function deleteAdmin(userName) {
         softDelete: true,
       },
     });
-    return 'admin deleted';
+    return "admin deleted";
   } catch (error) {
-    return 'error';
+    return "error";
   }
 }
 
@@ -151,7 +149,7 @@ module.exports = {
   getAdminbyId,
   updateAdmin,
   getAdminbyUserName,
-  getAlladmins,
+  getAllAdmins,
   setRefereshToken,
   createAdmin,
   deleteAdmin,

@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 const {
   updateUser,
-  getAllusers,
+  getAllUsers,
   getUserbyPhone,
   createUser,
   deleteUser,
@@ -42,7 +42,7 @@ router.get(
   isCan('read', 'User'),
   async (req, res) => {
     try {
-      const resault = await getAllusers();
+      const resault = await getAllUsers();
       res.send(resault);
     } catch (error) {
       res.send('the database is empty');

@@ -1,9 +1,6 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-use-before-define */
 
-
-
-
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -35,7 +32,7 @@ const login = async (phone, password) => {
   if (await bcrypt.compare(password, user.password)) return setRefereshToken(phone, password);
   return 'password or username is incorrect';
 };
-async function getAllusers() {
+async function getAllUsers() {
   try {
     const users = await prisma.user.findMany();
     return users;
@@ -168,7 +165,7 @@ module.exports = {
   logout,
   updateUser,
   getUserbyId,
-  getAllusers,
+  getAllUsers,
   getUserbyPhone,
   setRefereshToken,
   createUser,
