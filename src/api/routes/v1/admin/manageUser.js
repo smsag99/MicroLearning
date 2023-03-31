@@ -20,7 +20,6 @@ const manageUserValidationSchema = require("../../../../validation/validation.ad
 const { ApiError } = require("../../../middlewares/errorHandling.middleware");
 
 router.get(
-  "/:phone",
   "/getAllUsers",
   validate(manageUserValidationSchema.getAll),
   isAuth,
@@ -29,7 +28,7 @@ router.get(
   async (req, res) => {
     try {
       const { size, page } = req.query;
-      console.log(size, page);  
+      console.log(size, page);
       const resault = await getAllUsers(size, page);
       res.send(resault);
     } catch (error) {
