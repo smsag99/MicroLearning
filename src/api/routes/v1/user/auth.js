@@ -1,6 +1,6 @@
-const express = require('express');
-const validate = require('../../../middlewares/validate.middleware');
-const userAuthValidationSchema = require('../../../../validation/validation.user.auth.services');
+const express = require("express");
+const validate = require("../../../middlewares/validate.middleware");
+const userAuthValidationSchema = require("../../../../validation/validation.user.auth.services");
 const {
   signup,
   verify,
@@ -10,12 +10,13 @@ const {
   forgetPassword,
   verifyForgetPassword,
   checkRefreshToken,
-} = require('../../../../services/user.services');
+} = require("../../../../services/user.services");
+const { ApiError } = require("../../../middlewares/errorHandling.middleware");
 
 const router = express.Router();
 
 router.post(
-  '/signup',
+  "/signup",
   validate(userAuthValidationSchema.signup),
   async (req, res, next) => {
     try {
@@ -23,13 +24,13 @@ router.post(
       const resault = await signup(phone);
       return res.send(resault);
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
-  },
+  }
 );
 
 router.post(
-  '/verify',
+  "/verify",
   validate(userAuthValidationSchema.verify),
   async (req, res, next) => {
     try {
@@ -37,13 +38,13 @@ router.post(
       const resault = await verify(phone, code, password);
       return res.send(resault);
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
-  },
+  }
 );
 
 router.post(
-  '/login',
+  "/login",
   validate(userAuthValidationSchema.login),
   async (req, res, next) => {
     try {
@@ -51,13 +52,13 @@ router.post(
       const resault = await login(phone, password);
       return res.send(resault);
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
-  },
+  }
 );
 
 router.post(
-  '/refreshToken',
+  "/refreshToken",
   validate(userAuthValidationSchema.refreshToken),
   async (req, res, next) => {
     try {
@@ -68,13 +69,13 @@ router.post(
         return res.send(resault);
       }
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
-  },
+  }
 );
 
 router.post(
-  '/logout',
+  "/logout",
   validate(userAuthValidationSchema.logout),
   async (req, res, next) => {
     try {
@@ -82,13 +83,13 @@ router.post(
       const resault = await logout(phone);
       return res.send(resault);
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
-  },
+  }
 );
 
 router.post(
-  '/forgetpassword',
+  "/forgetpassword",
   validate(userAuthValidationSchema.forgetPassword),
   async (req, res, next) => {
     try {
@@ -96,13 +97,13 @@ router.post(
       const resault = await forgetPassword(phone);
       return res.send(resault);
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
-  },
+  }
 );
 
 router.post(
-  '/verifyforgetpassword',
+  "/verifyforgetpassword",
   validate(userAuthValidationSchema.verifyForgetPassword),
   async (req, res, next) => {
     try {
@@ -110,9 +111,9 @@ router.post(
       const resault = await verifyForgetPassword(phone, code, password);
       return res.send(resault);
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
-  },
+  }
 );
 
 module.exports = router;

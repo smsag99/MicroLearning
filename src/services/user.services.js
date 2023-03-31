@@ -1,16 +1,17 @@
 /* eslint-disable no-use-before-define */
-const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { CheckIfCorrect, generateNewCodeForThisNumber } = require('./sms');
-require('dotenv').config();
+const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { ApiError } = require("../api/middlewares/errorHandling.middleware");
+const { CheckIfCorrect, generateNewCodeForThisNumber } = require("./sms");
+require("dotenv").config();
 
 const prisma = new PrismaClient();
 
 const signup = async (phone) => {
   const user = await getUserbyPhone(phone);
   if (user) {
-    return 'This User Already Exists!';
+    throw new ApiError(403, "This User Already Exists!");
   }
   await generateNewCodeForThisNumber(phone);
 };
@@ -19,21 +20,22 @@ const verify = async (phone, code, password) => {
   if (await CheckIfCorrect(code, phone)) {
     return createUser(phone, password);
   }
-  return "code isn't correct";
+  throw new ApiError(403, "access denied! code isn't correct");
 };
 
 const login = async (phone, password) => {
   const user = await getUserbyPhone(phone);
   if (!user) {
-    return "This User Doesn't Exists!";
+    throw new ApiError(404, "This User Doesn't Exists!");
   }
-  if (await bcrypt.compare(password, user.password)) return setRefereshToken(phone, password);
-  return 'password is incorrect';
+  if (await bcrypt.compare(password, user.password))
+    return setRefereshToken(phone, password);
+  throw new ApiError(403, "access denied! password is incorrect");
 };
 async function checkRefreshToken(receivedRefreshToken) {
   const userId = await jwt.verify(
     receivedRefreshToken,
-    process.env.REFRESHTOKEN_SECRET,
+    process.env.REFRESHTOKEN_SECRET
   ).id;
   const admin = await getUserbyId(userId);
   if (receivedRefreshToken === admin.refreshToken) return userId;
@@ -46,17 +48,17 @@ const refreshToken = async (id) => {
 const logout = async (phone) => {
   try {
     const user = await getUserbyPhone(phone);
-    user.refreshToken = '';
+    user.refreshToken = "";
     await updateUser(user);
-    return 'user loged out';
+    return true;
   } catch (error) {
-    return false;
+    throw new ApiError(404, "User not found");
   }
 };
 
 const forgetPassword = async (phone) => {
   await generateNewCodeForThisNumber(phone);
-  return 'new code has generated';
+  return;
 };
 
 const verifyForgetPassword = async (phone, code, password) => {
@@ -64,9 +66,9 @@ const verifyForgetPassword = async (phone, code, password) => {
   if (await CheckIfCorrect(code, phone)) {
     const hashedPaassword = await bcrypt.hash(password, 10);
     user.password = hashedPaassword;
-    if (await updateUser(user)) return setRefereshToken(user.phone);
+    if (await updateUser(user)) await setRefereshToken(user.phone);
   } else {
-    return "code isn't correct";
+    throw new ApiError(403, "access denied! code isn't correct");
   }
 };
 
@@ -91,12 +93,12 @@ async function setRefereshToken(phone) {
   const refreshtoken = jwt.sign(
     { id: user.id },
     process.env.REFRESHTOKEN_SECRET,
-    { expiresIn: 3600000 * 1000 },
+    { expiresIn: 3600000 * 1000 }
   );
   const accesstoken = await jwt.sign(
     { id: user.id },
     process.env.ACCESSTOKEN_SECRET,
-    { expiresIn: 3600000 },
+    { expiresIn: 3600000 }
   );
   user.refreshToken = refreshtoken;
   if (await updateUser(user)) {
@@ -120,13 +122,13 @@ async function updateUser(user) {
     const { phone } = user;
     // eslint-disable-next-line no-param-reassign
     delete user.id;
-    await prisma.User.update({
+    const user = await prisma.User.update({
       where: { phone },
       data: user,
     });
-    return true;
-  } catch (err) {
-    return false;
+    return user;
+  } catch (error) {
+    throw new ApiError(500, "error while updating");
   }
 }
 
@@ -140,9 +142,9 @@ async function deleteUser(phone) {
         softDelete: true,
       },
     });
-    return 'user deleted';
+    return true;
   } catch (error) {
-    return 'error';
+    throw new ApiError(500, "error while deleting");
   }
 }
 

@@ -1,5 +1,6 @@
-const SData = require('simple-data-storage');
-const axios = require('axios');
+const SData = require("simple-data-storage");
+const axios = require("axios");
+const { ApiError } = require("../api/middlewares/errorHandling.middleware");
 
 const min = 1000;
 const max = 9999;
@@ -10,17 +11,13 @@ function getRandomInt() {
 async function sendSMS(code, number) {
   axios
     .get(
-      `https://api.kavenegar.com/v1/627269524D4A464252476F584B6264684A4D6B6A57387654343461645A713644344C7348674A67567943513D/verify/lookup.json?receptor=${
-        number
-      }&token=${
-        code
-      }&template=MicroLearning`,
+      `https://api.kavenegar.com/v1/627269524D4A464252476F584B6264684A4D6B6A57387654343461645A713644344C7348674A67567943513D/verify/lookup.json?receptor=${number}&token=${code}&template=MicroLearning`
     )
     .then((response) => {
       console.log(response.data);
     })
     .catch((error) => {
-      console.log(error);
+      throw new ApiError(500, "kaveh negar error");
     });
 }
 
