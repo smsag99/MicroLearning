@@ -10,7 +10,7 @@ const read = {
       .required(),
   }),
 };
-const gerAll = {
+const getAll = {
   query: joi.object().keys({
     size: joi.number().required(),
     page: joi.number().required(),
@@ -74,5 +74,5 @@ module.exports = {
   read,
   create,
   update,
-  gerAll,
+  getAll,
 };

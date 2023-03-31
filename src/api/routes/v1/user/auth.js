@@ -24,7 +24,7 @@ router.post(
       const resault = await signup(phone);
       return res.send(resault);
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );
@@ -37,9 +37,9 @@ router.post(
       const { phone, code, password } = req.body;
       console.log(code);
       const resault = await verify(phone, code, password);
-      return res.send(resault);
+      return res.send();
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );
@@ -51,9 +51,12 @@ router.post(
     try {
       const { phone, password } = req.body;
       const resault = await login(phone, password);
-      return res.send(resault);
+      return res.send({
+        Refresh_Token: resault.refreshtoken,
+        Access_Token: resault.accesstoken,
+      });
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );
@@ -67,10 +70,13 @@ router.post(
       const userId = await checkRefreshToken(receivedRefreshToken);
       if (userId) {
         const resault = await refreshToken(userId);
-        return res.send(resault);
+        return res.send({
+          Refresh_Token: resault.refreshtoken,
+          Access_Token: resault.accesstoken,
+        });
       }
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );
@@ -82,9 +88,9 @@ router.post(
     try {
       const { phone } = req.body;
       const resault = await logout(phone);
-      return res.send(resault);
+      return res.send();
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );
@@ -96,9 +102,9 @@ router.post(
     try {
       const { phone } = req.body;
       const resault = await forgetPassword(phone);
-      return res.send(resault);
+      return res.send();
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );
@@ -110,9 +116,9 @@ router.post(
     try {
       const { phone, code, password } = req.body;
       const resault = await verifyForgetPassword(phone, code, password);
-      return res.send(resault);
+      return res.send();
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );

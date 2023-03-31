@@ -10,7 +10,7 @@ const fetchAdmin = async (req, res, next) => {
     console.log(req.user.permissions);
     next();
   } catch (err) {
-    throw new ApiError(403, "admin not found!");
+    return next (new ApiError(403, "admin not found!"));
   }
 };
 

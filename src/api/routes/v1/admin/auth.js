@@ -20,13 +20,17 @@ router.post(
   "/signup",
   validate(adminAuthValidationSchema.signup),
   async (req, res, next) => {
-    try {
-      const { userName, password, permissions } = req.body;
-      const resault = await signup(userName, password, permissions);
-      return res.send(resault);
-    } catch (error) {
-      return next(new ApiError(500, error.message));
-    }
+    if (process.env.ENVIRONMENT == "development")
+      try {
+        const { userName, password, permissions } = req.body;
+        const resault = await signup(userName, password, permissions);
+        return res.send({
+          Refresh_Token: resault.refreshtoken,
+          Access_Token: resault.accesstoken,
+        });
+      } catch (error) {
+        return next(new ApiError(error.statusCode, error.message));
+      }
   }
 );
 router.post(
@@ -37,10 +41,11 @@ router.post(
       const { userName, password } = req.body;
       const resault = await login(userName, password);
       return res.send({
-        token: resault,
+        Refresh_Token: resault.refreshtoken,
+        Access_Token: resault.accesstoken,
       });
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );
@@ -55,11 +60,14 @@ router.post(
       console.log(adminId);
       if (adminId) {
         const resault = await refreshToken(adminId);
-        return res.send(resault);
+        return res.send({
+          Refresh_Token: resault.refreshtoken,
+          Access_Token: resault.accesstoken,
+        });
       }
-      throw new ApiError(403, "access denied! refresh token not valid");
+      return next(new ApiError(403, "access denied! refresh token not valid"));
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );
@@ -71,9 +79,9 @@ router.post(
     try {
       const { userName } = req.body;
       const resault = await logout(userName);
-      return res.send(resault);
+      return res.send();
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );

@@ -1,16 +1,6 @@
 /* eslint-disable linebreak-style */
 const express = require("express");
-
 const bcrypt = require("bcrypt");
-
-const {
-  updateUser,
-  getAllUsers,
-  getUserbyPhone,
-  createUser,
-  deleteUser,
-} = require("../../../../services/user.services");
-
 const router = express.Router();
 const { isAuth } = require("../../../middlewares/isAuth.middleware");
 const { isCan } = require("../../../middlewares/isCan.middleware");
@@ -19,13 +9,22 @@ const validate = require("../../../middlewares/validate.middleware");
 const manageUserValidationSchema = require("../../../../validation/validation.admin.manageUser.services");
 const { ApiError } = require("../../../middlewares/errorHandling.middleware");
 
+const {
+  updateUser,
+  getAllUsers,
+  getUserbyPhone,
+  createUser,
+  deleteUser,
+  omit,
+} = require("../../../../services/user.services");
+
 router.get(
   "/getAllUsers",
   validate(manageUserValidationSchema.getAll),
   isAuth,
   fetchAdmin,
   isCan("read", "User"),
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const { size, page } = req.query;
       console.log(size, page);
@@ -42,13 +41,13 @@ router.get(
   isAuth,
   fetchAdmin,
   isCan("read", "User"),
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const { phone } = req.params;
       const resault = await getUserbyPhone(phone);
-      res.send(resault);
+      res.send(omit(resault));
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );
@@ -59,18 +58,21 @@ router.post(
   isAuth,
   fetchAdmin,
   isCan("create", "User"),
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const { phone, password } = req.body;
       const user = await getUserbyPhone(phone);
       if (user) {
-        throw new ApiError(403, "This User Already Exists!");
+        return next(new ApiError(403, "This User Already Exists!"));
       } else {
         const resault = await createUser(phone, password);
-        res.send(resault);
+        res.send({
+          phone: phone,
+          password: password,
+        });
       }
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );
@@ -80,7 +82,7 @@ router.put(
   isAuth,
   fetchAdmin,
   isCan("update", "User"),
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       if (req.body.password) {
         req.body.password = (
@@ -91,7 +93,7 @@ router.put(
       const resault = await updateUser(req.body);
       res.send(resault);
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );
@@ -100,13 +102,13 @@ router.delete(
   isAuth,
   fetchAdmin,
   isCan("delete", "User"),
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const { phone } = req.body;
       const resault = await deleteUser(phone);
       res.send(resault);
     } catch (error) {
-      return next(new ApiError(500, error.message));
+      return next(new ApiError(error.statusCode, error.message));
     }
   }
 );

@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { CheckIfCorrect, generateNewCodeForThisNumber } = require("./sms");
 require("dotenv").config();
+const lodash = require("lodash");
 
 const prisma = new PrismaClient();
 
@@ -97,11 +98,15 @@ async function getUserbyId(objectId) {
 }
 
 async function getUserbyPhone(phone) {
-  return prisma.User.findUnique({
-    where: {
-      phone,
-    },
-  });
+  try {
+    return prisma.User.findUnique({
+      where: {
+        phone,
+      },
+    });
+  } catch (error) {
+    throw new ApiError(404, "User not found");
+  }
 }
 
 async function setRefereshToken(phone) {
@@ -118,7 +123,7 @@ async function setRefereshToken(phone) {
   );
   user.refreshToken = refreshtoken;
   if (await updateUser(user)) {
-    return accesstoken;
+    return { accesstoken, refreshtoken };
   }
 }
 
@@ -133,18 +138,23 @@ async function createUser(phone, password) {
   return setRefereshToken(phone);
 }
 
-async function updateUser(user) {
+async function updateUser(obj) {
   try {
-    const { phone } = user;
-    // eslint-disable-next-line no-param-reassign
-    delete user.id;
-    const user = await prisma.User.update({
-      where: { phone },
-      data: user,
-    });
-    return user;
+    const { phone } = obj;
+    console.log(obj);
+    if (await getUserbyPhone(phone)) {
+      // eslint-disable-next-line no-param-reassign
+      delete obj.id;
+      const user = await prisma.User.update({
+        where: { phone },
+        data: obj,
+      });
+      return omit(user);
+    } else {
+      throw new ApiError(404, "User not found");
+    }
   } catch (error) {
-    throw new ApiError(500, "error while updating");
+    throw new ApiError(error.statusCode, error.message);
   }
 }
 
@@ -163,7 +173,17 @@ async function deleteUser(phone) {
     throw new ApiError(500, "error while deleting");
   }
 }
-
+function omit(object) {
+  if (Array.isArray(object)) {
+    console.log("aray");
+    return object.map((item) => {
+      return lodash.omit(item, ["password", "refreshToken"]);
+    });
+  } else {
+    console.log("non arary");
+    return lodash.omit(object, ["password", "refreshToken"]);
+  }
+}
 module.exports = {
   signup,
   verify,
@@ -180,4 +200,5 @@ module.exports = {
   createUser,
   deleteUser,
   checkRefreshToken,
+  omit,
 };

@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { ApiError } = require("../api/middlewares/errorHandling.middleware");
 require("dotenv").config();
+const lodash = require("lodash");
 
 const prisma = new PrismaClient();
 
@@ -87,14 +88,14 @@ async function setRefereshToken(userName) {
     process.env.REFRESHTOKEN_SECRET,
     { expiresIn: 3600000 * 1000 }
   );
-  const accessToken = await jwt.sign(
+  const accesstoken = await jwt.sign(
     { id: admin.id },
     process.env.ACCESSTOKEN_SECRET,
     { expiresIn: 3600000 }
   );
   admin.refreshToken = refreshtoken;
   if (await updateAdmin(admin)) {
-    return accessToken;
+    return { accesstoken, refreshtoken };
   }
 }
 
@@ -141,7 +142,17 @@ async function deleteAdmin(userName) {
     throw new ApiError(500, "error while deleting");
   }
 }
-
+function omit(object) {
+  if (Array.isArray(object)) {
+    console.log("aray");
+    return object.map((item) => {
+      return lodash.omit(item, ["password", "refreshToken"]);
+    });
+  } else {
+    console.log("non arary");
+    return lodash.omit(object, ["password", "refreshToken"]);
+  }
+}
 module.exports = {
   signup,
   login,
@@ -155,4 +166,5 @@ module.exports = {
   createAdmin,
   deleteAdmin,
   checkRefreshToken,
+  omit,
 };

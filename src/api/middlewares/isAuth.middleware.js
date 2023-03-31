@@ -6,7 +6,7 @@ require("dotenv").config();
 const isAuth = async (req, res, next) => {
   const token = req.headers["access-token"];
   if (!token) {
-    throw new ApiError(403, "access denied! token not available!");
+    return next(new ApiError(403, "access denied! token not available!"));
   }
   try {
     const decoded = await jwt.verify(token, process.env.ACCESSTOKEN_SECRET);
@@ -14,7 +14,7 @@ const isAuth = async (req, res, next) => {
     console.log("auth");
     next();
   } catch (error) {
-    throw new ApiError(403, "access denied! invalid token!");
+    return next ( new ApiError(403, "access denied! invalid token!"));
   }
 };
 module.exports = { isAuth };

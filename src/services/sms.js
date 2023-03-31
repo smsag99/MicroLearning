@@ -17,7 +17,7 @@ async function sendSMS(code, number) {
       console.log(response.data);
     })
     .catch((error) => {
-      throw new ApiError(500, "kaveh negar error");
+      throw new ApiError(error.statusCode, "kaveh negar error");
     });
 }
 
@@ -41,7 +41,7 @@ async function CheckIfCorrect(code, number) {
       if (savedCode.code === Number(code)) {
         console.log("saved code", savedCode.code);
         SData.clear(number);
-        return true;  
+        return true;
       }
       return false;
     }
