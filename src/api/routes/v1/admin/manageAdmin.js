@@ -17,7 +17,7 @@ const validate = require("../../../middlewares/validate.middleware");
 const manageAdminValidationSchema = require("../../../../validation/validation.admin.manageAdmin.services");
 
 router.get(
-  "/getAllAdmin",
+  "/getAllAdmins",
   isAuth,
   fetchAdmin,
   isCan("read", "Admin"),

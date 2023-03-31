@@ -1,23 +1,24 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-use-before-define */
 
-const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { CheckIfCorrect, generateNewCodeForThisNumber } = require('./sms');
-require('dotenv').config();
+const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { CheckIfCorrect, generateNewCodeForThisNumber } = require("./sms");
+require("dotenv").config();
 
 const prisma = new PrismaClient();
 
 const signup = async (phone) => {
   const user = await getUserbyPhone(phone);
   if (user) {
-    return 'This User Already Exists!';
+    return "This User Already Exists!";
   }
   await generateNewCodeForThisNumber(phone);
 };
 
 const verify = async (phone, code, password) => {
+  console.log(code);
   if (await CheckIfCorrect(code, phone)) {
     return createUser(phone, password);
   }
@@ -27,22 +28,29 @@ const verify = async (phone, code, password) => {
 const login = async (phone, password) => {
   const user = await getUserbyPhone(phone);
   if (!user) {
-    return 'password or username is incorrect';
+    return "password or username is incorrect";
   }
-  if (await bcrypt.compare(password, user.password)) return setRefereshToken(phone, password);
-  return 'password or username is incorrect';
+  if (await bcrypt.compare(password, user.password))
+    return setRefereshToken(phone, password);
+  return "password or username is incorrect";
 };
-async function getAllUsers() {
+async function getAllUsers(size, page) {
   try {
-    const users = await prisma.user.findMany();
+    console.log(size, page);
+    const users = await prisma.user.findMany({
+      skip: size * (page - 1),
+      take: size * 1,
+    });
     return users;
   } catch (error) {
+    console.log("errrror", error);
     return error;
-  }}
+  }
+}
 async function checkRefreshToken(receivedRefreshToken) {
   const userId = await jwt.verify(
     receivedRefreshToken,
-    process.env.REFRESHTOKEN_SECRET,
+    process.env.REFRESHTOKEN_SECRET
   ).id;
   const admin = await getUserbyId(userId);
   if (receivedRefreshToken === admin.refreshToken) return userId;
@@ -55,9 +63,9 @@ const refreshToken = async (id) => {
 const logout = async (phone) => {
   try {
     const user = await getUserbyPhone(phone);
-    user.refreshToken = '';
+    user.refreshToken = "";
     await updateUser(user);
-    return 'user loged out';
+    return "user loged out";
   } catch (error) {
     return false;
   }
@@ -65,7 +73,7 @@ const logout = async (phone) => {
 
 const forgetPassword = async (phone) => {
   await generateNewCodeForThisNumber(phone);
-  return 'new code has generated';
+  return "new code has generated";
 };
 
 const verifyForgetPassword = async (phone, code, password) => {
@@ -100,12 +108,12 @@ async function setRefereshToken(phone) {
   const refreshtoken = jwt.sign(
     { id: user.id },
     process.env.REFRESHTOKEN_SECRET,
-    { expiresIn: 3600000 * 1000 },
+    { expiresIn: 3600000 * 1000 }
   );
   const accesstoken = await jwt.sign(
     { id: user.id },
     process.env.ACCESSTOKEN_SECRET,
-    { expiresIn: 3600000 },
+    { expiresIn: 3600000 }
   );
   user.refreshToken = refreshtoken;
   if (await updateUser(user)) {
@@ -149,9 +157,9 @@ async function deleteUser(phone) {
         softDelete: true,
       },
     });
-    return 'user deleted';
+    return "user deleted";
   } catch (error) {
-    return 'error';
+    return "error";
   }
 }
 

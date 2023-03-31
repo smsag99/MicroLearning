@@ -1,5 +1,5 @@
 /* eslint-disable linebreak-style */
-const joi = require('joi');
+const joi = require("joi");
 
 const read = {
   params: joi.object().keys({
@@ -8,6 +8,12 @@ const read = {
       .length(11)
       .regex(/^09\d{9}$/)
       .required(),
+  }),
+};
+const gerAll = {
+  query: joi.object().keys({
+    size: joi.number().required(),
+    page: joi.number().required(),
   }),
 };
 const create = {
@@ -31,7 +37,7 @@ const create = {
         province: joi.string().optional(),
         city: joi.string().optional(),
         address: joi.string().optional(),
-      }).optional,
+      }).optional
     ),
   }),
 };
@@ -59,7 +65,7 @@ const update = {
         province: joi.string().optional(),
         city: joi.string().optional(),
         address: joi.string().optional(),
-      }).optional,
+      }).optional
     ),
   }),
 };
@@ -68,4 +74,5 @@ module.exports = {
   read,
   create,
   update,
+  gerAll,
 };

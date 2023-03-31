@@ -1,6 +1,6 @@
-const express = require('express');
-const validate = require('../../../middlewares/validate.middleware');
-const userAuthValidationSchema = require('../../../../validation/validation.user.auth.services');
+const express = require("express");
+const validate = require("../../../middlewares/validate.middleware");
+const userAuthValidationSchema = require("../../../../validation/validation.user.auth.services");
 const {
   signup,
   verify,
@@ -10,12 +10,12 @@ const {
   forgetPassword,
   verifyForgetPassword,
   checkRefreshToken,
-} = require('../../../../services/user.services');
+} = require("../../../../services/user.services");
 
 const router = express.Router();
 
 router.post(
-  '/signup',
+  "/signup",
   validate(userAuthValidationSchema.signup),
   async (req, res, next) => {
     try {
@@ -25,25 +25,26 @@ router.post(
     } catch (error) {
       return next(error);
     }
-  },
+  }
 );
 
 router.post(
-  '/verify',
+  "/verify",
   validate(userAuthValidationSchema.verify),
   async (req, res, next) => {
     try {
       const { phone, code, password } = req.body;
+      console.log(code);
       const resault = await verify(phone, code, password);
       return res.send(resault);
     } catch (error) {
       return next(error);
     }
-  },
+  }
 );
 
 router.post(
-  '/login',
+  "/login",
   validate(userAuthValidationSchema.login),
   async (req, res, next) => {
     try {
@@ -53,11 +54,11 @@ router.post(
     } catch (error) {
       return next(error);
     }
-  },
+  }
 );
 
 router.post(
-  '/refreshToken',
+  "/refreshToken",
   validate(userAuthValidationSchema.refreshToken),
   async (req, res, next) => {
     try {
@@ -70,11 +71,11 @@ router.post(
     } catch (error) {
       return next(error);
     }
-  },
+  }
 );
 
 router.post(
-  '/logout',
+  "/logout",
   validate(userAuthValidationSchema.logout),
   async (req, res, next) => {
     try {
@@ -84,11 +85,11 @@ router.post(
     } catch (error) {
       return next(error);
     }
-  },
+  }
 );
 
 router.post(
-  '/forgetpassword',
+  "/forgetpassword",
   validate(userAuthValidationSchema.forgetPassword),
   async (req, res, next) => {
     try {
@@ -98,11 +99,11 @@ router.post(
     } catch (error) {
       return next(error);
     }
-  },
+  }
 );
 
 router.post(
-  '/verifyforgetpassword',
+  "/verifyforgetpassword",
   validate(userAuthValidationSchema.verifyForgetPassword),
   async (req, res, next) => {
     try {
@@ -112,7 +113,7 @@ router.post(
     } catch (error) {
       return next(error);
     }
-  },
+  }
 );
 
 module.exports = router;
