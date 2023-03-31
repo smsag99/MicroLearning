@@ -17,8 +17,10 @@ const { isCan } = require("../../../middlewares/isCan.middleware");
 const { fetchAdmin } = require("../../../middlewares/fetchAdmin.middleware");
 const validate = require("../../../middlewares/validate.middleware");
 const manageUserValidationSchema = require("../../../../validation/validation.admin.manageUser.services");
+const { ApiError } = require("../../../middlewares/errorHandling.middleware");
 
 router.get(
+  "/:phone",
   "/getAllUsers",
   validate(manageUserValidationSchema.getAll),
   isAuth,
@@ -47,7 +49,7 @@ router.get(
       const resault = await getUserbyPhone(phone);
       res.send(resault);
     } catch (error) {
-      res.send("user not found");
+      return next(new ApiError(500, error.message));
     }
   }
 );
@@ -63,13 +65,13 @@ router.post(
       const { phone, password } = req.body;
       const user = await getUserbyPhone(phone);
       if (user) {
-        res.send("This User Already Exists!");
+        throw new ApiError(403, "This User Already Exists!");
       } else {
         const resault = await createUser(phone, password);
-        res.status(200).send(resault);
+        res.send(resault);
       }
     } catch (error) {
-      res.send("bad request");
+      return next(new ApiError(500, error.message));
     }
   }
 );
@@ -88,9 +90,9 @@ router.put(
       }
       req.body.phone = req.params.phone;
       const resault = await updateUser(req.body);
-      res.status(200).send(resault);
+      res.send(resault);
     } catch (error) {
-      res.send("bad request");
+      return next(new ApiError(500, error.message));
     }
   }
 );
@@ -103,9 +105,9 @@ router.delete(
     try {
       const { phone } = req.body;
       const resault = await deleteUser(phone);
-      res.status(200).send(resault);
+      res.send(resault);
     } catch (error) {
-      res.send("bad request");
+      return next(new ApiError(500, error.message));
     }
   }
 );

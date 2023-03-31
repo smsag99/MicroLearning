@@ -1,5 +1,6 @@
 const SData = require("simple-data-storage");
 const axios = require("axios");
+const { ApiError } = require("../api/middlewares/errorHandling.middleware");
 
 const min = 1000;
 const max = 9999;
@@ -16,7 +17,7 @@ async function sendSMS(code, number) {
       console.log(response.data);
     })
     .catch((error) => {
-      console.log(error);
+      throw new ApiError(500, "kaveh negar error");
     });
 }
 

@@ -3,6 +3,7 @@
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { ApiError } = require("../api/middlewares/errorHandling.middleware");
 require("dotenv").config();
 
 const prisma = new PrismaClient();
@@ -11,7 +12,7 @@ const signup = async (userName, password, permissions) => {
   const admin = await getAdminbyUserName(userName);
   console.log(admin);
   if (admin) {
-    return "This admin Already Exists!";
+    throw new ApiError(403, "This Admin Already Exists!");
   }
   return createAdmin(userName, password, permissions);
 };
@@ -20,12 +21,12 @@ const login = async (userName, password) => {
   const admin = await getAdminbyUserName(userName);
   console.log(admin);
   if (!admin) {
-    return "This admin Doesn't Exists!";
+    throw new ApiError(404, "This admin Doesn't Exists!");
   }
   if (await bcrypt.compare(password, admin.password)) {
     return setRefereshToken(userName);
   }
-  return "password is incorrect";
+  throw new ApiError(403, "access denied! password is incorrect");
 };
 
 const refreshToken = async (id) => {
@@ -39,7 +40,7 @@ const logout = async (userName) => {
     admin.refreshToken = "";
     await updateAdmin(admin);
   } catch (error) {
-    return "Admin not found";
+    throw new ApiError(404, "Admin not found");
   }
 };
 
@@ -60,7 +61,7 @@ async function getAdminbyUserName(userName) {
       },
     });
   } catch (error) {
-    return error;
+    throw new ApiError(500, "database error while findUnique");
   }
 }
 async function getAllAdmins() {
@@ -119,9 +120,9 @@ async function updateAdmin(admin) {
       data: admin,
     });
     console.log(resault);
-    return true;
-  } catch (err) {
-    return false;
+    return resault;
+  } catch (error) {
+    throw new ApiError(500, "error while updating");
   }
 }
 
@@ -135,9 +136,9 @@ async function deleteAdmin(userName) {
         softDelete: true,
       },
     });
-    return "admin deleted";
+    return true;
   } catch (error) {
-    return "error";
+    throw new ApiError(500, "error while deleting");
   }
 }
 

@@ -45,7 +45,7 @@ router.get(
 
       res.send(resault);
     } catch (error) {
-      res.send("admin not found");
+      return next(new ApiError(500, error.message));
     }
   }
 );
@@ -60,14 +60,14 @@ router.post(
       const { userName } = req.body;
       const admin = await getAdminbyUserName(userName);
       if (admin) {
-        res.send("This User Already Exists!");
+        throw new ApiError(403, "This Admin Already Exists!");
       } else {
         const { user, password, permissions } = req.body;
         const resault = await createAdmin(user, password, permissions);
-        res.status(200).send(resault);
+        res.send(resault);
       }
     } catch (error) {
-      res.send("bad request");
+      return next(new ApiError(500, error.message));
     }
   }
 );
@@ -84,9 +84,9 @@ router.put(
       req.body.permissions = JSON.stringify(req.body.permissions);
       console.log(req.body.permissions);
       const resault = await updateAdmin(req.body);
-      res.status(200).send(resault);
+      res.send(resault);
     } catch (error) {
-      res.send("bad request");
+      return next(new ApiError(500, error.message));
     }
   }
 );
@@ -101,7 +101,7 @@ router.delete(
       const resault = await deleteAdmin(userName);
       res.status(200).send(resault);
     } catch (error) {
-      res.send("bad request");
+      return next(new ApiError(500, error.message));
     }
   }
 );

@@ -11,6 +11,7 @@ const {
   verifyForgetPassword,
   checkRefreshToken,
 } = require("../../../../services/user.services");
+const { ApiError } = require("../../../middlewares/errorHandling.middleware");
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.post(
       const resault = await signup(phone);
       return res.send(resault);
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
   }
 );
@@ -38,7 +39,7 @@ router.post(
       const resault = await verify(phone, code, password);
       return res.send(resault);
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
   }
 );
@@ -52,7 +53,7 @@ router.post(
       const resault = await login(phone, password);
       return res.send(resault);
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
   }
 );
@@ -69,7 +70,7 @@ router.post(
         return res.send(resault);
       }
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
   }
 );
@@ -83,7 +84,7 @@ router.post(
       const resault = await logout(phone);
       return res.send(resault);
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
   }
 );
@@ -97,7 +98,7 @@ router.post(
       const resault = await forgetPassword(phone);
       return res.send(resault);
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
   }
 );
@@ -111,7 +112,7 @@ router.post(
       const resault = await verifyForgetPassword(phone, code, password);
       return res.send(resault);
     } catch (error) {
-      return next(error);
+      return next(new ApiError(500, error.message));
     }
   }
 );
