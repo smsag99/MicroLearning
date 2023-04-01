@@ -1,4 +1,4 @@
-const joi = require('joi');
+const joi = require("joi");
 
 const signup = {
   body: joi.object().keys({
@@ -53,7 +53,7 @@ const logout = {
 };
 const refreshToken = {
   body: joi.object().keys({
-    receivedRefreshToken: joi.string().required(),
+    RefreshToken: joi.string().required(),
   }),
 };
 const forgetPassword = {

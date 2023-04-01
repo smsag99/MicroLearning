@@ -1,4 +1,4 @@
-const joi = require('joi');
+const joi = require("joi");
 
 const signup = {
   body: joi.object().keys({
@@ -14,13 +14,13 @@ const signup = {
       joi.object({
         action: joi
           .string()
-          .valid(...['create', 'read', 'update', 'delete'])
+          .valid(...["create", "read", "update", "delete"])
           .required(),
         subject: joi
           .string()
-          .valid(...['Admin', 'User'])
+          .valid(...["Admin", "User"])
           .required(),
-      }),
+      })
     ),
   }),
 };
@@ -38,7 +38,7 @@ const login = {
 };
 const refreshToken = {
   body: joi.object().keys({
-    receivedRefreshToken: joi.string().required(),
+    RefreshToken: joi.string().required(),
   }),
 };
 const logout = {

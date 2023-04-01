@@ -66,8 +66,8 @@ router.post(
   validate(userAuthValidationSchema.refreshToken),
   async (req, res, next) => {
     try {
-      const { receivedRefreshToken } = req.body;
-      const userId = await checkRefreshToken(receivedRefreshToken);
+      const { RefreshToken } = req.body;
+      const userId = await checkRefreshToken(RefreshToken);
       if (userId) {
         const resault = await refreshToken(userId);
         return res.send({

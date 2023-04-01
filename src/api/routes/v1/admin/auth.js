@@ -54,8 +54,8 @@ router.post(
   validate(adminAuthValidationSchema.refreshToken),
   async (req, res, next) => {
     try {
-      const { receivedRefreshToken } = req.body;
-      console.log(receivedRefreshToken);
+      const { RefreshToken } = req.body;
+      console.log(RefreshToken);
       const adminId = await checkRefreshToken(receivedRefreshToken);
       console.log(adminId);
       if (adminId) {
