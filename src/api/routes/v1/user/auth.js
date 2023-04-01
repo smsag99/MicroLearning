@@ -37,7 +37,10 @@ router.post(
       const { phone, code, password } = req.body;
       console.log(code);
       const resault = await verify(phone, code, password);
-      return res.send();
+      return res.send({
+        Refresh_Token: resault.refreshtoken,
+        Access_Token: resault.accesstoken,
+      });
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));
     }
