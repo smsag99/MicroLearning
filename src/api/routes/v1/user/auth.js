@@ -10,6 +10,8 @@ const {
   forgetPassword,
   verifyForgetPassword,
   checkRefreshToken,
+  checkIfBlocked,
+  getUserbyId,
 } = require("../../../../services/user.services");
 const { ApiError } = require("../../../middlewares/errorHandling.middleware");
 
@@ -53,6 +55,8 @@ router.post(
   async (req, res, next) => {
     try {
       const { phone, password } = req.body;
+      if (await checkIfBlocked(phone))
+        return next(new ApiError(403, "access denied! This user is blocked."));
       const resault = await login(phone, password);
       return res.send({
         Refresh_Token: resault.refreshtoken,
@@ -71,6 +75,9 @@ router.post(
     try {
       const { RefreshToken } = req.body;
       const userId = await checkRefreshToken(RefreshToken);
+      const user = await getUserbyId(userId);
+      if (await checkIfBlocked(user.phone))
+        return next(new ApiError(403, "access denied! This user is blocked."));
       if (userId) {
         const resault = await refreshToken(userId);
         return res.send({
@@ -104,6 +111,8 @@ router.post(
   async (req, res, next) => {
     try {
       const { phone } = req.body;
+      if (await checkIfBlocked(phone))
+        return next(new ApiError(403, "access denied! This user is blocked."));
       const resault = await forgetPassword(phone);
       return res.send();
     } catch (error) {

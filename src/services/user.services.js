@@ -182,6 +182,10 @@ function omit(object) {
     return lodash.omit(object, ["password", "refreshToken"]);
   }
 }
+async function checkIfBlocked(phone) {
+  const user = await getUserbyPhone(phone);
+  return user.blocked;
+}
 module.exports = {
   signup,
   verify,
@@ -199,4 +203,5 @@ module.exports = {
   deleteUser,
   checkRefreshToken,
   omit,
+  checkIfBlocked,
 };
