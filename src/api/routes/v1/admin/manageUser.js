@@ -29,7 +29,7 @@ router.get(
       const { size, page } = req.query;
       console.log(size, page);
       const resault = await getAllUsers(size, page);
-      res.send(resault);
+      res.send(omit(resault));
     } catch (error) {
       res.send("the database is empty");
     }

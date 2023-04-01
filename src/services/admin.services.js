@@ -145,9 +145,7 @@ async function deleteAdmin(userName) {
 function omit(object) {
   if (Array.isArray(object)) {
     console.log("aray");
-    return object.map((item) => {
-      return lodash.omit(item, ["password", "refreshToken"]);
-    });
+    return object.map((item) => omit(item));
   } else {
     console.log("non arary");
     return lodash.omit(object, ["password", "refreshToken"]);
