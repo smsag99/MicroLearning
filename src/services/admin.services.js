@@ -22,12 +22,12 @@ const login = async (userName, password) => {
   const admin = await getAdminbyUserName(userName);
   console.log(admin);
   if (!admin) {
-    throw new ApiError(404, "This admin Doesn't Exists!");
+    throw new ApiError(403, "the password or username is incorrect");
   }
   if (await bcrypt.compare(password, admin.password)) {
     return setRefereshToken(userName);
   }
-  throw new ApiError(403, "access denied! password is incorrect");
+  throw new ApiError(403, "the password or username is incorrect");
 };
 
 const refreshToken = async (id) => {
