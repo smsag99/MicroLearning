@@ -34,7 +34,7 @@ const login = async (phone, password) => {
   }
   if (await bcrypt.compare(password, user.password))
     return setRefereshToken(phone, password);
-  throw new ApiError(403, "access denied! password is incorrect");
+  throw new ApiError(403, "the password or the username is incorrect");
 };
 async function getAllUsers(size, page) {
   try {
