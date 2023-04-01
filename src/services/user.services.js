@@ -30,7 +30,7 @@ const verify = async (phone, code, password) => {
 const login = async (phone, password) => {
   const user = await getUserbyPhone(phone);
   if (!user) {
-    throw new ApiError(404, "This User Doesn't Exists!");
+    throw new ApiError(403, "the password or username is incorrect");
   }
   if (await bcrypt.compare(password, user.password))
     return setRefereshToken(phone, password);
