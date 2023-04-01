@@ -2,11 +2,11 @@ const SData = require("simple-data-storage");
 const axios = require("axios");
 const { ApiError } = require("../api/middlewares/errorHandling.middleware");
 
-const min = 1000;
-const max = 9999;
+const min = 10000;
+const max = 99999;
 
 function getRandomInt() {
-  return Math.floor(Math.random() * max) + min;
+  return Math.floor(Math.random() * (max - min) + min);
 }
 async function sendSMS(code, number) {
   axios
