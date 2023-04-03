@@ -77,7 +77,7 @@ router.post(
 router.post(
   "/logout",
   isAuth,
-  validate(adminAuthValidationSchema.logout),
+  //validate(adminAuthValidationSchema.logout),
   async (req, res, next) => {
     try {
       const id = req.client.id;

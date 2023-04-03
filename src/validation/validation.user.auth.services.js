@@ -42,15 +42,15 @@ const login = {
   }),
 };
 
-const logout = {
-  body: joi.object().keys({
-    phone: joi
-      .string()
-      .length(11)
-      .regex(/^09\d{9}$/)
-      .required(),
-  }),
-};
+// const logout = {
+//   body: joi.object().keys({
+//     phone: joi
+//       .string()
+//       .length(11)
+//       .regex(/^09\d{9}$/)
+//       .required(),
+//   }),
+// };
 const refreshToken = {
   body: joi.object().keys({
     RefreshToken: joi.string().required(),
@@ -88,7 +88,7 @@ module.exports = {
   signup,
   verify,
   login,
-  logout,
+  //logout,
   refreshToken,
   forgetPassword,
   verifyForgetPassword,

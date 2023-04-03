@@ -96,7 +96,7 @@ router.post(
 router.post(
   "/logout",
   isAuth,
-  validate(userAuthValidationSchema.logout),
+  //validate(userAuthValidationSchema.logout),
   async (req, res, next) => {
     try {
       const id = req.client.id;
