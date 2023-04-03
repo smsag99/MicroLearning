@@ -1,5 +1,5 @@
 /* eslint-disable no-dupe-keys */
-const joi = require('joi');
+const joi = require("joi");
 
 const read = {
   params: joi.object().keys({
@@ -15,6 +15,8 @@ const create = {
       .string()
       .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
+    firstName: joi.string().optional(),
+    lastName: joi.string().optional(),
     softDelete: joi.bool().optional(),
     password: joi
       .string()
@@ -24,17 +26,22 @@ const create = {
       joi.object({
         action: joi
           .string()
-          .valid(...['create', 'read', 'update', 'delete'])
+          .valid(...["create", "read", "update", "delete"])
           .required(),
         subject: joi
           .string()
-          .valid(...['Admin', 'User'])
-          .required(), 
-      }),
+          .valid(...["Admin", "User"])
+          .required(),
+      })
     ),
-    role : joi.string().valid(...['teacher', 'admin', 'supervisor']).optional(),
-    firstName: joi.string().regex(/^[a-zA-Z]{3,16}$/).optional(),
-    lastName: joi.string().regex(/^[a-zA-Z]{3,16}$/).optional(),
+    firstName: joi
+      .string()
+      .regex(/^[a-zA-Z]{3,16}$/)
+      .optional(),
+    lastName: joi
+      .string()
+      .regex(/^[a-zA-Z]{3,16}$/)
+      .optional(),
   }),
 };
 
@@ -50,23 +57,32 @@ const update = {
       .string()
       .regex(/^[a-zA-Z0-9]{8,16}$/)
       .required(),
-    permissions: joi.array().items(
-      joi.object({
-        action: joi
-          .string()
-          .valid(...['create', 'read', 'update', 'delete'])
-          .required(),
-        subject: joi
-          .string()
-          .valid(...['Admin', 'User'])
-          .required(),
-      }).optional(),
-    ),
-    firstName: joi.string().regex(/^[a-zA-Z]{3,16}$/).optional(),
-    lastName: joi.string().regex(/^[a-zA-Z]{3,16}$/).optional(),
-    role : joi.string().valid(...['teacher', 'admin', 'supervisor']).optional(),
+    permissions: joi
+      .array()
+      .items(
+        joi.object({
+          action: joi
+            .string()
+            .valid(...["create", "read", "update", "delete"])
+            .required(),
+          subject: joi
+            .string()
+            .valid(...["Admin", "User"])
+            .required(),
+        })
+      )
+      .optional(),
+    firstName: joi
+      .string()
+      .regex(/^[a-zA-Z]{3,16}$/)
+      .optional(),
+    lastName: joi
+      .string()
+      .regex(/^[a-zA-Z]{3,16}$/)
+      .optional(),
   }),
 };
+
 module.exports = {
   read,
   create,
