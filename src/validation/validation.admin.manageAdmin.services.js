@@ -15,8 +15,6 @@ const create = {
       .string()
       .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
-    firstName: joi.string().optional(),
-    lastName: joi.string().optional(),
     softDelete: joi.bool().optional(),
     password: joi
       .string()
@@ -31,9 +29,10 @@ const create = {
         subject: joi
           .string()
           .valid(...['Admin', 'User'])
-          .required(),
+          .required(), 
       }),
     ),
+    role : joi.string().valid(...['teacher', 'admin', 'supervisor']).optional(),
     firstName: joi.string().regex(/^[a-zA-Z]{3,16}$/).optional(),
     lastName: joi.string().regex(/^[a-zA-Z]{3,16}$/).optional(),
   }),
@@ -61,13 +60,13 @@ const update = {
           .string()
           .valid(...['Admin', 'User'])
           .required(),
-      }),
+      }).optional(),
     ),
     firstName: joi.string().regex(/^[a-zA-Z]{3,16}$/).optional(),
     lastName: joi.string().regex(/^[a-zA-Z]{3,16}$/).optional(),
+    role : joi.string().valid(...['teacher', 'admin', 'supervisor']).optional(),
   }),
 };
-
 module.exports = {
   read,
   create,
