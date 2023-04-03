@@ -54,17 +54,18 @@ async function checkRefreshToken(receivedRefreshToken) {
     receivedRefreshToken,
     process.env.REFRESHTOKEN_SECRET
   ).id;
-  const admin = await getUserbyId(userId);
-  if (receivedRefreshToken === admin.refreshToken) return userId;
+  const user = await getUserbyId(userId);
+  if (receivedRefreshToken === user.refreshToken) return userId;
 }
+
 const refreshToken = async (id) => {
   const user = await getUserbyId(id);
   return setRefereshToken(user.phone);
 };
 
-const logout = async (phone) => {
+const logout = async (id) => {
   try {
-    const user = await getUserbyPhone(phone);
+    const user = await getUserbyId(id);
     user.refreshToken = "";
     await updateUser(user);
     return true;

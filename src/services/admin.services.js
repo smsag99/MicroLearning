@@ -35,9 +35,9 @@ const refreshToken = async (id) => {
   return setRefereshToken(admin.userName);
 };
 
-const logout = async (userName) => {
+const logout = async (id) => {
   try {
-    const admin = await getAdminbyUserName(userName);
+    const admin = await getAdminbyId(id);
     admin.refreshToken = "";
     await updateAdmin(admin);
   } catch (error) {
@@ -81,6 +81,7 @@ async function checkRefreshToken(receivedRefreshToken) {
   const admin = await getAdminbyId(adminId);
   if (receivedRefreshToken === admin.refreshToken) return admin.id;
 }
+
 async function setRefereshToken(userName) {
   const admin = await getAdminbyUserName(userName);
   const refreshtoken = await jwt.sign(

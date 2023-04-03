@@ -14,6 +14,7 @@ const {
   getUserbyId,
 } = require("../../../../services/user.services");
 const { ApiError } = require("../../../middlewares/errorHandling.middleware");
+const { isAuth } = require("../../../middlewares/isAuth.middleware");
 
 const router = express.Router();
 
@@ -70,6 +71,7 @@ router.post(
 
 router.post(
   "/refreshToken",
+  isAuth,
   validate(userAuthValidationSchema.refreshToken),
   async (req, res, next) => {
     try {
@@ -93,11 +95,12 @@ router.post(
 
 router.post(
   "/logout",
+  isAuth,
   validate(userAuthValidationSchema.logout),
   async (req, res, next) => {
     try {
-      const { phone } = req.body;
-      const resault = await logout(phone);
+      const id = req.client.id;
+      const resault = await logout(id);
       return res.send();
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));

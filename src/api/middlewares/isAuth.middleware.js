@@ -11,10 +11,11 @@ const isAuth = async (req, res, next) => {
   try {
     const decoded = await jwt.verify(token, process.env.ACCESSTOKEN_SECRET);
     req.user = decoded;
+    req.client = decoded;
     console.log("auth");
     next();
   } catch (error) {
-    return next ( new ApiError(403, "access denied! invalid token!"));
+    return next(new ApiError(403, "access denied! invalid token!"));
   }
 };
 module.exports = { isAuth };
