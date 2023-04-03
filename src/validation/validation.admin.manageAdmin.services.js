@@ -68,8 +68,32 @@ const update = {
   }),
 };
 
+const role = {
+  params: joi.object().keys({
+    userName: joi
+      .string()
+      .regex(/^[a-zA-Z0-9]{5,16}$/)
+      .required(),
+  }),
+  body: joi.object().keys({
+    role: joi.array().items(
+      joi.object({
+        action: joi
+          .string()
+          .valid(...['superviaser', 'teacher', 'super', 'delete'])
+          .required(),
+        subject: joi
+          .string()
+          .valid(...['Admin'])
+          .required(),
+      }),
+    ),
+  }),
+};
+
 module.exports = {
   read,
   create,
   update,
+  role
 };
