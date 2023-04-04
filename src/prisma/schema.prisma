@@ -58,8 +58,6 @@ model Course {
   id               Int                        @id @default(autoincrement())
   Teacher          Admin                      @relation(fields: [TeacherID], references: [id])
   TeacherID        Int
-  session          session                    @relation(name: "sessionID", fields: [sessionID], references: [id])
-  sessionID        Int                        @unique
   title            String
   deadlineDuration DateTime
   description      String
@@ -67,23 +65,20 @@ model Course {
   taskcount        Int
   isLocked         Boolean
   enrolledpeople   String[]
-  sessions         String[]
-  courseID         session?                   @relation("course ID")
-  enrolled         EnrolledCoursebyEachUser[]
+  seasions         String[]
+  seasion          seasion?                   @relation("course ID")
   class            Class[]
   chapter          chapter[]
   task             task[]
 }
 
-model session {
+model seasion {
   id        Int       @id @default(autoincrement())
   course    Course?   @relation(name: "course ID", fields: [courseID], references: [id])
   courseID  Int       @unique
-  chapterID String
   title     String
   priority  Int
   chapters  String[]
-  sessionID Course[]  @relation(name: "sessionID")
   chapter   chapter[]
 }
 
@@ -91,26 +86,22 @@ model EnrolledCoursebyEachUser {
   id        Int    @id @default(autoincrement())
   user      User   @relation(fields: [userID], references: [id])
   userID    Int
-  course    Course @relation(fields: [courseID], references: [id])
-  courseID  Int
   class     Class  @relation(fields: [classID], references: [id])
   classID   Int
   mark      Int    @default(0)
   progress  Float  @default(0.0)
-  startTime String @default("")
-  endTime   String @default("")
+  startTime DateTime
+  endTime   DateTime
   quizes    Json   @db.JsonB
   done      Json   @db.JsonB
 }
 
 model chapter {
   id        Int      @id @default(autoincrement())
-  session   session  @relation(fields: [sessionID], references: [id])
-  sessionID Int
+  seasion   seasion  @relation(fields: [seasionID], references: [id])
+  seasionID Int
   course    Course   @relation(fields: [courseID], references: [id])
   courseID  Int
-  task      task     @relation(fields: [taskID], references: [id])
-  taskID    Int
   title     String   @default("")
   priority  Int      @default(0)
   examID    String   @default("")
@@ -127,7 +118,6 @@ model task {
   title       String    @default("")
   priority    Int       @default(0)
   description String    @default("")
-  taskID      chapter[]
 }
 
 model Quize {
