@@ -15,8 +15,6 @@ const create = {
       .string()
       .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
-    firstName: joi.string().optional(),
-    lastName: joi.string().optional(),
     softDelete: joi.bool().optional(),
     password: joi
       .string()

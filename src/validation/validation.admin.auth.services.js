@@ -41,17 +41,17 @@ const refreshToken = {
     RefreshToken: joi.string().required(),
   }),
 };
-const logout = {
-  body: joi.object().keys({
-    userName: joi
-      .string()
-      .regex(/^[a-zA-Z0-9]{5,16}$/)
-      .required(),
-  }),
-};
+// const logout = {
+//   body: joi.object().keys({
+//     userName: joi
+//       .string()
+//       .regex(/^[a-zA-Z0-9]{5,16}$/)
+//       .required(),
+//   }),
+// };
 module.exports = {
   signup,
   login,
-  logout,
+  //logout,
   refreshToken,
 };

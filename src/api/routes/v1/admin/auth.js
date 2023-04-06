@@ -12,6 +12,7 @@ const {
 const router = express.Router();
 const adminAuthValidationSchema = require("../../../../validation/validation.admin.auth.services");
 const { ApiError } = require("../../../middlewares/errorHandling.middleware");
+const { isAuth } = require("../../../middlewares/isAuth.middleware");
 const validate = require("../../../middlewares/validate.middleware");
 
 require("dotenv").config();
@@ -51,6 +52,7 @@ router.post(
 );
 router.post(
   "/refreshToken",
+  isAuth,
   validate(adminAuthValidationSchema.refreshToken),
   async (req, res, next) => {
     try {
@@ -74,11 +76,12 @@ router.post(
 
 router.post(
   "/logout",
-  validate(adminAuthValidationSchema.logout),
+  isAuth,
+  //validate(adminAuthValidationSchema.logout),
   async (req, res, next) => {
     try {
-      const { userName } = req.body;
-      const resault = await logout(userName);
+      const id = req.client.id;
+      const resault = await logout(id);
       return res.send();
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));

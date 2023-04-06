@@ -57,53 +57,51 @@ model Course {
   deadlineDuration DateTime
   description      String
   rate             Int?
-  taskcount        Int?
-  isLocked         Boolean  @default(false)
-  seassions          seassion[]
+  taskcount        Int
+  isLocked         Boolean
+  seasons          season[]
   classes          Class[]
 }
 
-model seassion {
-  id       Int       @id @default(autoincrement())
-  course   Course    @relation(fields: [courseID], references: [id])
-  courseID Int       @unique
-  title    String
-  priority Int
-  chapters chapter[]
+model season {
+  id        Int       @id @default(autoincrement())
+  course    Course   @relation(fields: [courseID], references: [id])
+  courseID  Int      
+  title     String
+  priority  Int
+  chapters  chapter[]
 }
 
 model studentsOnClass {
   id        Int      @id @default(autoincrement())
   student   User     @relation(fields: [userID], references: [id])
   userID    Int
-  class     Class    @relation(fields: [classID], references: [id])
+  class     Class  @relation(fields: [classID], references: [id])
   classID   Int
-  mark      Int      @default(0)
-  progress  Float    @default(0.0)
-  startTime DateTime
+  mark      Int    @default(0)
+  progress  Float  @default(0.0)
+  startTime DateTime 
   endTime   DateTime
-  quizes    Json     @db.JsonB
-  done      Json     @db.JsonB
+  quizes    Json   @db.JsonB
+  done      Json   @db.JsonB
 }
 
 model chapter {
-  id        Int    @id @default(autoincrement())
-  seassion  seassion @relation(fields: [seasionID], references: [id])
-  seasionID Int
-  taskType  String
-  title     String @default("")
-  priority  Int    @default(0)
-  examID    String @default("")
+  id        Int      @id @default(autoincrement())
+  season   season  @relation(fields: [seasonID], references: [id])
+  seasonID Int
+  title     String   @default("")
+  priority  Int      @default(0)
   tasks     task[]
 }
 
 model task {
-  id          Int      @id @default(autoincrement())
-  chapter     chapter? @relation(fields: [chpterID], references: [id])
-  chpterID    Int
-  title       String   @default("")
-  priority    Int      @default(0)
-  description String   @default("")
+  id          Int       @id @default(autoincrement())
+  chapter     chapter   @relation(fields: [chpterID], references: [id])
+  chpterID    Int      
+  title       String    @default("")
+  priority    Int       @default(0)
+  description String    @default("")
 }
 
 //model Quize {
