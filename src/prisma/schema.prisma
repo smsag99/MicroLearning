@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
   engineType = "binary"
 }
 
@@ -9,18 +9,17 @@ datasource db {
 }
 
 model User {
-  id           Int                        @id @default(autoincrement())
-  firstName    String                     @default("")
-  lastName     String                     @default("")
-  phone        String                     @unique
-  countryCode  String                     @default("")
-  password     String                     @default("")
-  refreshToken String                     @default("")
-  blocked      Boolean                    @default(false)
-  softDelete   Boolean                    @default(false)
-  address      String                     @default("")
-  classes      Class[]
-  enrolled     EnrolledCoursebyEachUser[]
+  id           Int               @id @default(autoincrement())
+  firstName    String            @default("")
+  lastName     String            @default("")
+  phone        String            @unique
+  countryCode  String            @default("")
+  password     String            @default("")
+  refreshToken String            @default("")
+  blocked      Boolean           @default(false)
+  softDelete   Boolean           @default(false)
+  address      String            @default("")
+  classes      studentsOnClass[]
 }
 
 model Admin {
@@ -38,96 +37,83 @@ model Admin {
 }
 
 model Class {
-  id        Int                        @id @default(autoincrement())
-  course    Course                     @relation(fields: [courseID], references: [id])
+  id        Int               @id @default(autoincrement())
+  course    Course            @relation(fields: [courseID], references: [id])
   courseID  Int
-  mentor    Admin                      @relation(fields: [mentorID], references: [id])
+  mentor    Admin             @relation(fields: [mentorID], references: [id])
   mentorID  Int
-  student   User                       @relation(fields: [studetID], references: [id])
-  studetID  Int
-  title     String                     @default("")
-  startTime String                     @default("")
-  isLocked  Boolean                    @default(false)
-  capasity  Int                        @default(0)
-  mentors   String[]                   @default([])
-  students  String[]                   @default([])
-  enrolled  EnrolledCoursebyEachUser[]
+  title     DateTime
+  startTime DateTime
+  isLocked  Boolean           @default(false)
+  capasity  Int               @default(0)
+  students  studentsOnClass[]
 }
 
 model Course {
-  id               Int                        @id @default(autoincrement())
-  Teacher          Admin                      @relation(fields: [TeacherID], references: [id])
+  id               Int      @id @default(autoincrement())
+  Teacher          Admin    @relation(fields: [TeacherID], references: [id])
   TeacherID        Int
   title            String
   deadlineDuration DateTime
   description      String
-  rate             Int
-  taskcount        Int
-  isLocked         Boolean
-  enrolledpeople   String[]
-  seasions         String[]
-  seasion          seasion?                   @relation("course ID")
-  class            Class[]
-  chapter          chapter[]
-  task             task[]
+  rate             Int?
+  taskcount        Int?
+  isLocked         Boolean  @default(false)
+  seassions          seassion[]
+  classes          Class[]
 }
 
-model seasion {
-  id        Int       @id @default(autoincrement())
-  course    Course?   @relation(name: "course ID", fields: [courseID], references: [id])
-  courseID  Int       @unique
-  title     String
-  priority  Int
-  chapters  String[]
-  chapter   chapter[]
+model seassion {
+  id       Int       @id @default(autoincrement())
+  course   Course    @relation(fields: [courseID], references: [id])
+  courseID Int       @unique
+  title    String
+  priority Int
+  chapters chapter[]
 }
 
-model EnrolledCoursebyEachUser {
-  id        Int    @id @default(autoincrement())
-  user      User   @relation(fields: [userID], references: [id])
+model studentsOnClass {
+  id        Int      @id @default(autoincrement())
+  student   User     @relation(fields: [userID], references: [id])
   userID    Int
-  class     Class  @relation(fields: [classID], references: [id])
+  class     Class    @relation(fields: [classID], references: [id])
   classID   Int
-  mark      Int    @default(0)
-  progress  Float  @default(0.0)
+  mark      Int      @default(0)
+  progress  Float    @default(0.0)
   startTime DateTime
   endTime   DateTime
-  quizes    Json   @db.JsonB
-  done      Json   @db.JsonB
+  quizes    Json     @db.JsonB
+  done      Json     @db.JsonB
 }
 
 model chapter {
-  id        Int      @id @default(autoincrement())
-  seasion   seasion  @relation(fields: [seasionID], references: [id])
+  id        Int    @id @default(autoincrement())
+  seassion  seassion @relation(fields: [seasionID], references: [id])
   seasionID Int
-  course    Course   @relation(fields: [courseID], references: [id])
-  courseID  Int
-  title     String   @default("")
-  priority  Int      @default(0)
-  examID    String   @default("")
-  tasks     String[] @default([])
-  chapterID task?    @relation("chapterID")
+  taskType  String
+  title     String @default("")
+  priority  Int    @default(0)
+  examID    String @default("")
+  tasks     task[]
 }
 
 model task {
-  id          Int       @id @default(autoincrement())
-  chapter     chapter?  @relation(name: "chapterID", fields: [chpterID], references: [id])
-  chpterID    Int       @unique
-  course      Course    @relation(fields: [courseID], references: [id])
-  courseID    Int
-  title       String    @default("")
-  priority    Int       @default(0)
-  description String    @default("")
+  id          Int      @id @default(autoincrement())
+  chapter     chapter? @relation(fields: [chpterID], references: [id])
+  chpterID    Int
+  title       String   @default("")
+  priority    Int      @default(0)
+  description String   @default("")
 }
 
-model Quize {
-  id   Int    @id @default(autoincrement())
-  row1 String @default("")
-  row2 String @default("")
-  row3 String @default("")
-}
+//model Quize {
+//  id   Int    @id @default(autoincrement())
+//  row1 String @default("")
+//  row2 String @default("")
+//  row3 String @default("")
+//}
 
-model test {
-  id   Int    @id @default(autoincrement())
-  name String @default("")
-}
+//model test {
+//  id   Int    @id @default(autoincrement())
+//  name String @default("")
+//}
