@@ -23,7 +23,7 @@ model User {
 }
 
 model Admin {
-  id           Int      @id @default(autoincrement())
+  id           Int      @id @default(autoincrement()) @unique
   firstName    String   @default("")
   lastName     String   @default("")
   userName     String   @unique
@@ -51,14 +51,14 @@ model Class {
 
 model Course {
   id               Int      @id @default(autoincrement())
-  Teacher          Admin    @relation(fields: [TeacherID], references: [id])
-  TeacherID        Int
+  name             String   @default("")
+  teacher          Admin    @relation(fields: [teacherID], references: [id])
+  teacherID        Int
   title            String
-  deadlineDuration DateTime
   description      String
-  rate             Int?
-  taskcount        Int
-  isLocked         Boolean
+  //rate           Int?
+  taskcount        Int?
+  isLocked         Boolean  @default(false)
   seasons          season[]
   classes          Class[]
 }
