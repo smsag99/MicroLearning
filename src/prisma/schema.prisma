@@ -42,12 +42,12 @@ model Class {
   courseID  Int
   mentor    Admin             @relation(fields: [mentorID], references: [id])
   mentorID  Int
-  title     DateTime
-  startTime DateTime
-  isLocked  Boolean           @default(false)
-  capasity  Int               @default(0)
+  title     String
+  startTime DateTime          @default(now())
+  endTime   DateTime
+  isLocked  Boolean?          
+  capacity  Int               @default(0)
   students  studentsOnClass[]
-}
 
 model Course {
   id               Int      @id @default(autoincrement())
@@ -84,6 +84,28 @@ model studentsOnClass {
   endTime   DateTime
   quizes    Json   @db.JsonB
   done      Json   @db.JsonB
+}
+
+model Course {
+  id               Int      @id @default(autoincrement())
+  teacher          Admin    @relation(fields: [teacherID], references: [id])
+  teacherID        Int
+  title            String
+  description      String
+  //rate           Int?
+  taskcount        Int?
+  isLocked         Boolean  @default(false)
+  seasons          season[]
+  classes          Class[]
+}
+
+model season {
+  id        Int       @id @default(autoincrement())
+  course    Course   @relation(fields: [courseID], references: [id])
+  courseID  Int      
+  title     String
+  priority  Int
+  chapters  chapter[]
 }
 
 model chapter {

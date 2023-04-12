@@ -1,18 +1,25 @@
 const { PrismaClient } = require("@prisma/client");
 const { ApiError } = require("../../api/middlewares/errorHandling.middleware");
+const { connect } = require("http2");
+const { get } = require("https");
 const prisma = new PrismaClient();
 require("dotenv").config();
 
 
-
-async function ceateEmptyCourse(teacherId, title, description, isLocked){
+//only admin can makes class
+async function createEmptyClass(title ,
+  startTime = Date.prototype.getDate(),
+  endTime = Date.prototype.setMonth(6), capacity, course, mentor) {
     try {
-        return await prisma.Course.create({
+        const name = title;
+        await prisma.Class.create({
             data: {
-              teacher : {connect : {id : teacherId }},
               title : title,
-              description: description,
-              isLocked : false
+              startTime : startTime,
+              endTime : endTime,
+              capacity : capacity,
+              course : {connect : {id : course }},
+              mentor : {connect : {id : mentor}}
             },
           });
       } catch (error) {
@@ -21,46 +28,42 @@ async function ceateEmptyCourse(teacherId, title, description, isLocked){
   };
   async function lockStatus(id ,lockStatus) {
     try {
-        await prisma.Course.findUnique({
+        return prisma.Class.findUnique({
             where: {
-              id: id,
+              id: id
             },
-            data: {
-                isLocked : lockStatus
-            }
+            select : {isLocked : true}, 
+            data: { isLocked : lockStatus }
           });
       } catch (error) {
         throw (new ApiError(error.statusCode, error.message));
       }
   };
-  async function updateCourse(Course) {
+  async function updateClass(updatedClass) {
     try {
       // eslint-disable-next-line no-param-reassign
-      const id = Course.id
-      //delete Course.id;
-      const resault = await prisma.Course.update({
-        where: { id : Course.id },
-        data: Course,
+      const id  = updatedClass.id
+      await prisma.Class.update({
+        where: { id : id },
+        data: updatedClass
       });
-      console.log("the Course has been successfully updated");
-      return resault;
+      console.log("the Class has been successfully updated");
     } catch (error) {
         throw (new ApiError(error.statusCode, error.message));
     }
   }
-async function getAllCourses() {
+async function getAllClasses() {
     try {
-      const courseRecords = await prisma.course.findMany();
+      const courseRecords = await prisma.Class.findMany();
       console.log(courseRecords)
       return courseRecords;
     } catch (error) {
         throw (new ApiError(error.statusCode, error.message));
     }
   }
-
   async function getClassByID(id) {
     try {
-      await prisma.Course.findUnique({
+      await prisma.Class.findUnique({
         where: {
           id,
         },
@@ -70,8 +73,10 @@ async function getAllCourses() {
     }
   }
   module.exports = {
-    createEmptyCourse,
+    createEmptyClass, 
     lockStatus, 
-    updateCourse,
-    getAllCourses
+    updateClass, 
+    getAllClasses, 
+    getAllClasses, 
+    getClassByID
   };
