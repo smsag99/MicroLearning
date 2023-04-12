@@ -21,14 +21,13 @@ async function ceateEmptyCourse(teacherId, title, description, isLocked){
   };
   async function lockStatus(id ,lockStatus) {
     try {
-        await prisma.Course.findUnique({
+        const lock = await prisma.Course.update({
             where: {
-              id: id,
+              id: id
             },
-            data: {
-                isLocked : lockStatus
-            }
+            data : {isLocked : lockStatus }
           });
+          console.log (lock)
       } catch (error) {
         throw (new ApiError(error.statusCode, error.message));
       }

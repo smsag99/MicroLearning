@@ -52,16 +52,14 @@ model Class {
 
 model studentsOnClass {
   id        Int      @id @default(autoincrement())
-  student   User     @relation(fields: [userID], references: [id])
-  userID    Int
+  student   User     @relation(fields: [studentID], references: [id])
+  studentID    Int
   class     Class  @relation(fields: [classID], references: [id])
   classID   Int
   mark      Int    @default(0)
   progress  Float  @default(0.0)
-  startTime DateTime 
-  endTime   DateTime
-  quizes    Json   @db.JsonB
-  done      Json   @db.JsonB
+  quizes    Json?   @db.JsonB
+  done      Boolean @default(false)
 }
 
 model Course {
