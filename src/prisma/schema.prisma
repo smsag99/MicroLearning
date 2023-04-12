@@ -48,6 +48,28 @@ model Class {
   isLocked  Boolean?          
   capacity  Int               @default(0)
   students  studentsOnClass[]
+
+model Course {
+  id               Int      @id @default(autoincrement())
+  name             String   @default("")
+  teacher          Admin    @relation(fields: [teacherID], references: [id])
+  teacherID        Int
+  title            String
+  description      String
+  //rate           Int?
+  taskcount        Int?
+  isLocked         Boolean  @default(false)
+  seasons          season[]
+  classes          Class[]
+}
+
+model season {
+  id        Int       @id @default(autoincrement())
+  course    Course   @relation(fields: [courseID], references: [id])
+  courseID  Int      
+  title     String
+  priority  Int
+  chapters  chapter[]
 }
 
 model studentsOnClass {

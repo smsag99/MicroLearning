@@ -1,8 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
 const { ApiError } = require("../../api/middlewares/errorHandling.middleware");
-const { createEmptyClass } = require("./Class services");
 const prisma = new PrismaClient();
 require("dotenv").config();
+
 
 
 async function ceateEmptyCourse(teacherId, title, description, isLocked){
@@ -57,6 +57,7 @@ async function getAllCourses() {
         throw (new ApiError(error.statusCode, error.message));
     }
   }
+
   async function getClassByID(id) {
     try {
       await prisma.Course.findUnique({
@@ -69,7 +70,7 @@ async function getAllCourses() {
     }
   }
   module.exports = {
-    ceateEmptyCourse,
+    createEmptyCourse,
     lockStatus, 
     updateCourse,
     getAllCourses
