@@ -2,16 +2,17 @@ const { PrismaClient } = require("@prisma/client");
 const { ApiError } = require("../../api/middlewares/errorHandling.middleware");
 const { connect } = require("http2");
 const { get } = require("https");
+const { chain } = require("lodash");
 const prisma = new PrismaClient();
 require("dotenv").config();
 
 
-async function createEmptySeason(title ,
-  course, priority) {
+async function createEmptyChapter(season ,
+  title, priority) {
     try {
-         await prisma.season.create({
+         await prisma.chapter.create({
             data: {
-              course : {connect : {id : course}},
+              season : {connect : {id : season}},
               title : title,
               priority : priority
             },
@@ -20,54 +21,55 @@ async function createEmptySeason(title ,
         throw (new ApiError(error.statusCode, error.message));
       }
   };
-  async function updateSeason(updatedSeason) {
+  async function updateChapter(updatedChapter) {
     try {
       // eslint-disable-next-line no-param-reassign
-      const id  = updatedSeason.id
-      await prisma.season.update({
+      const id  = updatedChapter.id
+      await prisma.chapter.update({
         where: { id : id },
-        data: updatedSeason
+        data: updatedChapter
       });
-      console.log("the seasn has been successfully updated");
+      console.log("the chapter has been successfully updated");
     } catch (error) {
         throw (new ApiError(error.statusCode, error.message));
     }
   }
-async function getAllSeasons() {
+async function getAllChapters() {
     try {
-      const seasonRecords = await prisma.season.findMany();
-      console.log(seasonRecords)
-      return seasonRecords;
+      const chapterRecords = await prisma.chapter.findMany();
+      console.log(chapterRecords)
+      return chapterRecords;
     } catch (error) {
         throw (new ApiError(error.statusCode, error.message));
     }
   }
-  async function getSeasonByID(id) {
+  async function getChapterByID(id) {
     try {
-      const season = await prisma.season.findUnique({
+      const chapter = await prisma.chapter.findUnique({
         where: {
           id : id
         },
       });
-      console.log (season)
+      console.log (chapter)
     } catch (error) {
       throw new ApiError(500, "database error while findUnique");
     }
   }
-  async function getSeasonsOfCourse (courseID){
+  async function getChaptersOfSeason (seasonID){
       try {
-      const seasons = await prisma.season.findMany({
-        where : {courseID : courseID}
+      const chapters = await prisma.chapter.findMany({
+        where : {seasonID : seasonID}
     });
-    console.log (seasons)
+    console.log (chapters)
   } catch {
     throw new ApiError(500, "error while adding student to class");
   }};
+  
 module.exports = {
-  createEmptySeason,
-  updateSeason,
-  getAllSeasons,
-  getSeasonByID,
-  getSeasonsOfCourse
+  createEmptyChapter,
+  updateChapter,
+  getAllChapters,
+  getChapterByID,
+  getChaptersOfSeason
 }
   
