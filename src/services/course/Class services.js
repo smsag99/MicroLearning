@@ -72,53 +72,12 @@ async function getAllClasses() {
       throw new ApiError(500, "database error while findUnique");
     }
   }
-  async function addStudentToClass (studentID, classID){
-      try {
-      await prisma.studentsOnClass.create({
-        data : {
-          student : {connect : {id : studentID }},
-          class : {connect : {id : classID}},
-          mark : null, 
-          progress : 0,
-          done : false
-        }
-    });
-  } catch {
-    throw new ApiError(500, "error while adding student to class");
-  }};
-  async function getAllStudentsOnClass(id) {
-    try {
-      const courseRecords = await prisma.studentsOnClass.findMany( {
-        where : {classID : id}
-      }
-      );
-      console.log(courseRecords)
-      return courseRecords;
-    } catch (error) {
-        throw (new ApiError(error.statusCode, error.message));
-    }
-  }
-  async function updateStudentOnClass(updatedStudentOnClass) {
-    try {
-      // eslint-disable-next-line no-param-reassign
-      const id  = updatedStudentOnClass;
-      await prisma.studentsOnClass.update({
-        where: { id : id },
-        data: updatedStudentOnClass
-      });
-    } catch (error) {
-        throw (new ApiError(error.statusCode, error.message));
-    }
-  }
 
-  
   module.exports = {
     createEmptyClass, 
     lockStatus, 
-    updateClass,  
+    updateClass, 
     getAllClasses, 
-    getClassByID,
-    addStudentToClass,
-    getAllStudentsOnClass, 
-    updateStudentOnClass
+    getAllClasses, 
+    getClassByID
   };

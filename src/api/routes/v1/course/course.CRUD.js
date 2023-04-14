@@ -5,6 +5,7 @@ const { isCan } = require("../../../middlewares/isCan.middleware");
 const { fetchAdmin } = require("../../../middlewares/fetchAdmin.middleware");
 const validate = require("../../../middlewares/validate.middleware");
 const { ApiError } = require("../../../middlewares/errorHandling.middleware");
+const courseServices = require("../../../../services/course/Course.services");
 //get course
 router.get(
   "/",
@@ -28,6 +29,14 @@ router.post(
   isCan("create", "Course"),
   async (req, res, next) => {
     try {
+      const { name, teacherId, title, description } = req.body;
+      await courseServices.createEmptyCourse(
+        name,
+        teacherId,
+        title,
+        description
+      );
+      res.send();
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));
     }

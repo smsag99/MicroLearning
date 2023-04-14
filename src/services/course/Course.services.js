@@ -1,11 +1,10 @@
 const { PrismaClient } = require("@prisma/client");
 const { ApiError } = require("../../api/middlewares/errorHandling.middleware");
-const { createEmptyClass } = require("./Class services");
 const prisma = new PrismaClient();
 require("dotenv").config();
 
 
-async function ceateEmptyCourse(teacherId, title, description, isLocked){
+async function createEmptyCourse(teacherId, title, description, isLocked){
     try {
         return await prisma.Course.create({
             data: {
@@ -68,7 +67,7 @@ async function getAllCourses() {
     }
   }
   module.exports = {
-    ceateEmptyCourse,
+    createEmptyCourse,
     lockStatus, 
     updateCourse,
     getAllCourses

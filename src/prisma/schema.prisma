@@ -23,7 +23,7 @@ model User {
 }
 
 model Admin {
-  id           Int      @id @default(autoincrement())
+  id           Int      @id @default(autoincrement()) @unique
   firstName    String   @default("")
   lastName     String   @default("")
   userName     String   @unique
@@ -71,8 +71,32 @@ model Course {
   title            String
   description      String
   rate             Int?
+  taskcount        Int?
   isLocked         Boolean
   seasons          season[]  
+
+  classes          Class[]
+}
+
+model season {
+  id        Int       @id @default(autoincrement())
+  course    Course   @relation(fields: [courseID], references: [id])
+  courseID  Int      
+  title     String
+  priority  Int
+  chapters  chapter[]
+}
+
+model Course {
+  id               Int      @id @default(autoincrement())
+  teacher          Admin    @relation(fields: [teacherID], references: [id])
+  teacherID        Int
+  title            String
+  description      String
+  //rate           Int?
+  taskcount        Int?
+  isLocked         Boolean  @default(false)
+  seasons          season[]
   classes          Class[]
 }
 
@@ -87,7 +111,7 @@ model season {
 
 model chapter {
   id        Int      @id @default(autoincrement())
-  season   season    @relation(fields: [seasonID], references: [id])
+  season   season  @relation(fields: [seasonID], references: [id])
   seasonID Int
   title     String   @default("")
   priority  Int      @default(0)
