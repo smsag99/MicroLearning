@@ -4,8 +4,7 @@ const prisma = new PrismaClient();
 require("dotenv").config();
 
 
-
-async function ceateEmptyCourse(teacherId, title, description, isLocked){
+async function createEmptyCourse(teacherId, title, description, isLocked){
     try {
         return await prisma.Course.create({
             data: {
@@ -21,14 +20,13 @@ async function ceateEmptyCourse(teacherId, title, description, isLocked){
   };
   async function lockStatus(id ,lockStatus) {
     try {
-        await prisma.Course.findUnique({
+        const lock = await prisma.Course.update({
             where: {
-              id: id,
+              id: id
             },
-            data: {
-                isLocked : lockStatus
-            }
+            data : {isLocked : lockStatus }
           });
+          console.log (lock)
       } catch (error) {
         throw (new ApiError(error.statusCode, error.message));
       }
@@ -57,12 +55,11 @@ async function getAllCourses() {
         throw (new ApiError(error.statusCode, error.message));
     }
   }
-
   async function getClassByID(id) {
     try {
       await prisma.Course.findUnique({
         where: {
-          id,
+          id : id
         },
       });
     } catch (error) {

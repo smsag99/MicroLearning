@@ -28,13 +28,13 @@ async function createEmptyClass(title ,
   };
   async function lockStatus(id ,lockStatus) {
     try {
-        return prisma.Class.findUnique({
+        const lock = await prisma.Class.update({
             where: {
               id: id
             },
-            select : {isLocked : true}, 
-            data: { isLocked : lockStatus }
+            data : {isLocked : lockStatus }
           });
+          console.log (lock)
       } catch (error) {
         throw (new ApiError(error.statusCode, error.message));
       }
@@ -72,6 +72,7 @@ async function getAllClasses() {
       throw new ApiError(500, "database error while findUnique");
     }
   }
+
   module.exports = {
     createEmptyClass, 
     lockStatus, 
