@@ -98,11 +98,12 @@ model chapter {
 
 model task {
   id          Int       @id @default(autoincrement())
-  chapter     chapter   @relation(fields: [chpterID], references: [id])
-  chpterID    Int      
+  chapter     chapter   @relation(fields: [chapterID], references: [id])
+  chapterID    Int      
   title       String    @default("")
   priority    Int       @default(0)
   description String    @default("")
+  type        String
 }
 
 //model Quize {
