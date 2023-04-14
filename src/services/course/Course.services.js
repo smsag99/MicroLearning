@@ -60,7 +60,7 @@ async function getAllCourses() {
     try {
       await prisma.Course.findUnique({
         where: {
-          id,
+          id : id
         },
       });
     } catch (error) {

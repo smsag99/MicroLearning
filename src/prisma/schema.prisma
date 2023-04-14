@@ -23,7 +23,7 @@ model User {
 }
 
 model Admin {
-  id           Int      @id @default(autoincrement()) @unique
+  id           Int      @id @default(autoincrement())
   firstName    String   @default("")
   lastName     String   @default("")
   userName     String   @unique
@@ -43,23 +43,25 @@ model Class {
   mentor    Admin             @relation(fields: [mentorID], references: [id])
   mentorID  Int
   title     String
-  startTime DateTime          @default(now())
+  startTime DateTime
   endTime   DateTime
-  isLocked  Boolean?          
-  capacity  Int               @default(0)
+  isLocked  Boolean           @default(false)
+  capasity  Int               @default(0)
   students  studentsOnClass[]
 }
 
 model studentsOnClass {
   id        Int      @id @default(autoincrement())
-  student   User     @relation(fields: [studentID], references: [id])
-  studentID    Int
+  student   User     @relation(fields: [userID], references: [id])
+  userID    Int
   class     Class  @relation(fields: [classID], references: [id])
   classID   Int
   mark      Int    @default(0)
   progress  Float  @default(0.0)
+  startTime DateTime 
+  endTime   DateTime
   quizes    Json?   @db.JsonB
-  done      Boolean @default(false)
+  done      Json?   @db.JsonB
 }
 
 model Course {
@@ -68,10 +70,9 @@ model Course {
   teacherID        Int
   title            String
   description      String
-  //rate           Int?
-  taskcount        Int?
-  isLocked         Boolean  @default(false)
-  seasons          season[]
+  rate             Int?
+  isLocked         Boolean
+  seasons          season[]  
   classes          Class[]
 }
 
@@ -86,7 +87,7 @@ model season {
 
 model chapter {
   id        Int      @id @default(autoincrement())
-  season   season  @relation(fields: [seasonID], references: [id])
+  season   season    @relation(fields: [seasonID], references: [id])
   seasonID Int
   title     String   @default("")
   priority  Int      @default(0)
