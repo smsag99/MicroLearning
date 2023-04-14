@@ -13,11 +13,11 @@ const create = {
       .string()
       .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
-    teacherId: joi.number().required(),
-    description: joi
-      .string()
-      .regex(/^[a-zA-Z0-9]{1,200}$/)
-      .optional(),
+    startTime: joi.date().optional(),
+    endTime: joi.date().optional(),
+    mentorId: joi.number().required(),
+    courseId: joi.number().required(),
+    capacity: joi.number().required(),
   }),
 };
 
@@ -30,11 +30,11 @@ const update = {
       .string()
       .regex(/^[a-zA-Z0-9]{5,16}$/)
       .optional(),
-    teacherId: joi.number().optional(),
-    description: joi
-      .string()
-      .regex(/^[a-zA-Z0-9]{1,200}$/)
-      .optional(),
+    startTime: joi.date().optional(),
+    endTime: joi.date().optional(),
+    mentorId: joi.number().optional(),
+    courseId: joi.number().optional(),
+    capacity: joi.number().optional(),
   }),
 };
 const lock = {
