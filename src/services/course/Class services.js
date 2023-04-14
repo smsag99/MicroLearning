@@ -72,7 +72,6 @@ async function getAllClasses() {
       throw new ApiError(500, "database error while findUnique");
     }
   }
-
   module.exports = {
     createEmptyClass, 
     lockStatus, 

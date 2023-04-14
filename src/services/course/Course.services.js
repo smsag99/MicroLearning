@@ -4,14 +4,13 @@ const prisma = new PrismaClient();
 require("dotenv").config();
 
 
-async function createEmptyCourse(teacherId, title, description, isLocked){
+async function createEmptyCourse(teacherId, title, description){
     try {
-        return await prisma.Course.create({
+        await prisma.Course.create({
             data: {
               teacher : {connect : {id : teacherId }},
               title : title,
               description: description,
-              isLocked : false
             },
           });
       } catch (error) {
@@ -55,7 +54,7 @@ async function getAllCourses() {
         throw (new ApiError(error.statusCode, error.message));
     }
   }
-  async function getClassByID(id) {
+  async function getCourseByID(id) {
     try {
       await prisma.Course.findUnique({
         where: {
@@ -66,6 +65,8 @@ async function getAllCourses() {
       throw new ApiError(500, "database error while findUnique");
     }
   }
+
+  
   module.exports = {
     createEmptyCourse,
     lockStatus, 

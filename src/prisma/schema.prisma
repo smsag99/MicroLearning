@@ -46,7 +46,7 @@ model Class {
   startTime DateTime
   endTime   DateTime
   isLocked  Boolean           @default(false)
-  capasity  Int               @default(0)
+  capacity  Int               @default(0)
   students  studentsOnClass[]
 }
 
@@ -72,31 +72,9 @@ model Course {
   description      String
   rate             Int?
   taskcount        Int?
-  isLocked         Boolean
+  isLocked         Boolean  @default(false)
   seasons          season[]  
 
-  classes          Class[]
-}
-
-model season {
-  id        Int       @id @default(autoincrement())
-  course    Course   @relation(fields: [courseID], references: [id])
-  courseID  Int      
-  title     String
-  priority  Int
-  chapters  chapter[]
-}
-
-model Course {
-  id               Int      @id @default(autoincrement())
-  teacher          Admin    @relation(fields: [teacherID], references: [id])
-  teacherID        Int
-  title            String
-  description      String
-  //rate           Int?
-  taskcount        Int?
-  isLocked         Boolean  @default(false)
-  seasons          season[]
   classes          Class[]
 }
 

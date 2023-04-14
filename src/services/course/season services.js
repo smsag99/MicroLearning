@@ -9,7 +9,7 @@ require("dotenv").config();
 async function createEmptySeason(title ,
   course, priority) {
     try {
-        await prisma.season.create({
+         await prisma.season.create({
             data: {
               course : {connect : {id : course}},
               title : title,
