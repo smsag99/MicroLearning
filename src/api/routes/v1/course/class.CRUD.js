@@ -4,19 +4,19 @@ const { isAuth } = require("../../../middlewares/isAuth.middleware");
 const { isCan } = require("../../../middlewares/isCan.middleware");
 const { fetchAdmin } = require("../../../middlewares/fetchAdmin.middleware");
 const validate = require("../../../middlewares/validate.middleware");
-const crudCourseValidationSchema = require("../../../../validation/validation.course.services");
+const crudClassValidationSchema = require("../../../../validation/validation.class.services");
 const { ApiError } = require("../../../middlewares/errorHandling.middleware");
-const courseServices = require("../../../../services/course/Course.services");
+const classServices = require("../../../../services/course/Class services");
 
-//get all courses
+//get all class
 router.get(
-  "/getAllCourses",
+  "/getAllClasses",
   isAuth,
   fetchAdmin,
-  isCan("read", "Course"),
+  isCan("read", "Class"),
   async (req, res, next) => {
     try {
-      const resault = await courseServices.getAllCourses();
+      const resault = await classServices.getAllClasses();
       res.send(resault);
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));
@@ -27,34 +27,38 @@ router.get(
 
 router.get(
   "/:id",
-  validate(crudCourseValidationSchema.read),
+  validate(crudClassValidationSchema.read),
   isAuth,
   fetchAdmin,
-  isCan("read", "Course"),
+  isCan("read", "Class"),
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const resault = await courseServices.getClassByID(id);
+      const resault = await classServices.getClassByID(id);
       res.send(resault);
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));
     }
   }
 );
-//create course
+//create class
 router.post(
   "/",
-  validate(crudCourseValidationSchema.create),
+  validate(crudClassValidationSchema.create),
   isAuth,
   fetchAdmin,
-  isCan("create", "Course"),
+  isCan("create", "Class"),
   async (req, res, next) => {
     try {
-      const { teacherId, title, description } = req.body;
-      const resault = await courseServices.createEmptyCourse(
-        teacherId,
+      const { title, startTime, endTime, capacity, course, mentorId } =
+        req.body;
+      const resault = await classServices.createEmptyClass(
         title,
-        description
+        startTime,
+        endTime,
+        capacity,
+        courseId,
+        mentorId
       );
       res.send(resault);
     } catch (error) {
@@ -62,32 +66,33 @@ router.post(
     }
   }
 );
-//update course
+//update class
 router.put(
   "/:id",
-  validate(crudCourseValidationSchema.update),
+  validate(crudClassValidationSchema.update),
   isAuth,
   fetchAdmin,
-  isCan("update", "Course"),
+  isCan("update", "Class"),
   async (req, res, next) => {
     try {
       req.body.id = req.params.id;
-      const resault = await courseServices.updateCourse(req.body);
+      const resault = await classServices.updateClass(req.body);
       res.send(resault);
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));
     }
   }
 );
+//lock class
 router.put(
   "/lock/:id",
-  validate(crudCourseValidationSchema.lock),
+  validate(crudClassValidationSchema.lock),
   isAuth,
   fetchAdmin,
-  isCan("update", "Course"),
+  isCan("update", "Class"),
   async (req, res, next) => {
     try {
-      const resault = await courseServices.lockStatus(
+      const resault = await classServices.lockStatus(
         req.params.id,
         req.body.lockStatus
       );
@@ -97,12 +102,12 @@ router.put(
     }
   }
 );
-//delete course
+//delete class
 router.delete(
   "/",
   isAuth,
   fetchAdmin,
-  isCan("delete", "Course"),
+  isCan("delete", "Class"),
   async (req, res, next) => {
     try {
     } catch (error) {
