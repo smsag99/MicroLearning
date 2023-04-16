@@ -21,7 +21,7 @@ const create = {
       .optional(),
     type: joi
       .string()
-      .valid(...["video", "text", "quiz"])
+      .valid(...["text", "quiz"])
       .required(),
   }),
 };
