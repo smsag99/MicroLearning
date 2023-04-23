@@ -43,6 +43,7 @@ async function getAllUsers(size, page) {
       skip: size * (page - 1),
       take: size * 1,
     });
+    console.log(users);
     return users;
   } catch (error) {
     console.log("errrror", error);
@@ -187,6 +188,7 @@ async function checkIfBlocked(phone) {
   const user = await getUserbyPhone(phone);
   return user.blocked;
 }
+getAllUsers(2, 1);
 module.exports = {
   signup,
   verify,
