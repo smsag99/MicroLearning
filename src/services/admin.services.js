@@ -152,7 +152,7 @@ function omit(object) {
     return lodash.omit(object, ["password", "refreshToken"]);
   }
 }
-// createAdmin("aryan", "8763487126", "admin")
+// 
 module.exports = {
   signup,
   login,

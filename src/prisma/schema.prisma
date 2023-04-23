@@ -23,7 +23,7 @@ model User {
 }
 
 model Admin {
-  id           Int      @id @default(autoincrement()) @unique
+  id           Int      @id @unique @default(autoincrement())
   firstName    String   @default("")
   lastName     String   @default("")
   userName     String   @unique
@@ -54,55 +54,55 @@ model studentsOnClass {
   id        Int      @id @default(autoincrement())
   student   User     @relation(fields: [userID], references: [id])
   userID    Int
-  class     Class  @relation(fields: [classID], references: [id])
+  class     Class    @relation(fields: [classID], references: [id])
   classID   Int
-  mark      Int    @default(0)
-  progress  Float  @default(0.0)
-  startTime DateTime 
+  mark      Int      @default(0)
+  progress  Float    @default(0.0)
+  startTime DateTime
   endTime   DateTime
-  quizes    Json?   @db.JsonB
-  done      Json?   @db.JsonB
+  quizes    Json[]   @db.JsonB
+  done      Int[]
 }
 
 model Course {
-  id               Int      @id @default(autoincrement())
-  teacher          Admin    @relation(fields: [teacherID], references: [id])
-  teacherID        Int
-  title            String
-  description      String
-  rate             Int?
-  taskcount        Int?
-  isLocked         Boolean  @default(false)
-  seasons          season[]  
+  id          Int      @id @default(autoincrement())
+  teacher     Admin    @relation(fields: [teacherID], references: [id])
+  teacherID   Int
+  title       String
+  description String
+  rate        Int?
+  taskcount   Int?
+  isLocked    Boolean  @default(false)
+  seasons     season[]
 
-  classes          Class[]
+  classes Class[]
 }
 
 model season {
-  id        Int       @id @default(autoincrement())
-  course    Course   @relation(fields: [courseID], references: [id])
-  courseID  Int      
-  title     String
-  priority  Int
-  chapters  chapter[]
+  id       Int       @id @default(autoincrement())
+  course   Course    @relation(fields: [courseID], references: [id])
+  courseID Int
+  title    String
+  priority Int
+  chapters chapter[]
 }
 
 model chapter {
-  id        Int      @id @default(autoincrement())
-  season   season  @relation(fields: [seasonID], references: [id])
+  id       Int    @id @default(autoincrement())
+  season   season @relation(fields: [seasonID], references: [id])
   seasonID Int
-  title     String   @default("")
-  priority  Int      @default(0)
-  tasks     task[]
+  title    String @default("")
+  priority Int    @default(0)
+  tasks    task[]
 }
 
 model task {
-  id          Int       @id @default(autoincrement())
-  chapter     chapter   @relation(fields: [chapterID], references: [id])
-  chapterID    Int      
-  title       String    @default("")
-  priority    Int       @default(0)
-  description String    @default("")
+  id          Int     @id @default(autoincrement())
+  chapter     chapter @relation(fields: [chapterID], references: [id])
+  chapterID   Int
+  title       String  @default("")
+  priority    Int     @default(0)
+  description String  @default("")
   type        String
 }
 
