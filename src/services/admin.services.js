@@ -152,7 +152,7 @@ function omit(object) {
     return lodash.omit(object, ["password", "refreshToken"]);
   }
 }
-// 
+
 module.exports = {
   signup,
   login,

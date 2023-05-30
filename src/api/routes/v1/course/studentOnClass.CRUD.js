@@ -63,7 +63,7 @@ router.get(
 //create studentOnClass
 router.post(
   "/",
-  validate(crudSeasonValidationSchema.create),
+  validate(crudStudentOnClassValidationSchema.create),
   isAuth,
   fetchAdmin,
   isCan("create", "StudentOnClass"),

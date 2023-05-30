@@ -188,7 +188,6 @@ async function checkIfBlocked(phone) {
   const user = await getUserbyPhone(phone);
   return user.blocked;
 }
-getAllUsers(2, 1);
 module.exports = {
   signup,
   verify,
