@@ -18,7 +18,18 @@ const signup = {
           .required(),
         subject: joi
           .string()
-          .valid(...["Admin", "User"])
+          .valid(
+            ...[
+              "Admin",
+              "User",
+              "Course",
+              "Class",
+              "Chapter",
+              "Task",
+              "Season",
+              "StudentOnClass",
+            ]
+          )
           .required(),
       })
     ),

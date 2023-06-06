@@ -11,7 +11,7 @@ router.get(
   "/",
   isAuth,
   fetchAdmin,
-  isCan("read", "Task"),
+  // isCan("read", "Task"),
   async (req, res, next) => {
     try {
       res.send("get task");

@@ -13,7 +13,7 @@ router.get(
   "/getAllClasses",
   isAuth,
   fetchAdmin,
-  isCan("read", "Class"),
+  // isCan("read", "Class"),
   async (req, res, next) => {
     try {
       const resault = await classServices.getAllClasses();
@@ -30,7 +30,7 @@ router.get(
   validate(crudClassValidationSchema.read),
   isAuth,
   fetchAdmin,
-  isCan("read", "Class"),
+  // isCan("read", "Class"),
   async (req, res, next) => {
     try {
       const { id } = req.params;
