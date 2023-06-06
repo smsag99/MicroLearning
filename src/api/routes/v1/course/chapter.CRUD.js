@@ -13,7 +13,7 @@ router.get(
   "/getAllChapters",
   isAuth,
   fetchAdmin,
-  isCan("read", "Chapter"),
+  // isCan("read", "Chapter"),
   async (req, res, next) => {
     try {
       const resault = await chapterServices.getAllChapters();
@@ -30,7 +30,7 @@ router.get(
   validate(crudChapterValidationSchema.read),
   isAuth,
   fetchAdmin,
-  isCan("read", "Chapter"),
+  // isCan("read", "Chapter"),
   async (req, res, next) => {
     try {
       const { id } = req.params;

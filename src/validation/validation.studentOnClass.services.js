@@ -2,9 +2,15 @@
 const { number } = require("joi");
 const joi = require("joi");
 
-const read = {
+const readAllStudent = {
   params: joi.object().keys({
-    id: joi.number().required(),
+    classID: joi.number().required(),
+  }),
+};
+const readStudentOnClass = {
+  params: joi.object().keys({
+    userID: joi.number().required(),
+    classID: joi.number().required(),
   }),
 };
 const create = {
@@ -29,7 +35,8 @@ const update = {
   }),
 };
 module.exports = {
-  read,
+  readAllStudent,
+  readStudentOnClass,
   create,
   update,
 };

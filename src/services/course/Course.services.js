@@ -55,11 +55,12 @@ async function getAllCourses() {
 }
 async function getCourseByID(id) {
   try {
-    await prisma.Course.findUnique({
+    const res = await prisma.Course.findUnique({
       where: {
         id: id,
       },
     });
+    return res;
   } catch (error) {
     throw new ApiError(500, "database error while findUnique");
   }
@@ -71,4 +72,5 @@ module.exports = {
   lockStatus,
   updateCourse,
   getAllCourses,
+  getCourseByID,
 };

@@ -14,22 +14,23 @@ async function addStudent(
   startTime,
   endTime
 ) {
-  try {
-    console.log(
-      await prisma.studentsOnClass.create({
-        data: {
-          student: { connect: { id: student } },
-          class: { connect: { id: classID } },
-          mark: mark,
-          progress: progress,
-          startTime: startTime,
-          endTime: endTime,
-        },
-      })
-    );
-  } catch (error) {
-    throw new ApiError(error.statusCode, error.message);
-  }
+  if ((await getStudentByID(student, classID)) == null)
+    try {
+      console.log(
+        await prisma.studentsOnClass.create({
+          data: {
+            student: { connect: { id: student } },
+            class: { connect: { id: classID } },
+            mark: mark,
+            progress: progress,
+            startTime: startTime,
+            endTime: endTime,
+          },
+        })
+      );
+    } catch (error) {
+      throw new ApiError(error.statusCode, error.message);
+    }
 }
 async function updateStudent(updatedStudent) {
   try {
@@ -45,10 +46,10 @@ async function updateStudent(updatedStudent) {
     throw new ApiError(error.statusCode, error.message);
   }
 }
-async function getAllStudentsOnClass(id) {
+async function getAllStudentsOnClass(classID) {
   try {
     const StudentRecords = await prisma.studentsOnClass.findMany({
-      where: { id: id },
+      where: { classID: classID },
     });
     console.log(StudentRecords);
     return StudentRecords;
@@ -56,15 +57,16 @@ async function getAllStudentsOnClass(id) {
     throw new ApiError(error.statusCode, error.message);
   }
 }
-async function getStudentByID(id) {
+async function getStudentByID(userID, classID) {
   try {
-    console.log(
-      await prisma.studentsOnClass.findUnique({
-        where: {
-          id: id,
-        },
-      })
-    );
+    const student = await prisma.studentsOnClass.findFirst({
+      where: {
+        userID: userID,
+        classID: classID,
+      },
+    });
+    console.log(student);
+    return student;
   } catch (error) {
     throw new ApiError(500, "database error while findUnique");
   }

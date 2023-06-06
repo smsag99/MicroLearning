@@ -67,11 +67,12 @@ async function getAllClasses() {
 }
 async function getClassByID(id) {
   try {
-    await prisma.Class.findUnique({
+    const res = await prisma.Class.findUnique({
       where: {
         id,
       },
     });
+    return res;
   } catch (error) {
     throw new ApiError(500, "database error while findUnique");
   }

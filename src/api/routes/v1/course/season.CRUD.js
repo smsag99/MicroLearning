@@ -13,7 +13,7 @@ router.get(
   "/getAllSeasons",
   isAuth,
   fetchAdmin,
-  isCan("read", "Season"),
+  // isCan("read", "Season"),
   async (req, res, next) => {
     try {
       const resault = await seasonServices.getAllSeasons();
@@ -30,7 +30,7 @@ router.get(
   validate(crudSeasonValidationSchema.read),
   isAuth,
   fetchAdmin,
-  isCan("read", "Season"),
+  // isCan("read", "Season"),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -42,13 +42,13 @@ router.get(
   }
 );
 
-//get season by Id
+//get season of course by courseId
 router.get(
   "/getSeasonsOfCourse/:id",
   validate(crudSeasonValidationSchema.read),
   isAuth,
   fetchAdmin,
-  isCan("read", "Season"),
+  // isCan("read", "Season"),
   async (req, res, next) => {
     try {
       const { id } = req.params;
