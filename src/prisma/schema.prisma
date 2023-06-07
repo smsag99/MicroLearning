@@ -97,13 +97,14 @@ model chapter {
 }
 
 model task {
-  id          Int     @id @default(autoincrement())
-  chapter     chapter @relation(fields: [chapterID], references: [id])
-  chapterID   Int
-  title       String  @default("")
-  priority    Int     @default(0)
-  description String  @default("")
-  type        String
+  id         Int     @id @default(autoincrement())
+  chapter    chapter @relation(fields: [chapterID], references: [id])
+  chapterID  Int
+  title      String  @default("")
+  priority   Int     @default(0)
+  content    Json    @db.JsonB
+  timeToRead Int     @default(1)
+  type       String
 }
 
 //model Quize {

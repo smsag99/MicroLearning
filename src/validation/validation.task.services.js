@@ -14,14 +14,12 @@ const create = {
       .regex(/^[a-zA-Z0-9]{5,16}$/)
       .required(),
     chapterId: joi.number().required(),
-    priority: joi.number().required(),
-    description: joi
-      .string()
-      .regex(/^[a-zA-Z0-9]{1,200}$/)
-      .optional(),
+    priority: joi.number().optional(),
+    timeToRead: joi.number().optional(),
+    content: joi.any().optional(),
     type: joi
       .string()
-      .valid(...["text", "quiz"])
+      .valid(...["task", "quiz"])
       .required(),
   }),
 };
@@ -37,13 +35,11 @@ const update = {
       .optional(),
     chapterId: joi.number().optional(),
     priority: joi.number().optional(),
-    description: joi
-      .string()
-      .regex(/^[a-zA-Z0-9]{1,200}$/)
-      .optional(),
+    timeToRead: joi.number().optional(),
+    content: joi.any().optional(),
     type: joi
       .string()
-      .valid(...["video", "text", "quiz"])
+      .valid(...["task", "quiz"])
       .optional(),
   }),
 };
