@@ -4,24 +4,62 @@ const { isAuth } = require("../../../middlewares/isAuth.middleware");
 const { isCan } = require("../../../middlewares/isCan.middleware");
 const { fetchAdmin } = require("../../../middlewares/fetchAdmin.middleware");
 const validate = require("../../../middlewares/validate.middleware");
+const crudTaskValidationSchema = require("../../../../validation/validation.task.services");
 const { ApiError } = require("../../../middlewares/errorHandling.middleware");
 const uploader = require("../../../../services/file-upload");
+const taskServices = require("../../../../services/course/task services");
 
-//get task
+//get all tasks
 router.get(
-  "/",
+  "/getalltasks",
   isAuth,
   fetchAdmin,
   // isCan("read", "Task"),
   async (req, res, next) => {
     try {
-      res.send("get task");
+      const resault = await taskServices.getAllTasks();
+      res.send(resault);
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));
     }
-    const uploader = require("../../../../services/common/uploader");
   }
 );
+//get task by id
+router.get(
+  "/:id",
+  validate(crudTaskValidationSchema.read),
+  isAuth,
+  fetchAdmin,
+  // isCan("read", "Task"),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const resault = await taskServices.getTaskByID(id);
+      res.send(resault);
+    } catch (error) {
+      return next(new ApiError(error.statusCode, error.message));
+    }
+  }
+);
+
+//get tasks of chapter
+router.get(
+  "/gettasksofchapter/:id",
+  validate(crudTaskValidationSchema.read),
+  isAuth,
+  fetchAdmin,
+  // isCan("read", "Task"),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const resault = await taskServices.getTasksOfChapter(id);
+      res.send(resault);
+    } catch (error) {
+      return next(new ApiError(error.statusCode, error.message));
+    }
+  }
+);
+
 //create task
 router.post(
   "/",

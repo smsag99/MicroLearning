@@ -10,17 +10,15 @@ const studentOnClassServices = require("../../../../services/course/StudentsOnCl
 
 //get all studentOnClass
 router.get(
-  "/getAllstudentsOnClass/:classID",
+  "/getAllstudentsOnClass/:id",
   isAuth,
   fetchAdmin,
-  validate(crudStudentOnClassValidationSchema.readAllStudent),
+  validate(crudStudentOnClassValidationSchema.read),
   // isCan("read", "StudentOnClass"),
   async (req, res, next) => {
     try {
-      const { classID } = req.params;
-      const resault = await studentOnClassServices.getAllStudentsOnClass(
-        classID
-      );
+      const { id } = req.params;
+      const resault = await studentOnClassServices.getAllStudentsOnClass(id);
       res.send(resault);
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));
@@ -43,6 +41,23 @@ router.get(
         userID,
         classID
       );
+      res.send(resault);
+    } catch (error) {
+      return next(new ApiError(error.statusCode, error.message));
+    }
+  }
+);
+//get classes of student
+router.get(
+  "/getclassesofstudent/:id",
+  validate(crudStudentOnClassValidationSchema.readStudentOnClass),
+  isAuth,
+  fetchAdmin,
+  // isCan("read", "StudentOnClass"),
+  async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const resault = await studentOnClassServices.getClassesOfStudent(id);
       res.send(resault);
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));

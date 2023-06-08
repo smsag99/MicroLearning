@@ -57,6 +57,18 @@ async function getAllStudentsOnClass(classID) {
     throw new ApiError(error.statusCode, error.message);
   }
 }
+//get classes of student
+async function getClassesOfStudent(id) {
+  try {
+    const StudentRecords = await prisma.studentsOnClass.findMany({
+      where: { userID: id },
+    });
+    console.log(StudentRecords);
+    return StudentRecords;
+  } catch (error) {
+    throw new ApiError(error.statusCode, error.message);
+  }
+}
 async function getStudentByID(userID, classID) {
   try {
     const student = await prisma.studentsOnClass.findFirst({
@@ -77,4 +89,5 @@ module.exports = {
   updateStudent,
   getAllStudentsOnClass,
   getStudentByID,
+  getClassesOfStudent,
 };

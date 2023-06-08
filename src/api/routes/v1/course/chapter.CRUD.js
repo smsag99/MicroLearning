@@ -42,13 +42,13 @@ router.get(
   }
 );
 
-//get chapter by Id
+//get chapters of season
 router.get(
   "/getChaptersOfSeason/:id",
   validate(crudChapterValidationSchema.read),
   isAuth,
   fetchAdmin,
-  isCan("read", "Chapter"),
+  // isCan("read", "Chapter"),
   async (req, res, next) => {
     try {
       const { id } = req.params;
