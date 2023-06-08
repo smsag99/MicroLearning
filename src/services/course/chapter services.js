@@ -60,6 +60,7 @@ async function getChaptersOfSeason(seasonID) {
       where: { seasonID: seasonID },
     });
     console.log(chapters);
+    return chapters;
   } catch {
     throw new ApiError(500, "error while adding student to class");
   }

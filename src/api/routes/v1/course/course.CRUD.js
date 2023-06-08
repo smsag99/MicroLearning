@@ -30,6 +30,7 @@ router.get(
 //get all courses
 router.get(
   "/getAllCourses",
+  validate(crudCourseValidationSchema.read),
   isAuth,
   fetchAdmin,
   // isCan("read", "Course"),
