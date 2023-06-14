@@ -27,7 +27,7 @@ const create = {
       .required(),
     password: joi
       .string()
-      .regex(/^[a-zA-Z0-9]{8,16}$/)
+      .regex(/^[a-zA-Z0-9- ]{8,16}$/)
       .required(),
     blocked: joi.bool().optional(),
     softDelete: joi.bool().optional(),
@@ -55,7 +55,7 @@ const update = {
     lastName: joi.string().optional(),
     password: joi
       .string()
-      .regex(/^[a-zA-Z0-9]{8,16}$/)
+      .regex(/^[a-zA-Z0-9- ]{8,16}$/)
       .optional(),
     blocked: joi.bool().optional(),
     softDelete: joi.bool().optional(),

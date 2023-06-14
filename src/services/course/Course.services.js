@@ -65,8 +65,6 @@ async function getCourseByID(id) {
     throw new ApiError(500, "database error while findUnique");
   }
 }
-createEmptyCourse(1, "lkkjasdlidsk", "hkjhjhkjhjkh");
-
 module.exports = {
   createEmptyCourse,
   lockStatus,

@@ -11,7 +11,7 @@ const create = {
   body: joi.object().keys({
     title: joi
       .string()
-      .regex(/^[a-zA-Z0-9]{5,16}$/)
+      .regex(/^[a-zA-Z0-9- ]{5,16}$/)
       .required(),
     chapterId: joi.number().required(),
     priority: joi.number().optional(),
@@ -31,7 +31,7 @@ const update = {
   body: joi.object().keys({
     title: joi
       .string()
-      .regex(/^[a-zA-Z0-9]{5,16}$/)
+      .regex(/^[a-zA-Z0-9- ]{5,16}$/)
       .optional(),
     chapterId: joi.number().optional(),
     priority: joi.number().optional(),
