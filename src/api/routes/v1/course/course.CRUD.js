@@ -8,8 +8,23 @@ const crudCourseValidationSchema = require("../../../../validation/validation.co
 const { ApiError } = require("../../../middlewares/errorHandling.middleware");
 const courseServices = require("../../../../services/course/Course.services");
 
-//get by id
+//get all courses
+router.get(
+  "/getAllCourses",
+  isAuth,
+  fetchAdmin,
+  // isCan("read", "Course"),
+  async (req, res, next) => {
+    try {
+      const resault = await courseServices.getAllCourses();
+      res.send(resault);
+    } catch (error) {
+      return next(new ApiError(error.statusCode, error.message));
+    }
+  }
+);
 
+//get by id
 router.get(
   "/:id",
   validate(crudCourseValidationSchema.read),
@@ -27,30 +42,13 @@ router.get(
   }
 );
 
-//get all courses
-router.get(
-  "/getAllCourses",
-  validate(crudCourseValidationSchema.read),
-  isAuth,
-  fetchAdmin,
-  // isCan("read", "Course"),
-  async (req, res, next) => {
-    try {
-      const resault = await courseServices.getAllCourses();
-      res.send(resault);
-    } catch (error) {
-      return next(new ApiError(error.statusCode, error.message));
-    }
-  }
-);
-
 //create course
 router.post(
   "/",
   validate(crudCourseValidationSchema.create),
   isAuth,
   fetchAdmin,
-  isCan("create", "Course"),
+  // isCan("create", "Course"),
   async (req, res, next) => {
     try {
       const { teacherId, title, description } = req.body;

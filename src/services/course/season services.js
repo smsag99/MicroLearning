@@ -5,6 +5,7 @@ const { get } = require("https");
 const prisma = new PrismaClient();
 require("dotenv").config();
 
+
 async function createEmptySeason(title, course, priority) {
   try {
     await prisma.season.create({

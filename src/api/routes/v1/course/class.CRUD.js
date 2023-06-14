@@ -23,8 +23,8 @@ router.get(
     }
   }
 );
-//get by id
 
+//get by id
 router.get(
   "/:id",
   validate(crudClassValidationSchema.read),
@@ -41,16 +41,17 @@ router.get(
     }
   }
 );
+
 //create class
 router.post(
   "/",
   validate(crudClassValidationSchema.create),
   isAuth,
   fetchAdmin,
-  isCan("create", "Class"),
+  // isCan("create", "Class"),
   async (req, res, next) => {
     try {
-      const { title, startTime, endTime, capacity, course, mentorId } =
+      const { title, startTime, endTime, capacity, courseId, mentorId } =
         req.body;
       const resault = await classServices.createEmptyClass(
         title,

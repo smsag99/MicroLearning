@@ -66,7 +66,7 @@ router.post(
   validate(crudChapterValidationSchema.create),
   isAuth,
   fetchAdmin,
-  isCan("create", "Chapter"),
+  // isCan("create", "Chapter"),
   async (req, res, next) => {
     try {
       const { title, seasonId, priority } = req.body;

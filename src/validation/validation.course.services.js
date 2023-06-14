@@ -11,12 +11,12 @@ const create = {
   body: joi.object().keys({
     title: joi
       .string()
-      .regex(/^[a-zA-Z0-9]{5,16}$/)
+      .regex(/^[a-zA-Z0-9- ]{5,16}$/)
       .required(),
     teacherId: joi.number().required(),
     description: joi
       .string()
-      .regex(/^[a-zA-Z0-9]{1,200}$/)
+      .regex(/^[a-zA-Z0-9- ]{1,200}$/)
       .optional(),
   }),
 };
@@ -28,12 +28,12 @@ const update = {
   body: joi.object().keys({
     title: joi
       .string()
-      .regex(/^[a-zA-Z0-9]{5,16}$/)
+      .regex(/^[a-zA-Z0-9- ]{5,16}$/)
       .optional(),
     teacherId: joi.number().optional(),
     description: joi
       .string()
-      .regex(/^[a-zA-Z0-9]{1,200}$/)
+      .regex(/^[a-zA-Z0-9- ]{1,200}$/)
       .optional(),
   }),
 };

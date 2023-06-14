@@ -63,10 +63,21 @@ router.get(
 //create task
 router.post(
   "/",
+  validate(crudTaskValidationSchema.create),
   isAuth,
   fetchAdmin,
-  isCan("create", "Task"),
+  // isCan("create", "Task"),
   async (req, res, next) => {
+    const { chapterId, title, priority, content, timeToRead, type } = req.body;
+    const resault = await taskServices.createEmptyTask(
+      chapterId,
+      title,
+      priority,
+      content,
+      timeToRead,
+      type
+    );
+    res.send(resault);
     try {
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));
@@ -78,7 +89,7 @@ router.post(
   "/upload",
   isAuth,
   fetchAdmin,
-  isCan("create", "Task"),
+  // isCan("create", "Task"),
   (req, res, next) => {
     uploader(req, "media")
       .then((result) => {
