@@ -19,8 +19,8 @@ const create = {
     classId: joi.number().required(),
     mark: joi.number().optional(),
     progress: joi.number().precision(2).strict().optional(),
-    startTime: joi.date().optional(),
-    endTime: joi.date().optional(),
+    startTime: joi.date().optional().default("2022-01-01T00:00:00.000Z"),
+    endTime: joi.date().optional().default("2027-01-01T00:00:00.000Z"),
   }),
 };
 

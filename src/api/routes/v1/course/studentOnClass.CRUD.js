@@ -50,7 +50,7 @@ router.get(
 //get classes of student
 router.get(
   "/getclassesofstudent/:id",
-  validate(crudStudentOnClassValidationSchema.readStudentOnClass),
+  validate(crudStudentOnClassValidationSchema.read),
   isAuth,
   fetchAdmin,
   // isCan("read", "StudentOnClass"),
@@ -71,14 +71,14 @@ router.post(
   validate(crudStudentOnClassValidationSchema.create),
   isAuth,
   fetchAdmin,
-  isCan("create", "StudentOnClass"),
+  // isCan("create", "StudentOnClass"),
   async (req, res, next) => {
     try {
-      const { studentId, classID, mark, progress, startTime, endTime } =
+      const { studentId, classId, mark, progress, startTime, endTime } =
         req.body;
       const resault = await studentOnClassServices.addStudent(
         studentId,
-        classID,
+        classId,
         mark,
         progress,
         startTime,
