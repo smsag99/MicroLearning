@@ -3,13 +3,21 @@ const { ApiError } = require("../../api/middlewares/errorHandling.middleware");
 const prisma = new PrismaClient();
 require("dotenv").config();
 
-async function createEmptyCourse(teacherId, title, description) {
+async function createEmptyCourse(
+  teacherId,
+  title,
+  description,
+  rate,
+  taskcount
+) {
   try {
     await prisma.Course.create({
       data: {
         teacher: { connect: { id: teacherId } },
         title: title,
         description: description,
+        rate: rate,
+        taskcount: taskcount,
       },
     });
   } catch (error) {

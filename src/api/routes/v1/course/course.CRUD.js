@@ -51,11 +51,13 @@ router.post(
   // isCan("create", "Course"),
   async (req, res, next) => {
     try {
-      const { teacherId, title, description } = req.body;
+      const { teacherId, title, description, rate, taskcount } = req.body;
       const resault = await courseServices.createEmptyCourse(
         teacherId,
         title,
-        description
+        description,
+        rate,
+        taskcount
       );
       res.send(resault);
     } catch (error) {
@@ -69,7 +71,7 @@ router.put(
   validate(crudCourseValidationSchema.update),
   isAuth,
   fetchAdmin,
-  isCan("update", "Course"),
+  // isCan("update", "Course"),
   async (req, res, next) => {
     try {
       req.body.id = req.params.id;

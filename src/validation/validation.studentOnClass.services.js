@@ -15,7 +15,7 @@ const readStudentOnClass = {
 };
 const create = {
   body: joi.object().keys({
-    studentId: joi.number().required(),
+    userId: joi.number().required(),
     classId: joi.number().required(),
     mark: joi.number().optional(),
     progress: joi.number().precision(2).strict().optional(),
@@ -25,9 +25,11 @@ const create = {
 };
 
 const update = {
-  body: joi.object().keys({
-    studentId: joi.number().required(),
+  params: joi.object().keys({
+    userId: joi.number().required(),
     classId: joi.number().optional(),
+  }),
+  body: joi.object().keys({
     mark: joi.number().optional(),
     progress: joi.number().precision(2).strict().optional(),
     startTime: joi.date().optional(),

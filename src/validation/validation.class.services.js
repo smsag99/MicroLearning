@@ -18,6 +18,7 @@ const create = {
     mentorId: joi.number().required(),
     courseId: joi.number().required(),
     capacity: joi.number().required(),
+    isLocked: joi.bool().optional(),
   }),
 };
 
@@ -35,6 +36,7 @@ const update = {
     mentorId: joi.number().optional(),
     courseId: joi.number().optional(),
     capacity: joi.number().optional(),
+    isLocked: joi.bool().optional(),
   }),
 };
 const lock = {

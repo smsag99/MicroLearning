@@ -67,17 +67,16 @@ router.get(
 
 //create studentOnClass
 router.post(
-  "/",
+  "/addStudentToClass",
   validate(crudStudentOnClassValidationSchema.create),
   isAuth,
   fetchAdmin,
   // isCan("create", "StudentOnClass"),
   async (req, res, next) => {
     try {
-      const { studentId, classId, mark, progress, startTime, endTime } =
-        req.body;
+      const { userId, classId, mark, progress, startTime, endTime } = req.body;
       const resault = await studentOnClassServices.addStudent(
-        studentId,
+        userId,
         classId,
         mark,
         progress,
@@ -92,14 +91,15 @@ router.post(
 );
 //put studentOnClass
 router.put(
-  "/",
+  "/:userId/:classId",
   validate(crudStudentOnClassValidationSchema.update),
   isAuth,
   fetchAdmin,
-  isCan("update", "StudentOnClass"),
+  // isCan("update", "StudentOnClass"),
   async (req, res, next) => {
     try {
-      req.body.id = req.params.id;
+      req.body.userID = req.params.userId;
+      req.body.classID = req.params.classId;
       const resault = await studentOnClassServices.updateStudent(req.body);
       res.send(resault);
     } catch (error) {

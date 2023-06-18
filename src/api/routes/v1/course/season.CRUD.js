@@ -83,11 +83,11 @@ router.post(
 );
 //put season
 router.put(
-  "/",
+  "/:id",
   validate(crudSeasonValidationSchema.update),
   isAuth,
   fetchAdmin,
-  isCan("update", "Season"),
+  // isCan("update", "Season"),
   async (req, res, next) => {
     try {
       req.body.id = req.params.id;

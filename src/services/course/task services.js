@@ -15,7 +15,7 @@ async function createEmptyTask(
   type
 ) {
   try {
-    await prisma.task.create({
+    return await prisma.task.create({
       data: {
         chapter: { connect: { id: chapter } },
         title: title,
@@ -33,7 +33,7 @@ async function updateTask(updatedTask) {
   try {
     // eslint-disable-next-line no-param-reassign
     const id = updatedTask.id;
-    await prisma.task.update({
+    return await prisma.task.update({
       where: { id: id },
       data: updatedTask,
     });

@@ -73,7 +73,7 @@ router.put(
   validate(crudClassValidationSchema.update),
   isAuth,
   fetchAdmin,
-  isCan("update", "Class"),
+  // isCan("update", "Class"),
   async (req, res, next) => {
     try {
       req.body.id = req.params.id;

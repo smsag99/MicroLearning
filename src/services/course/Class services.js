@@ -47,11 +47,10 @@ async function updateClass(updatedClass) {
   try {
     // eslint-disable-next-line no-param-reassign
     const id = updatedClass.id;
-    await prisma.Class.update({
+    return await prisma.Class.update({
       where: { id: id },
       data: updatedClass,
     });
-    console.log("the Class has been successfully updated");
   } catch (error) {
     throw new ApiError(error.statusCode, error.message);
   }

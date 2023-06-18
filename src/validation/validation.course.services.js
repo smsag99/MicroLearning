@@ -18,6 +18,9 @@ const create = {
       .string()
       .regex(/^[a-zA-Z0-9- ]{1,200}$/)
       .optional(),
+    rate: joi.number().optional(),
+    taskcount: joi.number().optional(),
+    isLocked: joi.bool().optional(),
   }),
 };
 
@@ -35,6 +38,9 @@ const update = {
       .string()
       .regex(/^[a-zA-Z0-9- ]{1,200}$/)
       .optional(),
+    rate: joi.number().optional(),
+    isLocked: joi.bool().optional(),
+    taskcount: joi.number().optional(),
   }),
 };
 const lock = {
