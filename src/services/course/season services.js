@@ -5,7 +5,6 @@ const { get } = require("https");
 const prisma = new PrismaClient();
 require("dotenv").config();
 
-
 async function createEmptySeason(title, course, priority) {
   try {
     await prisma.season.create({
@@ -23,11 +22,10 @@ async function updateSeason(updatedSeason) {
   try {
     // eslint-disable-next-line no-param-reassign
     const id = updatedSeason.id;
-    await prisma.season.update({
+    return await prisma.season.update({
       where: { id: id },
       data: updatedSeason,
     });
-    console.log("the seasn has been successfully updated");
   } catch (error) {
     throw new ApiError(error.statusCode, error.message);
   }

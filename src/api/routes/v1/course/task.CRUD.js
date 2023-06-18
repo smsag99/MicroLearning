@@ -103,11 +103,15 @@ router.post(
 
 //put task
 router.put(
-  "/",
+  "/:id",
+  validate(crudTaskValidationSchema.update),
   isAuth,
   fetchAdmin,
-  isCan("update", "Task"),
+  // isCan("update", "Task"),
   async (req, res, next) => {
+    req.body.id = req.params.id;
+    const resault = await taskServices.updateTask(req.body);
+    res.send(resault);
     try {
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));

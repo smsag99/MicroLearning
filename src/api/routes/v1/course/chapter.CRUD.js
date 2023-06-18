@@ -83,11 +83,11 @@ router.post(
 );
 //put Chapter
 router.put(
-  "/",
+  "/:id",
   validate(crudChapterValidationSchema.update),
   isAuth,
   fetchAdmin,
-  isCan("update", "Chapter"),
+  // isCan("update", "Chapter"),
   async (req, res, next) => {
     try {
       req.body.id = req.params.id;

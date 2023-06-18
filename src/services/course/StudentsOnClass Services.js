@@ -35,13 +35,15 @@ async function addStudent(
 async function updateStudent(updatedStudent) {
   try {
     // eslint-disable-next-line no-param-reassign
-    const id = updatedStudent.id;
-    console.log(
-      await prisma.studentsOnClass.update({
-        where: { id: id },
-        data: updatedStudent,
-      })
-    );
+    const userId = updatedStudent.userId;
+    const classId = updatedStudent.classId;
+    const record = await getStudentByID(userId, classId);
+    return await prisma.studentsOnClass.update({
+      where: {
+        id: record.id,
+      },
+      data: updatedStudent,
+    });
   } catch (error) {
     throw new ApiError(error.statusCode, error.message);
   }

@@ -23,11 +23,10 @@ async function updateChapter(updatedChapter) {
   try {
     // eslint-disable-next-line no-param-reassign
     const id = updatedChapter.id;
-    await prisma.chapter.update({
+    return await prisma.chapter.update({
       where: { id: id },
       data: updatedChapter,
     });
-    console.log("the chapter has been successfully updated");
   } catch (error) {
     throw new ApiError(error.statusCode, error.message);
   }
