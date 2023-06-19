@@ -27,7 +27,7 @@ const create = {
 const update = {
   params: joi.object().keys({
     userId: joi.number().required(),
-    classId: joi.number().optional(),
+    classId: joi.number().required(),
   }),
   body: joi.object().keys({
     mark: joi.number().optional(),
@@ -36,9 +36,17 @@ const update = {
     endTime: joi.date().optional(),
   }),
 };
+const updateDone = {
+  params: joi.object().keys({
+    userId: joi.number().required(),
+    classId: joi.number().required(),
+    taskId: joi.number().required(),
+  }),
+};
 module.exports = {
   read,
   readStudentOnClass,
   create,
   update,
+  updateDone,
 };
