@@ -48,6 +48,27 @@ async function updateStudent(updatedStudent) {
     throw new ApiError(error.statusCode, error.message);
   }
 }
+
+async function updateTaskOfStudent(updatedStudent) {
+  try {
+    // eslint-disable-next-line no-param-reassign
+    const userId = updatedStudent.userId;
+    const classId = updatedStudent.classId;
+    const TaskId = updatedStudent.taskId;
+
+    const record = await getStudentByID(userId, classId);
+    const updatedArray = [...record.done, TaskId];
+
+    return await prisma.studentsOnClass.update({
+      where: {
+        id: record.id,
+      },
+      data: { done: updatedArray },
+    });
+  } catch (error) {
+    throw new ApiError(error.statusCode, error.message);
+  }
+}
 async function getAllStudentsOnClass(classID) {
   try {
     const StudentRecords = await prisma.studentsOnClass.findMany({
@@ -92,4 +113,5 @@ module.exports = {
   getAllStudentsOnClass,
   getStudentByID,
   getClassesOfStudent,
+  updateTaskOfStudent,
 };

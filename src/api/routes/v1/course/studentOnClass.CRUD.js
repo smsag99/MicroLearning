@@ -98,8 +98,8 @@ router.put(
   // isCan("update", "StudentOnClass"),
   async (req, res, next) => {
     try {
-      req.body.userID = req.params.userId;
-      req.body.classID = req.params.classId;
+      req.body.userId = req.params.userId;
+      req.body.classId = req.params.classId;
       const resault = await studentOnClassServices.updateStudent(req.body);
       res.send(resault);
     } catch (error) {
@@ -107,6 +107,28 @@ router.put(
     }
   }
 );
+// adding a task
+router.put(
+  "/doneTask/:userId/:classId/:taskId",
+  validate(crudStudentOnClassValidationSchema.updateDone),
+  isAuth,
+  fetchAdmin,
+  // isCan("update", "StudentOnClass"),
+  async (req, res, next) => {
+    try {
+      req.body.userId = req.params.userId;
+      req.body.classId = req.params.classId;
+      req.body.taskId = req.params.taskId;
+      const resault = await studentOnClassServices.updateTaskOfStudent(
+        req.body
+      );
+      res.send(resault);
+    } catch (error) {
+      return next(new ApiError(error.statusCode, error.message));
+    }
+  }
+);
+
 //delete studentOnClass
 router.delete(
   "/",
