@@ -32,4 +32,3 @@ services:
 networks:
    app_network:
     name: network-np
-    external: true
