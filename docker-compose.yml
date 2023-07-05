@@ -24,7 +24,7 @@ services:
     networks:
       - app_network
     volumes:
-      - /var/lib/microlearning-postgres/data:/var/lib/postgresql/data
+      - ./microlearning-postgres/data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
       
