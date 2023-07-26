@@ -50,7 +50,7 @@ async function getChapterByID(id) {
     console.log(chapter);
     return chapter;
   } catch (error) {
-    throw new ApiError(500, "database error while findUnique");
+    throw new ApiError(400, "database error while findUnique");
   }
 }
 async function getChaptersOfSeason(seasonID) {
@@ -61,7 +61,7 @@ async function getChaptersOfSeason(seasonID) {
     console.log(chapters);
     return chapters;
   } catch {
-    throw new ApiError(500, "error while adding student to class");
+    throw new ApiError(400, "error while adding student to class");
   }
 }
 

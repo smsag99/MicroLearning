@@ -63,7 +63,7 @@ router.post(
       const { phone, password } = req.body;
       const user = await getUserbyPhone(phone);
       if (user) {
-        return next(new ApiError(403, "This User Already Exists!"));
+        return next(new ApiError(400, "This User Already Exists!"));
       } else {
         const resault = await createUser(phone, password);
         res.send({

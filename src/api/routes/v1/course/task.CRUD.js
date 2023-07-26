@@ -96,7 +96,7 @@ router.post(
         res.send(result[result.length - 1]);
       })
       .catch((error) => {
-        return next(new ApiError(500, error.message));
+        return next(new ApiError(400, error.message));
       });
   }
 );

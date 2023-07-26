@@ -14,7 +14,7 @@ const prisma = new PrismaClient();
 const signup = async (phone) => {
   const user = await getUserbyPhone(phone);
   if (user) {
-    throw new ApiError(403, "This User Already Exists!");
+    throw new ApiError(400, "This User Already Exists!");
   }
   await generateNewCodeForThisNumber(phone);
 };
@@ -24,17 +24,17 @@ const verify = async (phone, code, password) => {
   if (await CheckIfCorrect(code, phone)) {
     return createUser(phone, password);
   }
-  throw new ApiError(403, "access denied! code isn't correct");
+  throw new ApiError(400, "access denied! code isn't correct");
 };
 
 const login = async (phone, password) => {
   const user = await getUserbyPhone(phone);
   if (!user) {
-    throw new ApiError(403, "the password or username is incorrect");
+    throw new ApiError(400, "the password or username is incorrect");
   }
   if (await bcrypt.compare(password, user.password))
     return setRefereshToken(phone, password);
-  throw new ApiError(403, "the password or the username is incorrect");
+  throw new ApiError(400, "the password or the username is incorrect");
 };
 async function getAllUsers(size, page) {
   try {
@@ -71,7 +71,7 @@ const logout = async (id) => {
     await updateUser(user);
     return true;
   } catch (error) {
-    throw new ApiError(404, "User not found");
+    throw new ApiError(400, "User not found");
   }
 };
 
@@ -87,7 +87,7 @@ const verifyForgetPassword = async (phone, code, password) => {
     user.password = hashedPaassword;
     if (await updateUser(user)) await setRefereshToken(user.phone);
   } else {
-    throw new ApiError(403, "access denied! code isn't correct");
+    throw new ApiError(400, "access denied! code isn't correct");
   }
 };
 
@@ -107,7 +107,7 @@ async function getUserbyPhone(phone) {
       },
     });
   } catch (error) {
-    throw new ApiError(404, "User not found");
+    throw new ApiError(400, "User not found");
   }
 }
 
@@ -153,7 +153,7 @@ async function updateUser(obj) {
       });
       return omit(user);
     } else {
-      throw new ApiError(404, "User not found");
+      throw new ApiError(400, "User not found");
     }
   } catch (error) {
     throw new ApiError(error.statusCode, error.message);
@@ -172,7 +172,7 @@ async function deleteUser(phone) {
     });
     return true;
   } catch (error) {
-    throw new ApiError(500, "error while deleting");
+    throw new ApiError(400, "error while deleting");
   }
 }
 function omit(object) {

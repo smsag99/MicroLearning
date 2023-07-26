@@ -13,7 +13,7 @@ const signup = async (userName, password, permissions) => {
   const admin = await getAdminbyUserName(userName);
   console.log(admin);
   if (admin) {
-    throw new ApiError(403, "This Admin Already Exists!");
+    throw new ApiError(400, "This Admin Already Exists!");
   }
   return createAdmin(userName, password, permissions);
 };
@@ -22,12 +22,12 @@ const login = async (userName, password) => {
   const admin = await getAdminbyUserName(userName);
   console.log(admin);
   if (!admin) {
-    throw new ApiError(403, "the password or username is incorrect");
+    throw new ApiError(400, "the password or username is incorrect");
   }
   if (await bcrypt.compare(password, admin.password)) {
     return setRefereshToken(userName);
   }
-  throw new ApiError(403, "the password or username is incorrect");
+  throw new ApiError(400, "the password or username is incorrect");
 };
 
 const refreshToken = async (id) => {
@@ -41,7 +41,7 @@ const logout = async (id) => {
     admin.refreshToken = "";
     await updateAdmin(admin);
   } catch (error) {
-    throw new ApiError(404, "Admin not found");
+    throw new ApiError(400, "Admin not found");
   }
 };
 
@@ -62,7 +62,7 @@ async function getAdminbyUserName(userName) {
       },
     });
   } catch (error) {
-    throw new ApiError(500, "database error while findUnique");
+    throw new ApiError(400, "database error while findUnique");
   }
 }
 async function getAllAdmins() {
@@ -124,7 +124,7 @@ async function updateAdmin(admin) {
     console.log(resault);
     return resault;
   } catch (error) {
-    throw new ApiError(500, "error while updating");
+    throw new ApiError(400, "error while updating");
   }
 }
 
@@ -140,7 +140,7 @@ async function deleteAdmin(userName) {
     });
     return true;
   } catch (error) {
-    throw new ApiError(500, "error while deleting");
+    throw new ApiError(400, "error while deleting");
   }
 }
 function omit(object) {

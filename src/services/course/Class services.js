@@ -73,7 +73,7 @@ async function getClassByID(id) {
     });
     return res;
   } catch (error) {
-    throw new ApiError(500, "database error while findUnique");
+    throw new ApiError(400, "database error while findUnique");
   }
 }
 module.exports = {

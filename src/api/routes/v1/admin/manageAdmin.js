@@ -62,7 +62,7 @@ router.post(
       const { userName } = req.body;
       const admin = await getAdminbyUserName(userName);
       if (admin) {
-        return next(new ApiError(403, "This Admin Already Exists!"));
+        return next(new ApiError(400, "This Admin Already Exists!"));
       } else {
         const { user, password, permissions } = req.body;
         const resault = await createAdmin(user, password, permissions);
