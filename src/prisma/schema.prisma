@@ -23,31 +23,34 @@ model User {
 }
 
 model Admin {
-  id           Int      @id @unique @default(autoincrement())
-  firstName    String   @default("")
-  lastName     String   @default("")
-  userName     String   @unique
-  role         String   @default("")
-  password     String   @default("")
-  refreshToken String   @default("")
-  softDelete   Boolean  @default(false)
-  permissions  Json     @db.JsonB
-  classes      Class[]
-  courses      Course[]
+  id                  Int      @id @unique @default(autoincrement())
+  firstName           String   @default("")
+  lastName            String   @default("")
+  userName            String   @unique
+  role                String   @default("")
+  password            String   @default("")
+  refreshToken        String   @default("")
+  softDelete          Boolean  @default(false)
+  permissions         Json     @db.JsonB
+  classesAsSupervisor Class[]  @relation("supervisor")
+  classesAsMentor     Class[]  @relation("mentor")
+  courses             Course[]
 }
 
 model Class {
-  id        Int               @id @default(autoincrement())
-  course    Course            @relation(fields: [courseID], references: [id])
-  courseID  Int
-  mentor    Admin             @relation(fields: [mentorID], references: [id])
-  mentorID  Int
-  title     String
-  startTime DateTime
-  endTime   DateTime
-  isLocked  Boolean           @default(false)
-  capacity  Int               @default(0)
-  students  studentsOnClass[]
+  id           Int               @id @default(autoincrement())
+  course       Course            @relation(fields: [courseID], references: [id])
+  courseID     Int
+  mentor       Admin             @relation(name: "mentor", fields: [mentorID], references: [id])
+  mentorID     Int
+  supervisor   Admin             @relation(name: "supervisor", fields: [supervisorID], references: [id])
+  supervisorID Int               @default(1)
+  title        String
+  startTime    DateTime
+  endTime      DateTime
+  isLocked     Boolean           @default(false)
+  capacity     Int               @default(0)
+  students     studentsOnClass[]
 }
 
 model studentsOnClass {
