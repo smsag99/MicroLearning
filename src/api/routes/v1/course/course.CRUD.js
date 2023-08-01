@@ -12,7 +12,7 @@ const courseServices = require("../../../../services/course/Course.services");
 router.get(
   "/getAllCourses",
   isAuth,
-  fetchAdmin,
+  //fetchAdmin,
   // isCan("read", "Course"),
   async (req, res, next) => {
     try {
@@ -29,7 +29,7 @@ router.get(
   "/:id",
   validate(crudCourseValidationSchema.read),
   isAuth,
-  fetchAdmin,
+  //fetchAdmin,
   // isCan("read", "Course"),
   async (req, res, next) => {
     try {
