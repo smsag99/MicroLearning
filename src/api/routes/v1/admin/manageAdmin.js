@@ -64,12 +64,12 @@ router.post(
       if (admin) {
         return next(new ApiError(400, "This Admin Already Exists!"));
       } else {
-        const { user, password, rule } = req.body;
-        const resault = await createAdmin(user, password, rule);
+        const { userName, password, role } = req.body;
+        const resault = await createAdmin(userName, password, role);
         res.send({
-          userName: user,
+          userName: userName,
           password: password,
-          rule: rule,
+          role: role,
         });
       }
     } catch (error) {

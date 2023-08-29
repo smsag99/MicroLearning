@@ -20,7 +20,7 @@ const create = {
       .string()
       .regex(/^[a-zA-Z0-9- ]{8,16}$/)
       .required(),
-    rule: joi
+    role: joi
       .string()
       .valid(...["Admin", "Teacher", "Supervisor"])
       .required(),
