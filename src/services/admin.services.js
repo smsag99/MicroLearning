@@ -185,7 +185,6 @@ async function createAdmin(userName, password, role) {
         { action: "read", subject: "StudentOnClass" },
       ];
       break;
-      break;
   }
   const permissionsString = JSON.stringify(permissions);
 

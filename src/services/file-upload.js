@@ -16,6 +16,7 @@ module.exports = (req, directory) => {
 
         const newPath = path.join(
           process.cwd(),
+          "src/",
           directory,
           uuid.v4() + "_" + file.media.originalFilename
         );
