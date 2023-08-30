@@ -27,6 +27,7 @@ model Admin {
   firstName    String   @default("")
   lastName     String   @default("")
   userName     String   @unique
+  profilePhoto String   @default("default.jpg")
   role         String   @default("")
   password     String   @default("")
   refreshToken String   @default("")

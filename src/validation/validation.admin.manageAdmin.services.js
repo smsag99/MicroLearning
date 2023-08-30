@@ -16,6 +16,10 @@ const create = {
       .regex(/^[a-zA-Z0-9- ]{5,16}$/)
       .required(),
     softDelete: joi.bool().optional(),
+    profilePhoto: joi
+      .string()
+      .regex(/^[a-zA-Z0-9- ]{5,50}$/)
+      .optional(),
     password: joi
       .string()
       .regex(/^[a-zA-Z0-9- ]{8,16}$/)
@@ -46,6 +50,10 @@ const update = {
     password: joi
       .string()
       .regex(/^[a-zA-Z0-9- ]{8,16}$/)
+      .optional(),
+    profilePhoto: joi
+      .string()
+      .regex(/^[a-zA-Z0-9- ]{5,50}$/)
       .optional(),
     role: joi
       .string()
