@@ -64,12 +64,12 @@ router.post(
       if (admin) {
         return next(new ApiError(400, "This Admin Already Exists!"));
       } else {
-        const { user, password, permissions } = req.body;
-        const resault = await createAdmin(user, password, permissions);
+        const { userName, password, role } = req.body;
+        const resault = await createAdmin(userName, password, role);
         res.send({
-          userName: user,
+          userName: userName,
           password: password,
-          permissions: permissions,
+          role: role,
         });
       }
     } catch (error) {
@@ -85,12 +85,22 @@ router.put(
   isCan("update", "Admin"),
   async (req, res, next) => {
     try {
-      req.body.password = (await bcrypt.hash(req.body.password, 10)).toString();
+      if (req.body.password)
+        req.body.password = (
+          await bcrypt.hash(req.body.password, 10)
+        ).toString();
       req.body.userName = req.params.userName;
-      req.body.permissions = JSON.stringify(req.body.permissions);
-      console.log(req.body.permissions);
-      const resault = await updateAdmin(req.body);
-      res.send(omit(resault));
+      console.log(req.body.role);
+      if (req.user.userName == req.body.userName) {
+        const resault = await updateAdmin(req.body);
+        res.send(omit(resault));
+      }
+      return next(
+        new ApiError(
+          400,
+          "access denied! each user can only update their profile"
+        )
+      );
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));
     }

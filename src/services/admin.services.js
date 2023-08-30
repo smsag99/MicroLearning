@@ -100,14 +100,100 @@ async function setRefereshToken(userName) {
   }
 }
 
-async function createAdmin(userName, password, permissions) {
+async function createAdmin(userName, password, role) {
   const hashedPassword = await bcrypt.hash(password, 10);
+  let permissions;
+  switch (role) {
+    case "Admin":
+      permissions = [
+        { action: "create", subject: "Admin" },
+        { action: "read", subject: "Admin" },
+        { action: "update", subject: "Admin" },
+        { action: "delete", subject: "Admin" },
+        { action: "create", subject: "User" },
+        { action: "read", subject: "User" },
+        { action: "update", subject: "User" },
+        { action: "delete", subject: "User" },
+        { action: "create", subject: "Course" },
+        { action: "read", subject: "Course" },
+        { action: "update", subject: "Course" },
+        { action: "delete", subject: "Course" },
+        { action: "create", subject: "Chapter" },
+        { action: "read", subject: "Chapter" },
+        { action: "update", subject: "Chapter" },
+        { action: "delete", subject: "Chapter" },
+        { action: "create", subject: "Class" },
+        { action: "read", subject: "Class" },
+        { action: "update", subject: "Class" },
+        { action: "delete", subject: "Class" },
+        { action: "create", subject: "Task" },
+        { action: "read", subject: "Task" },
+        { action: "update", subject: "Task" },
+        { action: "delete", subject: "Task" },
+        { action: "create", subject: "Season" },
+        { action: "read", subject: "Season" },
+        { action: "update", subject: "Season" },
+        { action: "delete", subject: "Season" },
+        { action: "create", subject: "StudentOnClass" },
+        { action: "read", subject: "StudentOnClass" },
+        { action: "update", subject: "StudentOnClass" },
+        { action: "delete", subject: "StudentOnClass" },
+      ];
+      break;
+    case "Teacher":
+      permissions = [
+        { action: "read", subject: "Admin" },
+        { action: "create", subject: "User" },
+        { action: "read", subject: "User" },
+        { action: "update", subject: "User" },
+        { action: "delete", subject: "User" },
+        { action: "create", subject: "Course" },
+        { action: "read", subject: "Course" },
+        { action: "update", subject: "Course" },
+        { action: "delete", subject: "Course" },
+        { action: "create", subject: "Chapter" },
+        { action: "read", subject: "Chapter" },
+        { action: "update", subject: "Chapter" },
+        { action: "delete", subject: "Chapter" },
+        { action: "create", subject: "Class" },
+        { action: "read", subject: "Class" },
+        { action: "update", subject: "Class" },
+        { action: "delete", subject: "Class" },
+        { action: "create", subject: "Task" },
+        { action: "read", subject: "Task" },
+        { action: "update", subject: "Task" },
+        { action: "delete", subject: "Task" },
+        { action: "create", subject: "Season" },
+        { action: "read", subject: "Season" },
+        { action: "update", subject: "Season" },
+        { action: "delete", subject: "Season" },
+        { action: "create", subject: "StudentOnClass" },
+        { action: "read", subject: "StudentOnClass" },
+        { action: "update", subject: "StudentOnClass" },
+        { action: "delete", subject: "StudentOnClass" },
+      ];
+      break;
+    case "Supervisor":
+      permissions = [
+        { action: "read", subject: "Admin" },
+        { action: "read", subject: "User" },
+        { action: "read", subject: "Course" },
+        { action: "read", subject: "Chapter" },
+        { action: "read", subject: "Class" },
+        { action: "read", subject: "Task" },
+        { action: "read", subject: "Season" },
+        { action: "read", subject: "StudentOnClass" },
+      ];
+      break;
+  }
   const permissionsString = JSON.stringify(permissions);
+
   await prisma.Admin.create({
     data: {
       userName,
       password: hashedPassword,
       permissions: permissionsString,
+      role: role,
     },
   });
   return setRefereshToken(userName);
