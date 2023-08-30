@@ -12,7 +12,8 @@ services:
     depends_on:
       - db
     volumes:
-      - ./microImages:/MicroLearning
+      - ./microImages:/MicroLearning/src/media
+      - ./app:/app
     networks:
       - app_network
   db:
