@@ -21,14 +21,14 @@ module.exports = (req, directory) => {
           process.cwd(),
           "src/",
           directory,
-          uuid.v4() + "_" + extention[extention.length - 1]
+          uuid.v4() + "_." + extention[extention.length - 1]
         );
         const pathToFile = newPath.split(path.sep);
         fs.createReadStream(file.media.filepath)
           .pipe(fs.createWriteStream(newPath))
           .on("finish", () =>
             resolve(
-              "http://91.107.160.88:3000/" + pathToFile[pathToFile.length - 1]
+              `http://91.107.160.88:3000/${pathToFile[pathToFile.length - 1]}`
             )
           )
           .on("error", (error) => reject(error));
