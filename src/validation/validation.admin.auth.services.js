@@ -10,6 +10,10 @@ const signup = {
       .string()
       .regex(/^[a-zA-Z0-9- ]{8,16}$/)
       .required(),
+    profilePhoto: joi
+      .string()
+      .regex(/^[a-zA-Z0-9- ]{5,50}$/)
+      .optional(),
     permissions: joi.array().items(
       joi.object({
         action: joi

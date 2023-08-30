@@ -9,13 +9,18 @@ const lodash = require("lodash");
 
 const prisma = new PrismaClient();
 
-const signup = async (userName, password, permissions) => {
+const signup = async (userName, password, role) => {
   const admin = await getAdminbyUserName(userName);
   console.log(admin);
   if (admin) {
     throw new ApiError(400, "This Admin Already Exists!");
   }
-  return createAdmin(userName, password, permissions);
+  const obj = {
+    userName: userName,
+    password: password,
+    role: role,
+  };
+  return createAdmin(obj);
 };
 
 const login = async (userName, password) => {
@@ -100,8 +105,8 @@ async function setRefereshToken(userName) {
   }
 }
 
-async function createAdmin(userName, password, role) {
-  const hashedPassword = await bcrypt.hash(password, 10);
+async function createAdmin(admin) {
+  const hashedPassword = await bcrypt.hash(admin.password, 10);
   let permissions;
   switch (role) {
     case "Admin":
@@ -187,14 +192,10 @@ async function createAdmin(userName, password, role) {
       break;
   }
   const permissionsString = JSON.stringify(permissions);
-
+  admin.permissions = permissionsString;
+  admin.password = hashedPassword;
   await prisma.Admin.create({
-    data: {
-      userName,
-      password: hashedPassword,
-      permissions: permissionsString,
-      role: role,
-    },
+    data: admin,
   });
   return setRefereshToken(userName);
 }
