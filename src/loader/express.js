@@ -3,12 +3,14 @@ const routes = require("../api/routes");
 require("dotenv").config({ path: "../.env" });
 const httpstatus = require("http-status-codes");
 const cors = require("cors");
+const path = require("path");
 const {
   ApiError,
   errorHandler,
 } = require("../api/middlewares/errorHandling.middleware");
 
 const expressLoader = async (app) => {
+  app.use(express.static(path.join(__dirname, "../media")));
   app.use(
     cors({
       origin: "*",
