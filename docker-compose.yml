@@ -28,9 +28,6 @@ services:
     ports:
       - "5432:5432"
       
-volumes:
-  microImages:
-  microlearning-postgres/data:
 networks:
    app_network:
     name: network-np
