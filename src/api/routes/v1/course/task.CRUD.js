@@ -93,7 +93,7 @@ router.post(
   (req, res, next) => {
     uploader(req, "media")
       .then((result) => {
-        res.send(result[result.length - 1]);
+        res.send(result);
       })
       .catch((error) => {
         return next(new ApiError(400, error.message));
