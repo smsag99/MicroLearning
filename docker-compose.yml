@@ -12,7 +12,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./microImages:./src/media
+      - ./microImages:.
     networks:
       - app_network
   db:
