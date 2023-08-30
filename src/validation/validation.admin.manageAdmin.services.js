@@ -46,32 +46,10 @@ const update = {
     password: joi
       .string()
       .regex(/^[a-zA-Z0-9- ]{8,16}$/)
-      .required(),
-    permissions: joi
-      .array()
-      .items(
-        joi.object({
-          action: joi
-            .string()
-            .valid(...["create", "read", "update", "delete"])
-            .required(),
-          subject: joi
-            .string()
-            .valid(
-              ...[
-                "Admin",
-                "User",
-                "Course",
-                "Class",
-                "Chapter",
-                "Task",
-                "Season",
-                "StudentOnClass",
-              ]
-            )
-            .required(),
-        })
-      )
+      .optional(),
+    role: joi
+      .string()
+      .valid(...["Admin", "Teacher", "Supervisor"])
       .optional(),
     firstName: joi
       .string()
