@@ -92,6 +92,7 @@ router.put(
       req.body.userName = req.params.userName;
       console.log(req.body.role);
       if (req.user.userName == req.body.userName) {
+        console.log(req.body.userName + "  " + req.user.userName);
         const resault = await updateAdmin(req.body);
         res.send(omit(resault));
       }
