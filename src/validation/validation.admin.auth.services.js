@@ -14,6 +14,18 @@ const signup = {
       .string()
       .regex(/^[a-zA-Z0-9- ]{5,50}$/)
       .optional(),
+    role: joi
+      .string()
+      .valid(...["Admin", "Teacher", "Supervisor"])
+      .required(),
+    firstName: joi
+      .string()
+      .regex(/^[a-zA-Z]{3,16}$/)
+      .optional(),
+    lastName: joi
+      .string()
+      .regex(/^[a-zA-Z]{3,16}$/)
+      .optional(),
     permissions: joi.array().items(
       joi.object({
         action: joi
@@ -34,7 +46,7 @@ const signup = {
               "StudentOnClass",
             ]
           )
-          .required(),
+          .optional(),
       })
     ),
   }),
