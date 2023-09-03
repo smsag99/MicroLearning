@@ -108,7 +108,7 @@ async function setRefereshToken(userName) {
 async function createAdmin(admin) {
   const hashedPassword = await bcrypt.hash(admin.password, 10);
   let permissions;
-  switch (role) {
+  switch (admin.role) {
     case "Admin":
       permissions = [
         { action: "create", subject: "Admin" },
