@@ -95,13 +95,14 @@ router.put(
         console.log(req.body.userName + "  " + req.user.userName);
         const resault = await updateAdmin(req.body);
         res.send(omit(resault));
+      } else {
+        return next(
+          new ApiError(
+            400,
+            "access denied! each user can only update their profile"
+          )
+        );
       }
-      return next(
-        new ApiError(
-          400,
-          "access denied! each user can only update their profile"
-        )
-      );
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));
     }
