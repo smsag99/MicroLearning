@@ -197,7 +197,7 @@ async function createAdmin(admin) {
   await prisma.Admin.create({
     data: admin,
   });
-  return setRefereshToken(userName);
+  return setRefereshToken(admin.userName);
 }
 
 async function updateAdmin(admin) {
