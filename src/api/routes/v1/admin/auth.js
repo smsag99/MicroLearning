@@ -23,8 +23,8 @@ router.post(
   async (req, res, next) => {
     if (process.env.ENVIRONMENT == "development")
       try {
-        const { userName, password, permissions } = req.body;
-        const resault = await signup(userName, password, permissions);
+        const { userName, password, role } = req.body;
+        const resault = await signup(userName, password, role);
         return res.send({
           Refresh_Token: resault.refreshtoken,
           Access_Token: resault.accesstoken,
