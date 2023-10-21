@@ -19,7 +19,7 @@ model User {
   blocked      Boolean           @default(false)
   softDelete   Boolean           @default(false)
   address      String            @default("")
-  classes      studentsOnClass[]
+  courses      studentsOnClass[]
 }
 
 model Admin {
@@ -33,30 +33,30 @@ model Admin {
   refreshToken String   @default("")
   softDelete   Boolean  @default(false)
   permissions  Json     @db.JsonB
-  classes      Class[]
+  // classes      Class[]
   courses      Course[]
 }
 
-model Class {
-  id        Int               @id @default(autoincrement())
-  course    Course            @relation(fields: [courseID], references: [id])
-  courseID  Int
-  mentor    Admin             @relation(fields: [mentorID], references: [id])
-  mentorID  Int
-  title     String
-  startTime DateTime
-  endTime   DateTime
-  isLocked  Boolean           @default(false)
-  capacity  Int               @default(0)
-  students  studentsOnClass[]
-}
+// model Class {
+//   id        Int               @id @default(autoincrement())
+//   course    Course            @relation(fields: [courseID], references: [id])
+//   courseID  Int
+//   mentor    Admin             @relation(fields: [mentorID], references: [id])
+//   mentorID  Int
+//   title     String
+//   startTime DateTime
+//   endTime   DateTime
+//   isLocked  Boolean           @default(false)
+//   capacity  Int               @default(0)
+//   students  studentsOnClass[]
+// }
 
 model studentsOnClass {
   id        Int      @id @default(autoincrement())
   student   User     @relation(fields: [userID], references: [id])
   userID    Int
-  class     Class    @relation(fields: [classID], references: [id])
-  classID   Int
+  course     Course    @relation(fields: [courseID], references: [id])
+  courseID   Int
   mark      Int      @default(0)
   progress  Float    @default(0.0)
   startTime DateTime
@@ -73,10 +73,12 @@ model Course {
   description String
   rate        Int?
   taskcount   Int?
+  startTime DateTime
+  endTime   DateTime
   isLocked    Boolean  @default(false)
   seasons     season[]
-
-  classes Class[]
+  students  studentsOnClass[]
+  // classes Class[]
 }
 
 model season {
