@@ -7,11 +7,11 @@ async function createEmptyCourse(
   teacherId,
   mentorId,
   title,
-  startTime = Date.prototype.getDate(),
-  endTime = Date.prototype.setMonth(6),
   description,
   rate,
-  taskcount
+  taskcount,
+  startTime,
+  endTime
 ) {
   try {
     await prisma.Course.create({

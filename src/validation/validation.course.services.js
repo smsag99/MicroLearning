@@ -20,8 +20,8 @@ const create = {
       .default(function (parent, helpers) {
         return parent.teacherId;
       }),
-    startTime: joi.date().optional(),
-    endTime: joi.date().optional(),
+      startTime: joi.date().optional().default("2022-01-01T00:00:00.000Z"),
+      endTime: joi.date().optional().default("2024-01-01T00:00:00.000Z"),
     description: joi
       .string()
       .regex(/^[a-zA-Z0-9- ]{1,200}$/)
@@ -43,8 +43,8 @@ const update = {
       .optional(),
     teacherId: joi.number().optional(),
     mentorId: joi.number().optional(),
-    startTime: joi.date().optional(),
-    endTime: joi.date().optional(),
+    startTime: joi.date().optional().default("2022-01-01T00:00:00.000Z"),
+    endTime: joi.date().optional().default("2024-01-01T00:00:00.000Z"),
     description: joi
       .string()
       .regex(/^[a-zA-Z0-9- ]{1,200}$/)

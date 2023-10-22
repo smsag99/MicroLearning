@@ -50,8 +50,19 @@ router.post(
   fetchAdmin,
   // isCan("create", "Course"),
   async (req, res, next) => {
+    date = new Date();
     try {
-      const { teacherId, mentorId, title, description, rate, taskcount,startTime, endTime,  } = req.body;
+      const {
+        teacherId,
+        mentorId,
+        title,
+        description,
+        rate,
+        taskcount,
+        startTime,
+        endTime,
+      } = req.body;
+      console.log(date.getDate());
       const resault = await courseServices.createEmptyCourse(
         teacherId,
         mentorId,
@@ -59,8 +70,10 @@ router.post(
         description,
         rate,
         taskcount,
-        startTime, endTime, 
+        startTime || date,
+        endTime 
       );
+      console.log("test bug");
       res.send(resault);
     } catch (error) {
       return next(new ApiError(error.statusCode, error.message));
