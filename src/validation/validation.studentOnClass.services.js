@@ -10,13 +10,13 @@ const read = {
 const readStudentOnClass = {
   params: joi.object().keys({
     userID: joi.number().required(),
-    classID: joi.number().required(),
+    courseID: joi.number().required(),
   }),
 };
 const create = {
   body: joi.object().keys({
     userId: joi.number().required(),
-    classId: joi.number().required(),
+    courseId: joi.number().required(),
     mark: joi.number().optional(),
     progress: joi.number().precision(2).strict().optional(),
     startTime: joi.date().optional().default("2022-01-01T00:00:00.000Z"),
@@ -27,7 +27,7 @@ const create = {
 const update = {
   params: joi.object().keys({
     userId: joi.number().required(),
-    classId: joi.number().required(),
+    courseId: joi.number().required(),
   }),
   body: joi.object().keys({
     mark: joi.number().optional(),
@@ -39,7 +39,7 @@ const update = {
 const updateDone = {
   params: joi.object().keys({
     userId: joi.number().required(),
-    classId: joi.number().required(),
+    courseId: joi.number().required(),
     taskId: joi.number().required(),
   }),
 };

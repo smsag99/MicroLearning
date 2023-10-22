@@ -60,7 +60,7 @@ async function getSeasonsOfCourse(courseID) {
     console.log(seasons);
     return seasons;
   } catch {
-    throw new ApiError(500, "error while adding student to class");
+    throw new ApiError(500, "error while findUnique");
   }
 }
 module.exports = {

@@ -61,7 +61,7 @@ async function getChaptersOfSeason(seasonID) {
     console.log(chapters);
     return chapters;
   } catch {
-    throw new ApiError(400, "error while adding student to class");
+    throw new ApiError(400, "error while findUnique");
   }
 }
 

@@ -51,13 +51,15 @@ router.post(
   // isCan("create", "Course"),
   async (req, res, next) => {
     try {
-      const { teacherId, title, description, rate, taskcount } = req.body;
+      const { teacherId, mentorId, title, description, rate, taskcount,startTime, endTime,  } = req.body;
       const resault = await courseServices.createEmptyCourse(
         teacherId,
+        mentorId,
         title,
         description,
         rate,
-        taskcount
+        taskcount,
+        startTime, endTime, 
       );
       res.send(resault);
     } catch (error) {
