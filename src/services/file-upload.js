@@ -28,7 +28,7 @@ module.exports = (req, directory) => {
           .pipe(fs.createWriteStream(newPath))
           .on("finish", () =>
             resolve(
-              `http://91.107.160.88:3000/${pathToFile[pathToFile.length - 1]}`
+              `http://82.115.18.249:3000/${pathToFile[pathToFile.length - 1]}`
             )
           )
           .on("error", (error) => reject(error));
