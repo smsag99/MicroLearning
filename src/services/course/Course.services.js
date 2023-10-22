@@ -5,7 +5,10 @@ require("dotenv").config();
 
 async function createEmptyCourse(
   teacherId,
+  mentorId,
   title,
+  startTime = Date.prototype.getDate(),
+  endTime = Date.prototype.setMonth(6),
   description,
   rate,
   taskcount
@@ -14,7 +17,10 @@ async function createEmptyCourse(
     await prisma.Course.create({
       data: {
         teacher: { connect: { id: teacherId } },
+        mentor: { connect: { id: mentorId } },
         title: title,
+        startTime: startTime,
+        endTime: endTime,
         description: description,
         rate: rate,
         taskcount: taskcount,

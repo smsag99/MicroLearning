@@ -28,7 +28,7 @@ router.get(
 
 //get studentOnClass by Id
 router.get(
-  "/getStudentById/:userID/:classID",
+  "/getStudentById/:userID/:courseID",
   validate(crudStudentOnClassValidationSchema.readStudentOnClass),
   isAuth,
   fetchAdmin,
@@ -36,10 +36,10 @@ router.get(
   async (req, res, next) => {
     try {
       const userID = req.params.userID;
-      const classID = req.params.classID;
+      const courseID = req.params.courseID;
       const resault = await studentOnClassServices.getStudentByID(
         userID,
-        classID
+        courseID
       );
       res.send(resault);
     } catch (error) {
@@ -47,7 +47,7 @@ router.get(
     }
   }
 );
-//get classes of student
+//get courses of student
 router.get(
   "/getclassesofstudent/:id",
   validate(crudStudentOnClassValidationSchema.read),
@@ -67,17 +67,17 @@ router.get(
 
 //create studentOnClass
 router.post(
-  "/addStudentToClass",
+  "/addStudentToCourse",
   validate(crudStudentOnClassValidationSchema.create),
   isAuth,
   fetchAdmin,
   // isCan("create", "StudentOnClass"),
   async (req, res, next) => {
     try {
-      const { userId, classId, mark, progress, startTime, endTime } = req.body;
+      const { userId, courseId, mark, progress, startTime, endTime } = req.body;
       const resault = await studentOnClassServices.addStudent(
         userId,
-        classId,
+        courseId,
         mark,
         progress,
         startTime,
@@ -91,7 +91,7 @@ router.post(
 );
 //put studentOnClass
 router.put(
-  "/:userId/:classId",
+  "/:userId/:courseId",
   validate(crudStudentOnClassValidationSchema.update),
   isAuth,
   fetchAdmin,
@@ -99,7 +99,7 @@ router.put(
   async (req, res, next) => {
     try {
       req.body.userId = req.params.userId;
-      req.body.classId = req.params.classId;
+      req.body.courseId = req.params.courseId;
       const resault = await studentOnClassServices.updateStudent(req.body);
       res.send(resault);
     } catch (error) {
@@ -109,7 +109,7 @@ router.put(
 );
 // adding a task
 router.put(
-  "/doneTask/:userId/:classId/:taskId",
+  "/doneTask/:userId/:courseId/:taskId",
   validate(crudStudentOnClassValidationSchema.updateDone),
   isAuth,
   fetchAdmin,
@@ -117,7 +117,7 @@ router.put(
   async (req, res, next) => {
     try {
       req.body.userId = req.params.userId;
-      req.body.classId = req.params.classId;
+      req.body.courseId = req.params.courseId;
       req.body.taskId = req.params.taskId;
       const resault = await studentOnClassServices.updateTaskOfStudent(
         req.body

@@ -14,6 +14,14 @@ const create = {
       .regex(/^[a-zA-Z0-9- ]{5,16}$/)
       .required(),
     teacherId: joi.number().required(),
+    mentorId: joi
+      .number()
+      .optional()
+      .default(function (parent, helpers) {
+        return parent.teacherId;
+      }),
+    startTime: joi.date().optional(),
+    endTime: joi.date().optional(),
     description: joi
       .string()
       .regex(/^[a-zA-Z0-9- ]{1,200}$/)
@@ -34,6 +42,9 @@ const update = {
       .regex(/^[a-zA-Z0-9- ]{5,16}$/)
       .optional(),
     teacherId: joi.number().optional(),
+    mentorId: joi.number().optional(),
+    startTime: joi.date().optional(),
+    endTime: joi.date().optional(),
     description: joi
       .string()
       .regex(/^[a-zA-Z0-9- ]{1,200}$/)

@@ -8,19 +8,19 @@ require("dotenv").config();
 //only admin can makes class
 async function addStudent(
   student,
-  classID,
+  courseID,
   mark,
   progress,
   startTime,
   endTime
 ) {
-  if ((await getStudentByID(student, classID)) == null)
+  if ((await getStudentByID(student, courseID)) == null)
     try {
       console.log(
         await prisma.studentsOnClass.create({
           data: {
             student: { connect: { id: student } },
-            class: { connect: { id: classID } },
+            course: { connect: { id: courseID } },
             mark: mark,
             progress: progress,
             startTime: startTime,
@@ -36,8 +36,8 @@ async function updateStudent(updatedStudent) {
   try {
     // eslint-disable-next-line no-param-reassign
     const userId = updatedStudent.userId;
-    const classId = updatedStudent.classId;
-    const record = await getStudentByID(userId, classId);
+    const courseId = updatedStudent.courseId;
+    const record = await getStudentByID(userId, courseId);
     return await prisma.studentsOnClass.update({
       where: {
         id: record.id,
@@ -53,10 +53,10 @@ async function updateTaskOfStudent(updatedStudent) {
   try {
     // eslint-disable-next-line no-param-reassign
     const userId = updatedStudent.userId;
-    const classId = updatedStudent.classId;
+    const courseId = updatedStudent.courseId;
     const TaskId = updatedStudent.taskId;
 
-    const record = await getStudentByID(userId, classId);
+    const record = await getStudentByID(userId, courseId);
     const updatedArray = [...record.done, TaskId];
 
     return await prisma.studentsOnClass.update({
@@ -69,10 +69,10 @@ async function updateTaskOfStudent(updatedStudent) {
     throw new ApiError(error.statusCode, error.message);
   }
 }
-async function getAllStudentsOnClass(classID) {
+async function getAllStudentsOnClass(courseID) {
   try {
     const StudentRecords = await prisma.studentsOnClass.findMany({
-      where: { classID: classID },
+      where: { courseID: courseID },
     });
     console.log(StudentRecords);
     return StudentRecords;
@@ -92,12 +92,12 @@ async function getClassesOfStudent(id) {
     throw new ApiError(error.statusCode, error.message);
   }
 }
-async function getStudentByID(userID, classID) {
+async function getStudentByID(userID, courseID) {
   try {
     const student = await prisma.studentsOnClass.findFirst({
       where: {
         userID: userID,
-        classID: classID,
+        courseID: courseID,
       },
     });
     console.log(student);
